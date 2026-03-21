@@ -35,6 +35,13 @@ export type Project = {
     og_image_url?: string;
     og_title?: string;
     og_description?: string;
+    mac_config?: {
+        width: number;
+        height: number;
+        resizable: boolean;
+        fullscreen: boolean;
+        titleBarStyle: 'Overlay' | 'Visible';
+    };
 }
 
 export function useProjects() {

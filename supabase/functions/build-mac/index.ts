@@ -32,7 +32,7 @@ Deno.serve(async (req: Request) => {
     // Verify ownership and get live URL
     const { data: project, error: projError } = await supabase
       .from("projects")
-      .select("id, name, subdomain, worker_url, icon_512_url, icon_192_url, favicon_url")
+      .select("id, name, subdomain, worker_url, icon_512_url, icon_192_url, favicon_url, mac_config")
       .eq("id", project_id)
       .eq("user_id", user.id)
       .single()
@@ -74,7 +74,8 @@ Deno.serve(async (req: Request) => {
           project_name: project.name,
           live_url,
           icon_url,
-          build_mode
+          build_mode,
+          mac_config: project.mac_config // V25: Custom configurations
         }
       })
     })

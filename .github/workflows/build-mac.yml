@@ -72,10 +72,20 @@ jobs:
         if: github.event.client_payload.build_mode == 'pro'
         run: |
           cd tauri-template/src-tauri
-          # Use jq to update tauri.conf.json dynamically
+          # Use jq to update tauri.conf.json dynamically with custom mac_config
           jq --arg name "${{ github.event.client_payload.project_name }}" \
              --arg url "${{ github.event.client_payload.live_url }}" \
-             '.package.productName = $name | .tauri.window[0].title = $name | .build.devPath = $url | .build.distDir = $url' \
+             --argjson config '${{ secrets.DEFAULT_MAC_CONFIG || "{}" }}' \
+             --argjson user_config '${{ github.event.client_payload.mac_config || "{}" }}' \
+             '.package.productName = $name | 
+              .tauri.window[0].title = $name | 
+              .build.devPath = $url | 
+              .build.distDir = $url |
+              .tauri.window[0].width = ($user_config.width // 1280) |
+              .tauri.window[0].height = ($user_config.height // 800) |
+              .tauri.window[0].resizable = ($user_config.resizable // true) |
+              .tauri.window[0].fullscreen = ($user_config.fullscreen // false) |
+              .tauri.window[0].titleBarStyle = ($user_config.titleBarStyle // "Overlay")' \
              tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           
           # Handle icon if provided

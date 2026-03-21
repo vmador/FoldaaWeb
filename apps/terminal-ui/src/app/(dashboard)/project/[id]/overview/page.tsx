@@ -12,6 +12,65 @@ import { useToast } from '@/context/ToastContext';
 import { TabHeader } from '@/components/ui/TabHeader';
 import AsciiVortexAnimation from './AsciiVortexAnimation';
 
+const AnalyticsCard = ({ title, value, percentage, points, color, isInverse }: any) => {
+    return (
+        <div className="bg-[#080808] border border-[#111] rounded-[10px] p-4 flex flex-col gap-1 group hover:border-[#1c1c1e] transition-all relative overflow-hidden h-[100px]">
+            <div className="flex justify-between items-start relative z-10">
+                <div className="flex flex-col">
+                    <span className="text-[#333] text-[9px] font-bold uppercase tracking-widest mb-1">{title}</span>
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-[#CCC] text-2xl font-bold tracking-tight">{value}</span>
+                        <div className={clsx(
+                            "flex items-center text-[9px] font-bold px-1 py-0.5 rounded",
+                            percentage.startsWith('+') ? (isInverse ? "bg-red-500/5 text-red-500/60" : "bg-green-500/5 text-green-500/60") : 
+                                                         (isInverse ? "bg-green-500/5 text-green-500/60" : "bg-red-500/5 text-red-500/60")
+                        )}>
+                            {percentage}
+                        </div>
+                    </div>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-[#111] border border-[#1A1A1A] flex items-center justify-center text-[#222] group-hover:text-[#444] transition-colors">
+                    <Activity className="w-3.5 h-3.5" />
+                </div>
+            </div>
+            
+            <div className="absolute bottom-[-2px] left-0 right-0 h-8 opacity-40 group-hover:opacity-80 transition-all duration-500">
+                <Sparkline points={points} color={color} />
+            </div>
+        </div>
+    );
+};
+
+const Sparkline = ({ points, color }: { points: number[], color: string }) => {
+    if (!points || points.length < 2) return <div className="h-full w-full bg-[#111]/20 animate-pulse" />;
+    
+    const max = Math.max(...points) || 1;
+    const min = Math.min(...points);
+    const range = max - min || 1;
+    const height = 32;
+    const width = 300; 
+    const step = width / (points.length - 1);
+    
+    const d = points.map((p, i) => {
+        const x = i * step;
+        const y = height - ((p - min) / range) * height;
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+    }).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden" preserveAspectRatio="none">
+            <path 
+                d={d} 
+                fill="none" 
+                stroke={color} 
+                strokeWidth="1.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+            />
+        </svg>
+    );
+};
+
 export default function ProjectOverviewPage({ params }: { params: Promise<{ id: string }> }) {
     const { projects, loading: projectLoading } = useProjects();
     const { showToast, hideToast } = useToast();
@@ -31,6 +90,27 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
     const [hasExploded, setHasExploded] = useState(false);
     const [selectedBuildMode, setSelectedBuildMode] = useState<'fast' | 'pro'>('fast');
     const lastStatus = useRef<string | undefined>(undefined);
+    
+    // Pro Build Settings State
+    const [showProSettings, setShowProSettings] = useState(false);
+    const [macConfig, setMacConfig] = useState<any>(null);
+    const [isSavingConfig, setIsSavingConfig] = useState(false);
+
+    // Sync macConfig with project data when it loads
+    useEffect(() => {
+        if (project?.mac_config) {
+            setMacConfig(project.mac_config);
+        } else if (project) {
+            // Default config if none exists
+            setMacConfig({
+                width: 1280,
+                height: 800,
+                resizable: true,
+                fullscreen: false,
+                titleBarStyle: 'Overlay'
+            });
+        }
+    }, [project?.id]);
 
     // Play success sound when build becomes ready
     useEffect(() => {
@@ -318,7 +398,6 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 })
                 .eq('id', projectId);
 
-            if (error) throw error;
             showToast('Project name and URL updated');
             setIsEditingName(false);
         } catch (error) {
@@ -326,6 +405,25 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             showToast('Failed to update project name', 'error');
         } finally {
             setIsSavingName(false);
+        }
+    };
+
+    const handleSaveMacConfig = async () => {
+        if (!projectId || !macConfig) return;
+        setIsSavingConfig(true);
+        try {
+            const { error } = await supabase
+                .from('projects')
+                .update({ mac_config: macConfig })
+                .eq('id', projectId);
+            if (error) throw error;
+            showToast('Mac Configuration saved successfully', 'success');
+            setShowProSettings(false);
+        } catch (error) {
+            console.error('Error saving mac config:', error);
+            showToast('Failed to save configuration', 'error');
+        } finally {
+            setIsSavingConfig(false);
         }
     };
 
@@ -616,48 +714,130 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 </div>
                             ) : (
                                 <>
-                                    {/* Build Mode Selector */}
-                                    <div className="flex gap-2 mr-4">
-                                        <button 
-                                            onClick={() => setSelectedBuildMode('fast')}
-                                            className={clsx(
-                                                "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left",
-                                                selectedBuildMode === 'fast' 
-                                                    ? "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-400 font-black shadow-[0_0_15px_rgba(217,70,239,0.05)]" 
-                                                    : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
-                                            )}
-                                        >
-                                            <span className="uppercase tracking-widest text-[8px] opacity-70">Fast Build</span>
-                                            <span>Basic Wrapper</span>
-                                        </button>
-                                        <button 
-                                            onClick={() => setSelectedBuildMode('pro')}
-                                            className={clsx(
-                                                "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left relative overflow-hidden",
-                                                selectedBuildMode === 'pro' 
-                                                    ? "bg-fuchsia-500/10 border-fuchsia-500/40 text-fuchsia-300 font-black ring-1 ring-fuchsia-500/10" 
-                                                    : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
-                                            )}
-                                        >
-                                            {selectedBuildMode === 'pro' && (
-                                                <div className="absolute top-0 right-0 px-1.5 bg-fuchsia-500 text-black text-[7px] font-black uppercase tracking-tighter shadow-sm z-20">Pro</div>
-                                            )}
-                                            <span className="uppercase tracking-widest text-[8px] opacity-70">Pro Build</span>
-                                            <span>Native Feel</span>
-                                        </button>
-                                    </div>
+                                    <div className="flex flex-col gap-3">
+                                        {/* Build Mode Selector */}
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex gap-2">
+                                                <button 
+                                                    onClick={() => setSelectedBuildMode('fast')}
+                                                    className={clsx(
+                                                        "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left",
+                                                        selectedBuildMode === 'fast' 
+                                                            ? "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-400 font-black shadow-[0_0_15px_rgba(217,70,239,0.05)]" 
+                                                            : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
+                                                    )}
+                                                >
+                                                    <span className="uppercase tracking-widest text-[8px] opacity-70">Fast Build</span>
+                                                    <span>Basic Wrapper</span>
+                                                </button>
+                                                <button 
+                                                    onClick={() => setSelectedBuildMode('pro')}
+                                                    className={clsx(
+                                                        "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left relative overflow-hidden",
+                                                        selectedBuildMode === 'pro' 
+                                                            ? "bg-fuchsia-500/10 border-fuchsia-500/40 text-fuchsia-300 font-black ring-1 ring-fuchsia-500/10" 
+                                                            : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
+                                                    )}
+                                                >
+                                                    {selectedBuildMode === 'pro' && (
+                                                        <div className="absolute top-0 right-0 px-1.5 bg-fuchsia-500 text-black text-[7px] font-black uppercase tracking-tighter shadow-sm z-20">Pro</div>
+                                                    )}
+                                                    <span className="uppercase tracking-widest text-[8px] opacity-70">Pro Build</span>
+                                                    <span>Native Feel</span>
+                                                </button>
+                                            </div>
 
-                                    <button 
-                                        onClick={handleBuildMacApp}
-                                        disabled={actionLoading === 'build-mac'}
-                                        className="px-4 py-1.5 rounded-[8px] bg-white text-black text-[11px] font-black hover:bg-gray-200 transition-all flex items-center gap-2 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
-                                    >
-                                        {actionLoading === 'build-mac' ? (
-                                            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Starting...</>
-                                        ) : (
-                                            <><Monitor className="w-3.5 h-3.5" /> Build Mac App</>
+                                            {selectedBuildMode === 'pro' && (
+                                                <button 
+                                                    onClick={() => setShowProSettings(!showProSettings)}
+                                                    className={clsx(
+                                                        "p-2 rounded-[8px] border transition-all hover:bg-[#111]",
+                                                        showProSettings ? "border-fuchsia-500/50 text-fuchsia-400 bg-fuchsia-500/5" : "border-[#1A1A1A] text-[#444]"
+                                                    )}
+                                                >
+                                                    <Monitor className="w-4 h-4" />
+                                                </button>
+                                            )}
+
+                                            <button 
+                                                onClick={handleBuildMacApp}
+                                                disabled={actionLoading === 'build-mac'}
+                                                className="ml-2 px-4 py-3 rounded-[8px] bg-white text-black text-[11px] font-black hover:bg-gray-200 transition-all flex items-center gap-2 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                            >
+                                                {actionLoading === 'build-mac' ? (
+                                                    <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Starting...</>
+                                                ) : (
+                                                    <><Download className="w-3.5 h-3.5" /> Build Mac App</>
+                                                )}
+                                            </button>
+                                        </div>
+
+                                        {/* Pro Settings Expansion */}
+                                        {selectedBuildMode === 'pro' && showProSettings && macConfig && (
+                                            <div className="flex flex-col gap-4 p-4 bg-[#0A0A0A] border border-[#1A1A1A] rounded-[10px] animate-in slide-in-from-top-2 duration-300">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-widest">Window Width</label>
+                                                        <input 
+                                                            type="number"
+                                                            value={macConfig.width}
+                                                            onChange={(e) => setMacConfig({...macConfig, width: parseInt(e.target.value)})}
+                                                            className="bg-[#111] border border-[#222] rounded-[6px] px-3 py-1.5 text-white text-xs outline-none focus:border-fuchsia-500/30"
+                                                        />
+                                                    </div>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-widest">Window Height</label>
+                                                        <input 
+                                                            type="number"
+                                                            value={macConfig.height}
+                                                            onChange={(e) => setMacConfig({...macConfig, height: parseInt(e.target.value)})}
+                                                            className="bg-[#111] border border-[#222] rounded-[6px] px-3 py-1.5 text-white text-xs outline-none focus:border-fuchsia-500/30"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center justify-between gap-4 py-1">
+                                                    <div className="flex items-center gap-8">
+                                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                                            <input 
+                                                                type="checkbox"
+                                                                checked={macConfig.resizable}
+                                                                onChange={(e) => setMacConfig({...macConfig, resizable: e.target.checked})}
+                                                                className="sr-only"
+                                                            />
+                                                            <div className={clsx(
+                                                                "w-3 h-3 rounded-full border border-[#333] transition-colors",
+                                                                macConfig.resizable ? "bg-fuchsia-500 border-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.3)]" : "bg-black"
+                                                            )} />
+                                                            <span className="text-[10px] font-bold text-[#666] group-hover:text-[#AAA]">Resizable</span>
+                                                        </label>
+
+                                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                                            <input 
+                                                                type="checkbox"
+                                                                checked={macConfig.fullscreen}
+                                                                onChange={(e) => setMacConfig({...macConfig, fullscreen: e.target.checked})}
+                                                                className="sr-only"
+                                                            />
+                                                            <div className={clsx(
+                                                                "w-3 h-3 rounded-full border border-[#333] transition-colors",
+                                                                macConfig.fullscreen ? "bg-fuchsia-500 border-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.3)]" : "bg-black"
+                                                            )} />
+                                                            <span className="text-[10px] font-bold text-[#666] group-hover:text-[#AAA]">Fullscreen</span>
+                                                        </label>
+                                                    </div>
+
+                                                    <button 
+                                                        onClick={handleSaveMacConfig}
+                                                        disabled={isSavingConfig}
+                                                        className="px-3 py-1.5 rounded-[6px] bg-[#111] border border-fuchsia-500/30 text-fuchsia-400 text-[10px] font-black hover:bg-fuchsia-500/10 transition-all disabled:opacity-50"
+                                                    >
+                                                        {isSavingConfig ? 'Saving...' : 'Save Configuration'}
+                                                    </button>
+                                                </div>
+                                            </div>
                                         )}
-                                    </button>
+                                    </div>
                                 </>
                             )}
                         </div>
@@ -717,63 +897,3 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
         </div>
     );
 }
-
-const AnalyticsCard = ({ title, value, percentage, points, color, isInverse }: any) => {
-    return (
-        <div className="bg-[#080808] border border-[#111] rounded-[10px] p-4 flex flex-col gap-1 group hover:border-[#1c1c1e] transition-all relative overflow-hidden h-[100px]">
-            <div className="flex justify-between items-start relative z-10">
-                <div className="flex flex-col">
-                    <span className="text-[#333] text-[9px] font-bold uppercase tracking-widest mb-1">{title}</span>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-[#CCC] text-2xl font-bold tracking-tight">{value}</span>
-                        <div className={clsx(
-                            "flex items-center text-[9px] font-bold px-1 py-0.5 rounded",
-                            percentage.startsWith('+') ? (isInverse ? "bg-red-500/5 text-red-500/60" : "bg-green-500/5 text-green-500/60") : 
-                                                         (isInverse ? "bg-green-500/5 text-green-500/60" : "bg-red-500/5 text-red-500/60")
-                        )}>
-                            {percentage}
-                        </div>
-                    </div>
-                </div>
-                <div className="w-8 h-8 rounded-lg bg-[#111] border border-[#1A1A1A] flex items-center justify-center text-[#222] group-hover:text-[#444] transition-colors">
-                    <Activity className="w-3.5 h-3.5" />
-                </div>
-            </div>
-            
-            <div className="absolute bottom-[-2px] left-0 right-0 h-8 opacity-40 group-hover:opacity-80 transition-all duration-500">
-                <Sparkline points={points} color={color} />
-            </div>
-        </div>
-    );
-};
-
-const Sparkline = ({ points, color }: { points: number[], color: string }) => {
-    if (!points || points.length < 2) return <div className="h-full w-full bg-[#111]/20 animate-pulse" />;
-    
-    // Smooth the points or add Jitter for a "serious" data look
-    const max = Math.max(...points) || 1;
-    const min = Math.min(...points);
-    const range = max - min || 1;
-    const height = 32;
-    const width = 300; 
-    const step = width / (points.length - 1);
-    
-    const d = points.map((p, i) => {
-        const x = i * step;
-        const y = height - ((p - min) / range) * height;
-        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-    }).join(' ');
-
-    return (
-        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden" preserveAspectRatio="none">
-            <path 
-                d={d} 
-                fill="none" 
-                stroke={color} 
-                strokeWidth="1.5" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-            />
-        </svg>
-    );
-};
