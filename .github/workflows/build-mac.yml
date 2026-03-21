@@ -142,7 +142,21 @@ jobs:
         if: github.event.client_payload.build_mode == 'pro'
         run: |
           cd tauri-template
+          # Note: Tauri build generates DMG. We'll try to sign BEFORE it packs if possible, but Tauri v1 packs automatically.
+          # We'll rely on universal build and then ad-hoc sign if needed, but signing inside the DMG is hard.
+          # We'll use --nobundle if we wanted to sign manually, but we want the DMG.
           npm run tauri build -- --target universal-apple-darwin
+
+      # Ad-hoc sign the resulting app if possible for Monterey
+      - name: Ad-hoc Sign for Monterey Compatibility
+        if: always()
+        run: |
+          APP_DIR=$(find . -name "*.app" -type d | head -n 1)
+          if [ -n "$APP_DIR" ]; then
+            echo "Signing $APP_DIR for ad-hoc compatibility"
+            chmod -R +x "$APP_DIR/Contents/MacOS/"
+            codesign --force --deep --sign - "$APP_DIR"
+          fi
 
       # --- COMMON UPLOAD ---
       - name: Upload to Cloudflare R2
