@@ -26,7 +26,7 @@ Deno.serve(async (req: Request) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(authHeader.replace("Bearer ", ""))
     if (authError || !user) throw new Error("Unauthorized")
 
-    const { project_id, build_mode = 'fast' } = await req.json()
+    const { project_id, build_mode = 'fast', build_config = {} } = await req.json()
     if (!project_id) throw new Error("project_id is required")
 
     // Verify ownership and get live URL
@@ -40,7 +40,9 @@ Deno.serve(async (req: Request) => {
     if (projError || !project) throw new Error("Project not found or unauthorized")
 
     const live_url = project.worker_url || `https://${project.subdomain}.foldaa.com`
-    const icon_url = project.icon_512_url || project.icon_192_url || project.favicon_url
+    // Use branding from build_config if available, otherwise fallback to project defaults
+    const project_name = build_config?.branding?.app_name || project.name
+    const icon_url = build_config?.branding?.icon_url || project.icon_512_url || project.icon_192_url || project.favicon_url
 
     // Delete existing builds for this project to keep only one (User Request V19)
     await supabase.from("mac_builds").delete().eq("project_id", project_id)
@@ -51,7 +53,15 @@ Deno.serve(async (req: Request) => {
       .insert({
         project_id,
         status: "pending",
-        build_mode
+        build_mode,
+        build_config: {
+          ...build_config,
+          // Ensure branding is stored even if it was fallback
+          branding: {
+            app_name: project_name,
+            icon_url: icon_url
+          }
+        }
       })
       .select("id")
       .single()
@@ -71,11 +81,11 @@ Deno.serve(async (req: Request) => {
         client_payload: {
           build_id: build.id,
           project_id: project.id,
-          project_name: project.name,
+          project_name, // Updated from build_config or fallback
           live_url,
-          icon_url,
+          icon_url,     // Updated from build_config or fallback
           build_mode,
-          mac_config: project.mac_config // V25: Custom configurations
+          mac_config: build_config // V26: Use the specific build_config for this build
         }
       })
     })
