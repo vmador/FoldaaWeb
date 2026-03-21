@@ -67,7 +67,7 @@ jobs:
       - name: Setup Tauri Build Environment
         if: github.event.client_payload.build_mode == 'pro'
         run: |
-          npm install -g @tauri-apps/cli
+          npm install -g @tauri-apps/cli@1
           cd tauri-template
           npm install
           
@@ -82,23 +82,23 @@ jobs:
           if [ "$USER_CONFIG" != "null" ] && [ -n "$USER_CONFIG" ]; then
             CONF_JSON="$USER_CONFIG"
           fi
-
+          
           # Use jq to update tauri.conf.json dynamically with custom mac_config (Pro Build)
           jq --arg name "${{ github.event.client_payload.project_name }}" \
              --arg url "${{ github.event.client_payload.live_url }}" \
              --argjson user_config "$CONF_JSON" \
              '.package.productName = $name | 
-              .tauri.window[0].title = $name | 
+              .tauri.windows[0].title = $name | 
               .build.devPath = $url | 
               .build.distDir = $url |
-              .tauri.window[0].width = ($user_config.window.width // 1200) |
-              .tauri.window[0].height = ($user_config.window.height // 800) |
-              .tauri.window[0].resizable = ($user_config.behavior.resizable // true) |
-              .tauri.window[0].fullscreen = ($user_config.window.fullscreen // false) |
-              .tauri.window[0].decorations = ($user_config.window.frameless | not // true) |
-              .tauri.window[0].transparent = ($user_config.window.transparent // true) |
-              .tauri.window[0].alwaysOnTop = ($user_config.behavior.always_on_top // false) |
-              .tauri.window[0].titleBarStyle = ($user_config.toolbar.style // "Overlay")' \
+              .tauri.windows[0].width = ($user_config.window.width // 1200) |
+              .tauri.windows[0].height = ($user_config.window.height // 800) |
+              .tauri.windows[0].resizable = ($user_config.behavior.resizable // true) |
+              .tauri.windows[0].fullscreen = ($user_config.window.fullscreen // false) |
+              .tauri.windows[0].decorations = ($user_config.window.frameless | not // true) |
+              .tauri.windows[0].transparent = ($user_config.window.transparent // true) |
+              .tauri.windows[0].alwaysOnTop = ($user_config.behavior.always_on_top // false) |
+              .tauri.windows[0].titleBarStyle = ($user_config.toolbar.style // "Overlay")' \
              tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           
           # Handle icon if provided
