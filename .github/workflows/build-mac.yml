@@ -30,7 +30,7 @@ jobs:
         run: |
           # Robust naming and ID handling
           NAME_VAL="${{ github.event.client_payload.project_name }}"
-          if [ -z "$NAME_VAL" ] || [ "$NAME_VAL" == "null" ]; then NAME_VAL="FoldaaApp"; fi
+          if [ -z "$NAME_VAL" ] || [ "$NAME_VAL" == "null" ]; then NAME_VAL="Foldaa_DEBUG_FIX"; fi
           
           ID_VAL="${{ github.event.client_payload.project_id }}"
           if [ -z "$ID_VAL" ] || [ "$ID_VAL" == "null" ]; then ID_VAL="default"; fi
@@ -41,6 +41,7 @@ jobs:
           echo "PROJECT_NAME=$NAME_VAL" >> $GITHUB_ENV
           echo "PROJECT_ID=$ID_VAL" >> $GITHUB_ENV
           echo "LIVE_URL=$URL_VAL" >> $GITHUB_ENV
+          echo "REPONAME=vmador/FoldaaWeb" >> $GITHUB_ENV
 
       - name: Download & Convert Icon
         id: icon
