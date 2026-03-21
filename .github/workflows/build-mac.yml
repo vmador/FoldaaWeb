@@ -76,6 +76,7 @@ jobs:
         env:
           USER_CONFIG: ${{ toJSON(github.event.client_payload.mac_config) }}
         run: |
+          set -x
           cd tauri-template/src-tauri
           # Handle potential null or empty config
           CONF_JSON='{}'
@@ -83,16 +84,26 @@ jobs:
             CONF_JSON="$USER_CONFIG"
           fi
           
+          # Handle shell variables for robust naming
+          NAME_VAL="${{ github.event.client_payload.project_name }}"
+          if [ -z "$NAME_VAL" ] || [ "$NAME_VAL" == "null" ]; then NAME_VAL="FoldaaApp"; fi
+          
+          ID_VAL="${{ github.event.client_payload.project_id }}"
+          if [ -z "$ID_VAL" ] || [ "$ID_VAL" == "null" ]; then ID_VAL="default"; fi
+          
+          URL_VAL="${{ github.event.client_payload.live_url }}"
+          if [ -z "$URL_VAL" ] || [ "$URL_VAL" == "null" ]; then URL_VAL="https://foldaa.com"; fi
+
           # Use jq to update tauri.conf.json dynamically with custom mac_config (Pro Build)
-          jq --arg name "${{ github.event.client_payload.project_name || 'FoldaaApp' }}" \
-             --arg url "${{ github.event.client_payload.live_url }}" \
-             --arg id "${{ github.event.client_payload.project_id }}" \
+          jq --arg name "$NAME_VAL" \
+             --arg url "$URL_VAL" \
+             --arg id "$ID_VAL" \
              --argjson user_config "$CONF_JSON" \
              '.package.productName = $name | 
               .tauri.bundle.identifier = ("com.foldaa.app." + $id) |
               .tauri.windows[0].title = $name | 
               .build.devPath = $url | 
-              .build.distDir = $url |
+              .build.distDir = "../dist" |
               .tauri.windows[0].width = ($user_config.window.width // 1200) |
               .tauri.windows[0].height = ($user_config.window.height // 800) |
               .tauri.windows[0].resizable = ($user_config.behavior.resizable // true) |
@@ -102,6 +113,9 @@ jobs:
               .tauri.windows[0].alwaysOnTop = ($user_config.behavior.always_on_top // false) |
               .tauri.windows[0].titleBarStyle = ($user_config.toolbar.style // "Overlay")' \
              tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
+
+          # Inject the actual URL into the dummy index.html for production redirect
+          sed -i '' "s|__FOLDAA_URL__|$URL_VAL|g" ../dist/index.html
           
           # Handle icon (Prioritize custom icns, fallback to repo default)
           if [ -f "../../app-icon.icns" ]; then
