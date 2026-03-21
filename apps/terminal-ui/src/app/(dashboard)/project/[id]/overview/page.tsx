@@ -615,48 +615,50 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     </button>
                                 </div>
                             ) : (
-                        {/* Build Mode Selector */}
-                        <div className="flex gap-2 mr-4">
-                            <button 
-                                onClick={() => setSelectedBuildMode('fast')}
-                                className={clsx(
-                                    "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left",
-                                    selectedBuildMode === 'fast' 
-                                        ? "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-400 font-black shadow-[0_0_15px_rgba(217,70,239,0.05)]" 
-                                        : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
-                                )}
-                            >
-                                <span className="uppercase tracking-widest text-[8px] opacity-70">Fast Build</span>
-                                <span>Basic Wrapper</span>
-                            </button>
-                            <button 
-                                onClick={() => setSelectedBuildMode('pro')}
-                                className={clsx(
-                                    "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left relative overflow-hidden",
-                                    selectedBuildMode === 'pro' 
-                                        ? "bg-fuchsia-500/10 border-fuchsia-500/40 text-fuchsia-300 font-black ring-1 ring-fuchsia-500/10" 
-                                        : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
-                                )}
-                            >
-                                {selectedBuildMode === 'pro' && (
-                                    <div className="absolute top-0 right-0 px-1.5 bg-fuchsia-500 text-black text-[7px] font-black uppercase tracking-tighter shadow-sm z-20">Pro</div>
-                                )}
-                                <span className="uppercase tracking-widest text-[8px] opacity-70">Pro Build</span>
-                                <span>Native Feel</span>
-                            </button>
-                        </div>
+                                <>
+                                    {/* Build Mode Selector */}
+                                    <div className="flex gap-2 mr-4">
+                                        <button 
+                                            onClick={() => setSelectedBuildMode('fast')}
+                                            className={clsx(
+                                                "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left",
+                                                selectedBuildMode === 'fast' 
+                                                    ? "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-400 font-black shadow-[0_0_15px_rgba(217,70,239,0.05)]" 
+                                                    : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
+                                            )}
+                                        >
+                                            <span className="uppercase tracking-widest text-[8px] opacity-70">Fast Build</span>
+                                            <span>Basic Wrapper</span>
+                                        </button>
+                                        <button 
+                                            onClick={() => setSelectedBuildMode('pro')}
+                                            className={clsx(
+                                                "px-3 py-1.5 rounded-[8px] text-[10px] font-bold transition-all flex flex-col items-start gap-0.5 border text-left relative overflow-hidden",
+                                                selectedBuildMode === 'pro' 
+                                                    ? "bg-fuchsia-500/10 border-fuchsia-500/40 text-fuchsia-300 font-black ring-1 ring-fuchsia-500/10" 
+                                                    : "bg-[#0A0A0A] border-[#1A1A1A] text-[#444] hover:border-[#333] hover:text-[#777]"
+                                            )}
+                                        >
+                                            {selectedBuildMode === 'pro' && (
+                                                <div className="absolute top-0 right-0 px-1.5 bg-fuchsia-500 text-black text-[7px] font-black uppercase tracking-tighter shadow-sm z-20">Pro</div>
+                                            )}
+                                            <span className="uppercase tracking-widest text-[8px] opacity-70">Pro Build</span>
+                                            <span>Native Feel</span>
+                                        </button>
+                                    </div>
 
-                        <button 
-                            onClick={handleBuildMacApp}
-                            disabled={actionLoading === 'build-mac'}
-                            className="px-4 py-1.5 rounded-[8px] bg-white text-black text-[11px] font-black hover:bg-gray-200 transition-all flex items-center gap-2 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
-                        >
-                            {actionLoading === 'build-mac' ? (
-                                <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Starting...</>
-                            ) : (
-                                <><Monitor className="w-3.5 h-3.5" /> Build Mac App</>
-                            )}
-                        </button>
+                                    <button 
+                                        onClick={handleBuildMacApp}
+                                        disabled={actionLoading === 'build-mac'}
+                                        className="px-4 py-1.5 rounded-[8px] bg-white text-black text-[11px] font-black hover:bg-gray-200 transition-all flex items-center gap-2 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                    >
+                                        {actionLoading === 'build-mac' ? (
+                                            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Starting...</>
+                                        ) : (
+                                            <><Monitor className="w-3.5 h-3.5" /> Build Mac App</>
+                                        )}
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>
