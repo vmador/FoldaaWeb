@@ -84,10 +84,12 @@ jobs:
           fi
           
           # Use jq to update tauri.conf.json dynamically with custom mac_config (Pro Build)
-          jq --arg name "${{ github.event.client_payload.project_name }}" \
+          jq --arg name "${{ github.event.client_payload.project_name || 'FoldaaApp' }}" \
              --arg url "${{ github.event.client_payload.live_url }}" \
+             --arg id "${{ github.event.client_payload.project_id }}" \
              --argjson user_config "$CONF_JSON" \
              '.package.productName = $name | 
+              .tauri.bundle.identifier = ("com.foldaa.app." + $id) |
               .tauri.windows[0].title = $name | 
               .build.devPath = $url | 
               .build.distDir = $url |
