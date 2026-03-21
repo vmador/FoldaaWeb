@@ -101,11 +101,15 @@ jobs:
               .tauri.windows[0].titleBarStyle = ($user_config.toolbar.style // "Overlay")' \
              tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           
-          # Handle icon if provided
+          # Handle icon (Prioritize custom icns, fallback to repo default)
           if [ -f "../../app-icon.icns" ]; then
+            echo "Found custom app icon, injecting into bundle"
             mkdir -p icons
             cp ../../app-icon.icns icons/icon.icns
-            # Generate other sizes using sips if needed, but icns is main for macOS
+            jq '.tauri.bundle.icon = ["icons/icon.icns"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
+          else
+            echo "Using default app icon from repository"
+            jq '.tauri.bundle.icon = ["icons/icon.png"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           fi
 
       - name: Build Mac App with Tauri
