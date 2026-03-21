@@ -1,0 +1,47 @@
+{
+  "name": "mi-app-test",
+  "version": "1.0.0",
+  "originUrl": "https://aural.framer.website",
+  "domain": "mi-app-test.foldaa.com",
+  "pwa": {
+    "enabled": true,
+    "name": "Mi App Genial",
+    "short_name": "AppGenial",
+    "theme_color": "#ffffff",
+    "background_color": "#000000",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "/icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  },
+  "extensions": {
+    "auth": {
+      "enabled": true,
+      "provider": "magic_link",
+      "protectedRoutes": ["/dashboard", "/settings", "/api/private/*"]
+    },
+    "payments": {
+      "enabled": true,
+      "provider": "stripe",
+      "webhookRoute": "/api/webhooks/stripe",
+      "successUrl": "/dashboard"
+    },
+    "analytics": {
+      "enabled": true,
+      "trackPageViews": true,
+      "ignoreRoutes": ["/_next/*", "/static/*"]
+    }
+  },
+  "workflows": [
+    "workflows/onboarding.md"
+  ]
+}

@@ -1,0 +1,17 @@
+[CLI Debug] getContext: baseURL=http://localhost:3000/api/foldaa, hasApiKey=true, hasRefreshToken=true
+[CLI Debug] API Key starts with: eyJhbGciOi...
+[FoldaaClient] Initialized with baseURL=http://localhost:3000/api/foldaa, hasApiKey=true, hasRefreshToken=true
+[FoldaaClient] Refresh Token length: 12
+- Analyzing https://snpeople.framer.website...
+[FoldaaClient] Received 401 for /create-draft-project, attempting token refresh...
+[FoldaaClient] Refresh response status: 200
+[FoldaaClient] Token refresh successful.
+[FoldaaClient] Retrying original request to /create-draft-project...
+✔ Transformation successful!
+
+Project Details:
+- ID:      c221dfd2-2cc3-42e9-a5f1-18cc5234c910
+- URL:     https://sn-people.foldaa.com
+- Preview: https://sn-people.foldaa.com
+
+! Run "foldaa domain add" to map a custom domain.

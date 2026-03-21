@@ -1,0 +1,142 @@
+name: Build Mac App (Pake)
+
+on:
+  repository_dispatch:
+    types: [build-mac-app]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Notify Supabase (Building)
+        run: |
+          curl -s -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/update-mac-build \
+            -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"building\"}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Download & Convert Icon
+        id: icon
+        run: |
+          ICON_URL="${{ github.event.client_payload.icon_url }}"
+          if [ -n "$ICON_URL" ] && [ "$ICON_URL" != "null" ]; then
+            echo "Downloading icon from $ICON_URL"
+            curl -sL "$ICON_URL" -o app-icon.png
+            # Convert to ICNS using MacOS native tools
+            mkdir app-icon.iconset
+            sips -z 16 16     app-icon.png --out app-icon.iconset/icon_16x16.png
+            sips -z 32 32     app-icon.png --out app-icon.iconset/icon_16x16@2x.png
+            sips -z 32 32     app-icon.png --out app-icon.iconset/icon_32x32.png
+            sips -z 64 64     app-icon.png --out app-icon.iconset/icon_32x32@2x.png
+            sips -z 128 128   app-icon.png --out app-icon.iconset/icon_128x128.png
+            sips -z 256 256   app-icon.png --out app-icon.iconset/icon_128x128@2x.png
+            sips -z 256 256   app-icon.png --out app-icon.iconset/icon_256x256.png
+            sips -z 512 512   app-icon.png --out app-icon.iconset/icon_256x256@2x.png
+            sips -z 512 512   app-icon.png --out app-icon.iconset/icon_512x512.png
+            sips -z 1024 1024 app-icon.png --out app-icon.iconset/icon_512x512@2x.png
+            iconutil -c icns app-icon.iconset
+            echo "icon_args=--icon app-icon.icns" >> $GITHUB_ENV
+          else
+            echo "icon_args=" >> $GITHUB_ENV
+          fi
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-apple-darwin,aarch64-apple-darwin
+
+      # --- FAST BUILD (PAKE) ---
+      - name: Build Mac App with Pake
+        if: github.event.client_payload.build_mode == 'fast'
+        run: |
+          npx pake-cli ${{ github.event.client_payload.live_url }} \
+            --name "${{ github.event.client_payload.project_name }}" \
+            ${{ env.icon_args }} \
+            --multi-arch
+
+      # --- PRO BUILD (TAURI) ---
+      - name: Setup Tauri Build Environment
+        if: github.event.client_payload.build_mode == 'pro'
+        run: |
+          npm install -g @tauri-apps/cli
+          cd tauri-template
+          npm install
+          
+      - name: Inject Dynamic Tauri Configurations
+        if: github.event.client_payload.build_mode == 'pro'
+        run: |
+          cd tauri-template/src-tauri
+          # Use jq to update tauri.conf.json dynamically
+          jq --arg name "${{ github.event.client_payload.project_name }}" \
+             --arg url "${{ github.event.client_payload.live_url }}" \
+             '.package.productName = $name | .tauri.window[0].title = $name | .build.devPath = $url | .build.distDir = $url' \
+             tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
+          
+          # Handle icon if provided
+          if [ -f "../../app-icon.icns" ]; then
+            mkdir -p icons
+            cp ../../app-icon.icns icons/icon.icns
+            # Generate other sizes using sips if needed, but icns is main for macOS
+          fi
+
+      - name: Build Mac App with Tauri
+        if: github.event.client_payload.build_mode == 'pro'
+        run: |
+          cd tauri-template
+          npm run tauri build -- --target universal-apple-darwin
+
+      # --- COMMON UPLOAD ---
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          # The resulting DMG could be in different places depending on build mode
+          if [ "${{ github.event.client_payload.build_mode }}" == "pro" ]; then
+             DMG_FILE=$(find tauri-template/src-tauri/target -name "*.dmg" | head -n 1)
+          else
+             DMG_FILE=$(find . -maxdepth 1 -name "*.dmg" | head -n 1)
+          fi
+          
+          if [ -z "$DMG_FILE" ]; then
+            echo "Error: DMG file not found!"
+            exit 1
+          fi
+          echo "Found DMG: $DMG_FILE"
+          
+          # Upload DMG to R2 Bucket
+          R2_ENDPOINT="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+          aws s3 cp "$DMG_FILE" "s3://${{ secrets.R2_BUCKET_NAME }}/${{ github.event.client_payload.build_id }}.dmg" \
+            --endpoint-url $R2_ENDPOINT
+            
+          DOWNLOAD_URL="${{ secrets.R2_PUBLIC_URL }}/${{ github.event.client_payload.build_id }}.dmg"
+          echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+
+      - name: Notify Supabase (Success)
+        run: |
+          curl -s -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/update-mac-build \
+            -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"ready\", \"dmg_url\": \"${{ env.DOWNLOAD_URL }}\"}"
+
+      - name: Notify Supabase (Error)
+        if: failure()
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          error_payload=$(jq -n \
+            --arg id "${{ github.event.client_payload.build_id }}" \
+            --arg status "error" \
+            --arg logs "Build failed. View Action logs at $RUN_URL" \
+            '{build_id: $id, status: $status, logs: $logs}')
+            
+          curl -s -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/update-mac-build \
+            -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d "$error_payload"

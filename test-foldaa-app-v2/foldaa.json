@@ -1,0 +1,6 @@
+{
+  "name": "test-foldaa-app-v2",
+  "framework": "nextjs",
+  "outputDir": "out",
+  "buildCommand": "npm run build"
+}

@@ -1,0 +1,125 @@
+{
+  "version": "4",
+  "redirects": {
+    "https://esm.sh/@supabase/supabase-js@2": "https://esm.sh/@supabase/supabase-js@2.98.0",
+    "https://esm.sh/iceberg-js@^0.8.1?target=denonext": "https://esm.sh/iceberg-js@0.8.1?target=denonext"
+  },
+  "remote": {
+    "https://deno.land/x/deno_dom@v0.1.45/build/deno-wasm/deno-wasm.js": "d6841a06342eb6a2798ef28de79ad69c0f2fa349fa04d3ca45e5fcfbf50a9340",
+    "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts": "a33d160421bbb6e3104285ea5ebf33352b7ad50d82ea8765e3cf65f972b25119",
+    "https://deno.land/x/deno_dom@v0.1.45/src/api.ts": "0ff5790f0a3eeecb4e00b7d8fbfa319b165962cf6d0182a65ba90f158d74f7d7",
+    "https://deno.land/x/deno_dom@v0.1.45/src/constructor-lock.ts": "59714df7e0571ec7bd338903b1f396202771a6d4d7f55a452936bd0de9deb186",
+    "https://deno.land/x/deno_dom@v0.1.45/src/deserialize.ts": "1cf4096678d8afed8ed28dbad690504c4d2c28149ba768b26eacd1416873425b",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/document-fragment.ts": "1c7352a3c816587ed7fad574b42636198f680f17abc3836fcfe7799b31e7718f",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/document.ts": "a182727dd9179e5712e31be66f4f72b766a5b714c765a75950babe6dd756b4ee",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/dom-parser.ts": "609097b426f8c2358f3e5d2bca55ed026cf26cdf86562e94130dfdb0f2537f92",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/element.ts": "d5371cd83ff2128353c1975465c368ef83d7441568626b386557deba51315111",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/elements/html-template-element.ts": "740b97a5378c9a14cccf3429299846eda240b613013e2d2d7f20b393897453c2",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/html-collection.ts": "829a965f419f8286d5f43a12e27886d10836d519ca2d5e74cb3f2e1d35f35746",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/node-list.ts": "9008303fe236e40e74f9f93e398bd173d2e9b09065932a0153dd0142c759397b",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/node.ts": "3069e6fc93ac4111a136ed68199d76673339842b9751610ba06f111ba7dc10a7",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/custom-api.ts": "852696bd58e534bc41bd3be9e2250b60b67cd95fd28ed16b1deff1d548531a71",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/nwsapi-types.ts": "c43b36c36acc5d32caabaa54fda8c9d239b2b0fcbce9a28efb93c84aa1021698",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/nwsapi.js": "985d7d8fc1eabbb88946b47a1c44c1b2d4aa79ff23c21424219f1528fa27a2ff",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/selectors.ts": "83eab57be2290fb48e3130533448c93c6c61239f2a2f3b85f1917f80ca0fdc75",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/sizzle-types.ts": "78149e2502409989ce861ed636b813b059e16bc267bb543e7c2b26ef43e4798b",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/selectors/sizzle.js": "c3aed60c1045a106d8e546ac2f85cc82e65f62d9af2f8f515210b9212286682a",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/utils-types.ts": "96db30e3e4a75b194201bb9fa30988215da7f91b380fca6a5143e51ece2a8436",
+    "https://deno.land/x/deno_dom@v0.1.45/src/dom/utils.ts": "4c6206516fb8f61f37a209c829e812c4f5a183e46d082934dd14c91bde939263",
+    "https://deno.land/x/deno_dom@v0.1.45/src/parser.ts": "e06b2300d693e6ae7564e53dfa5c9a9e97fdb8c044c39c52c8b93b5d60860be3",
+    "https://esm.sh/@supabase/auth-js@2.98.0/denonext/auth-js.mjs": "1f94c714fe31a7e859825f50bd5a4971458ca69a6477a543665b7d4d06dfe0b9",
+    "https://esm.sh/@supabase/functions-js@2.98.0/denonext/functions-js.mjs": "65f1bc17c5af85234d9bfbc0f8a14c452b0d516d62dd23872662ec08adf91998",
+    "https://esm.sh/@supabase/postgrest-js@2.98.0/denonext/postgrest-js.mjs": "188a13abc25b0f5890de4bd3c3f2211e287091cc0434cea290ee1c7d06827e4a",
+    "https://esm.sh/@supabase/realtime-js@2.98.0/denonext/realtime-js.mjs": "c7490d09c983cfccf2f72c60bf8e6f45b9274650c27d3723b4a1c6386df201ce",
+    "https://esm.sh/@supabase/storage-js@2.98.0/denonext/storage-js.mjs": "8d3b1e4c8777511f1d2c542130203d6a3a627d93461846f727a912ca79ecfdac",
+    "https://esm.sh/@supabase/supabase-js@2.98.0": "7c91584aa8d7c3b272be04122a907e00a7028a20d0eaf5e40b2eb1eed10f06b3",
+    "https://esm.sh/@supabase/supabase-js@2.98.0/denonext/supabase-js.mjs": "50d9cef74b1e27d0536344733e386089230db8c89d2a2918a1c882a1b3262b2e",
+    "https://esm.sh/iceberg-js@0.8.1/denonext/iceberg-js.mjs": "d839d81a2e3966500ca2cdd0c1cb458e9608bacfc91f7bb67a69b2e878dcdb4f",
+    "https://esm.sh/iceberg-js@0.8.1?target=denonext": "58c849d7fe2bf4eca4a84eb501e83c161a7d8c34ca1bec15a962b3bec3062633",
+    "https://esm.sh/tslib@2.8.1/denonext/tslib.mjs": "c38da5dd6da6281964435002ce204cd586634fe3bdfb24a0ee116f48cf3292e9"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:tsx@^4.21.0"
+      ]
+    },
+    "members": {
+      "apps/terminal-ui": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@foldaa/api-client@1",
+            "npm:@foldaa/core@1",
+            "npm:@phosphor-icons/react@^2.1.10",
+            "npm:@supabase/auth-helpers-nextjs@0.15",
+            "npm:@supabase/auth-helpers-react@0.15",
+            "npm:@supabase/supabase-js@^2.99.0",
+            "npm:@tailwindcss/postcss@4",
+            "npm:@types/node@20",
+            "npm:@types/react-dom@19",
+            "npm:@types/react@19",
+            "npm:adm-zip@~0.5.16",
+            "npm:clsx@^2.1.1",
+            "npm:date-fns@^4.1.0",
+            "npm:eslint-config-next@16.1.6",
+            "npm:eslint@9",
+            "npm:framer-motion@^12.35.2",
+            "npm:lucide-react@0.577",
+            "npm:next@16.1.6",
+            "npm:qrcode.react@^4.2.0",
+            "npm:qrcode@^1.5.3",
+            "npm:react-dom@19.2.3",
+            "npm:react@19.2.3",
+            "npm:string-argv@~0.3.2",
+            "npm:tailwind-merge@^3.5.0",
+            "npm:tailwindcss@4",
+            "npm:typescript@5",
+            "npm:xterm-addon-fit@0.8",
+            "npm:xterm-addon-search@0.13",
+            "npm:xterm-addon-unicode11@0.6",
+            "npm:xterm-addon-web-links@0.9",
+            "npm:xterm@^5.3.0",
+            "npm:yargs-parser@^21.1.1"
+          ]
+        }
+      },
+      "packages/api-client": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@supabase/supabase-js@^2.99.2",
+            "npm:axios@^1.6.0",
+            "npm:typescript@5"
+          ]
+        }
+      },
+      "packages/cli": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@clack/prompts@^1.1.0",
+            "npm:@foldaa/api-client@*",
+            "npm:@types/adm-zip@~0.5.8",
+            "npm:@types/inquirer@^9.0.7",
+            "npm:@types/node@^20.10.0",
+            "npm:adm-zip@~0.5.16",
+            "npm:chalk@^5.3.0",
+            "npm:commander@^11.1.0",
+            "npm:inquirer@^9.2.12",
+            "npm:open@11",
+            "npm:ora@^7.0.1",
+            "npm:typescript@^5.3.2"
+          ]
+        }
+      },
+      "packages/metadata-extractor": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@types/node@20",
+            "npm:axios@^1.6.0",
+            "npm:cheerio@^1.0.0-rc.12",
+            "npm:typescript@5"
+          ]
+        }
+      }
+    }
+  }
+}

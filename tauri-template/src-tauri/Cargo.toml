@@ -1,0 +1,22 @@
+[package]
+name = "foldaa-pro-app"
+version = "0.1.0"
+description = "Foldaa Pro Build"
+authors = ["Foldaa"]
+license = "MIT"
+repository = "https://github.com/foldaa/foldaa"
+edition = "2021"
+rust-version = "1.60"
+
+[build-dependencies]
+tauri-build = "1.5"
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5", features = ["shell-open", "system-tray"] }
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# dose not contain the additional-debug-features
+custom-protocol = ["tauri/custom-protocol"]

@@ -1,0 +1,17 @@
+{
+  "name": "@foldaa/api-client",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.2",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

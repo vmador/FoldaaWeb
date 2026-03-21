@@ -1,0 +1,1 @@
+src/app/u/[username]/ProfileClient.tsx(12,11): error TS2339: Property 'user' does not exist on type 'UserContextType'.

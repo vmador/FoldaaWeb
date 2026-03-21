@@ -1,0 +1,31 @@
+{
+  "name": "@foldaa/cli",
+  "version": "1.0.0",
+  "description": "Foldaa Command Line Interface",
+  "main": "dist/index.js",
+  "bin": {
+    "foldaa": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "@foldaa/api-client": "*",
+    "adm-zip": "^0.5.16",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "open": "^11.0.0",
+    "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.8",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "type": "module"
+}
