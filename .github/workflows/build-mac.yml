@@ -70,13 +70,20 @@ jobs:
           
       - name: Inject Dynamic Tauri Configurations
         if: github.event.client_payload.build_mode == 'pro'
+        env:
+          USER_CONFIG: ${{ toJSON(github.event.client_payload.mac_config) }}
         run: |
           cd tauri-template/src-tauri
+          # Handle potential null or empty config
+          CONF_JSON='{}'
+          if [ "$USER_CONFIG" != "null" ] && [ -n "$USER_CONFIG" ]; then
+            CONF_JSON="$USER_CONFIG"
+          fi
+
           # Use jq to update tauri.conf.json dynamically with custom mac_config
           jq --arg name "${{ github.event.client_payload.project_name }}" \
              --arg url "${{ github.event.client_payload.live_url }}" \
-             --argjson config '${{ secrets.DEFAULT_MAC_CONFIG || "{}" }}' \
-             --argjson user_config '${{ github.event.client_payload.mac_config || "{}" }}' \
+             --argjson user_config "$CONF_JSON" \
              '.package.productName = $name | 
               .tauri.window[0].title = $name | 
               .build.devPath = $url | 
