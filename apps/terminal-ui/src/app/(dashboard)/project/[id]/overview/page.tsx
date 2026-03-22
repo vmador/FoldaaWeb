@@ -1043,9 +1043,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
                     )}
-                        </div>
-                    )}
                 </div>
+            </div>
             )}
         </div>
     </div>
