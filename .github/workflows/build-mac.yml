@@ -146,15 +146,30 @@ jobs:
           npm run tauri build -- --target universal-apple-darwin
 
       # Ad-hoc sign the resulting app if possible for Monterey
-      - name: Ad-hoc Sign for Monterey Compatibility
+      - name: Ad-hoc Sign and Repackage DMG
         if: always()
         run: |
-          APP_DIR=$(find . -name "*.app" -type d | head -n 1)
-          if [ -n "$APP_DIR" ]; then
-            echo "Signing $APP_DIR for ad-hoc compatibility"
-            chmod -R +x "$APP_DIR/Contents/MacOS/"
-            codesign --force --deep --sign - "$APP_DIR"
+          # 1. Find the .app bundle
+          APP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: .app bundle not found!"
+            exit 1
           fi
+          echo "Found app at: $APP_PATH"
+          
+          # 2. Fix permissions and Sign
+          echo "Applying ad-hoc signature to $APP_PATH"
+          chmod -R +x "$APP_PATH/Contents/MacOS/"
+          codesign --force --deep --sign - "$APP_PATH"
+          
+          # 3. Create a fresh DMG manually
+          APP_NAME=$(basename "$APP_PATH" .app)
+          mkdir -p dmg_content
+          cp -R "$APP_PATH" dmg_content/
+          
+          # Create DMG using hdiutil
+          hdiutil create -volname "$APP_NAME" -srcfolder dmg_content -ov -format UDZO "${{ github.event.client_payload.build_id }}.dmg"
+          echo "FINAL_DMG=${{ github.event.client_payload.build_id }}.dmg" >> $GITHUB_ENV
 
       # --- COMMON UPLOAD ---
       - name: Upload to Cloudflare R2
@@ -163,22 +178,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
         run: |
-          # The resulting DMG could be in different places depending on build mode
-          if [ "${{ github.event.client_payload.build_mode }}" == "pro" ]; then
-             DMG_FILE=$(find tauri-template/src-tauri/target -name "*.dmg" | head -n 1)
-          else
-             DMG_FILE=$(find . -maxdepth 1 -name "*.dmg" | head -n 1)
-          fi
-          
-          if [ -z "$DMG_FILE" ]; then
-            echo "Error: DMG file not found!"
+          if [ -z "${{ env.FINAL_DMG }}" ]; then
+            echo "Error: Final DMG not found!"
             exit 1
           fi
-          echo "Found DMG: $DMG_FILE"
           
           # Upload DMG to R2 Bucket
           R2_ENDPOINT="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          aws s3 cp "$DMG_FILE" "s3://${{ secrets.R2_BUCKET_NAME }}/${{ github.event.client_payload.build_id }}.dmg" \
+          aws s3 cp "${{ env.FINAL_DMG }}" "s3://${{ secrets.R2_BUCKET_NAME }}/${{ github.event.client_payload.build_id }}.dmg" \
             --endpoint-url $R2_ENDPOINT
             
           DOWNLOAD_URL="${{ secrets.R2_PUBLIC_URL }}/${{ github.event.client_payload.build_id }}.dmg"
