@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-12
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.15"
     steps:
@@ -78,6 +78,7 @@ jobs:
       - name: Build Mac App with Pake
         if: github.event.client_payload.build_mode == 'fast'
         run: |
+          echo "Building on $(uname -m)"
           npx pake-cli ${{ env.LIVE_URL }} \
             --name "${{ env.PROJECT_NAME }}" \
             ${{ env.icon_args }}
