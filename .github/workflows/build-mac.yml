@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-latest
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.15"
     steps:
@@ -72,16 +72,17 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-          targets: x86_64-apple-darwin
+          targets: x86_64-apple-darwin,aarch64-apple-darwin
 
       # --- FAST BUILD (PAKE) ---
       - name: Build Mac App with Pake
         if: github.event.client_payload.build_mode == 'fast'
         run: |
-          echo "Building on $(uname -m)"
+          echo "Building Universal binary with Pake..."
           npx pake-cli ${{ env.LIVE_URL }} \
             --name "${{ env.PROJECT_NAME }}" \
-            ${{ env.icon_args }}
+            ${{ env.icon_args }} \
+            --multi-arch
 
       # --- PRO BUILD (TAURI) ---
       - name: Setup Tauri Build Environment
@@ -138,14 +139,11 @@ jobs:
             jq '.tauri.bundle.icon = ["icons/icon.png"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           fi
 
-      - name: Build Mac App with Tauri
+      - name: Build Mac App with Tauri (Universal)
         if: github.event.client_payload.build_mode == 'pro'
         run: |
           cd tauri-template
-          # Note: Tauri build generates DMG. We'll try to sign BEFORE it packs if possible, but Tauri v1 packs automatically.
-          # We'll rely on universal build and then ad-hoc sign if needed, but signing inside the DMG is hard.
-          # We'll use --nobundle if we wanted to sign manually, but we want the DMG.
-          npm run tauri build -- --target x86_64-apple-darwin
+          npm run tauri build -- --target universal-apple-darwin
 
       # Ad-hoc sign the resulting app if possible for Monterey
       - name: Ad-hoc Sign for Monterey Compatibility
