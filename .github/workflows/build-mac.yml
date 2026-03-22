@@ -163,7 +163,10 @@ jobs:
           APP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" -not -path "*/Cargo/*" | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
-            echo "::error::No .app bundle found!"
+            echo "::error::No .app bundle found! Doing diagnostic file listing:"
+            find . -type d \( -name node_modules -o -name .git -o -name target -o -name Cargo \) -prune -o -print
+            # Check for any dmgs
+            find . -name "*.dmg" -print
             exit 1
           fi
           echo "Found app at: $APP_PATH"
