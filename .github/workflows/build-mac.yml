@@ -145,28 +145,24 @@ jobs:
           cd tauri-template
           npm run tauri build -- --target universal-apple-darwin
 
-      # Ad-hoc sign the resulting app if possible for Monterey
-      - name: Ad-hoc Sign and Repackage DMG
+      # Fix permissions and repackage DMG (Unsigned for better Monterey compatibility)
+      - name: Repackage DMG for Monterey
         run: |
           set -x
           echo "Current directory: $(pwd)"
-          ls -R . | grep ".app" || true
           
-          # 1. Find the .app bundle (try multiple plausible locations)
+          # 1. Find the .app bundle
           APP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" -not -path "*/Cargo/*" | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
-            echo "::error::No .app bundle found in the entire workspace after build!"
-            ls -R .
+            echo "::error::No .app bundle found!"
             exit 1
           fi
           echo "Found app at: $APP_PATH"
           
-          # 2. Fix permissions and Sign
-          echo "Applying ad-hoc signature to $APP_PATH"
+          # 2. Fix permissions (Executable bit)
+          echo "Setting executable permissions on $APP_PATH"
           chmod -R 755 "$APP_PATH"
-          find "$APP_PATH" -type f -perm +111 -exec codesign --force --deep --sign - {} \;
-          codesign --force --deep --sign - "$APP_PATH"
           
           # 3. Create a fresh DMG manually
           APP_NAME=$(basename "$APP_PATH" .app)
