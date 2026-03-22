@@ -673,10 +673,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     />
                 )}
 
-                <div className={clsx(
-                    "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden",
-                    (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-fuchsia-500/30 bg-fuchsia-500/[0.02]"
-                )}>
+                {(macBuild?.status !== 'building' && macBuild?.status !== 'pending') && (
+                    <div className={clsx(
+                        "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden",
+                        (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-fuchsia-500/30 bg-fuchsia-500/[0.02]"
+                    )}>
                     {/* Animated Progress Bar */}
                     {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
                         <div className="absolute bottom-0 left-0 h-[1.5px] bg-fuchsia-500 animate-[progress_3s_infinite_ease-in-out] shadow-[0_0_10px_#d946ef]" style={{ width: '40%' }} />
@@ -1042,8 +1043,10 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
                     )}
+                        </div>
+                    )}
                 </div>
-            </div>
+            )}
         </div>
     </div>
 

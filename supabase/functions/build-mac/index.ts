@@ -52,6 +52,7 @@ Deno.serve(async (req: Request) => {
       .from("mac_builds")
       .insert({
         project_id,
+        user_id: user.id,
         status: "pending",
         build_mode,
         build_config: {
