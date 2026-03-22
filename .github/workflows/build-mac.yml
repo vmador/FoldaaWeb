@@ -138,6 +138,14 @@ jobs:
             echo "Using default app icon from repository"
             jq '.tauri.bundle.icon = ["icons/icon.png"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
           fi
+          
+          echo "DUMPING MODIFIED tauri.conf.json:"
+          cat tauri.conf.json
+          
+          # Also update Cargo.toml to ensure binary name matches
+          sed -i '' "s|^name = \".*\"|name = \"$PROJECT_NAME\"|g" Cargo.toml
+          echo "DUMPING Cargo.toml:"
+          head -n 10 Cargo.toml
 
       - name: Build Mac App with Tauri (Universal)
         if: github.event.client_payload.build_mode == 'pro'
@@ -168,6 +176,10 @@ jobs:
           APP_NAME=$(basename "$APP_PATH" .app)
           mkdir -p dmg_repack
           cp -R "$APP_PATH" dmg_repack/
+          
+          # CRITICAL: Clean up ANY existing DMGs to avoid "Resource busy"
+          find . -maxdepth 1 -name "*.dmg" -delete
+          sync && sleep 2
           
           # Create DMG using hdiutil
           DMG_NAME="${{ github.event.client_payload.build_id }}.dmg"
