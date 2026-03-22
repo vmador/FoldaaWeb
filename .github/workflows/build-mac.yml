@@ -147,29 +147,36 @@ jobs:
 
       # Ad-hoc sign the resulting app if possible for Monterey
       - name: Ad-hoc Sign and Repackage DMG
-        if: always()
         run: |
-          # 1. Find the .app bundle
-          APP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" | head -n 1)
+          set -x
+          echo "Current directory: $(pwd)"
+          ls -R . | grep ".app" || true
+          
+          # 1. Find the .app bundle (try multiple plausible locations)
+          APP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" -not -path "*/Cargo/*" | head -n 1)
+          
           if [ -z "$APP_PATH" ]; then
-            echo "Error: .app bundle not found!"
+            echo "::error::No .app bundle found in the entire workspace after build!"
+            ls -R .
             exit 1
           fi
           echo "Found app at: $APP_PATH"
           
           # 2. Fix permissions and Sign
           echo "Applying ad-hoc signature to $APP_PATH"
-          chmod -R +x "$APP_PATH/Contents/MacOS/"
+          chmod -R 755 "$APP_PATH"
+          find "$APP_PATH" -type f -perm +111 -exec codesign --force --deep --sign - {} \;
           codesign --force --deep --sign - "$APP_PATH"
           
           # 3. Create a fresh DMG manually
           APP_NAME=$(basename "$APP_PATH" .app)
-          mkdir -p dmg_content
-          cp -R "$APP_PATH" dmg_content/
+          mkdir -p dmg_repack
+          cp -R "$APP_PATH" dmg_repack/
           
           # Create DMG using hdiutil
-          hdiutil create -volname "$APP_NAME" -srcfolder dmg_content -ov -format UDZO "${{ github.event.client_payload.build_id }}.dmg"
-          echo "FINAL_DMG=${{ github.event.client_payload.build_id }}.dmg" >> $GITHUB_ENV
+          DMG_NAME="${{ github.event.client_payload.build_id }}.dmg"
+          hdiutil create -volname "$APP_NAME" -srcfolder dmg_repack -ov -format UDZO "$DMG_NAME"
+          echo "FINAL_DMG=$DMG_NAME" >> $GITHUB_ENV
 
       # --- COMMON UPLOAD ---
       - name: Upload to Cloudflare R2
