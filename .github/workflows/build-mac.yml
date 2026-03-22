@@ -186,10 +186,13 @@ jobs:
 
       - name: Notify Supabase (Success)
         run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          LOG_MSG="Build successful using ${{ github.event.client_payload.build_mode }} mode on $(uname -m). Universal flags applied. View details at $RUN_URL"
+          
           curl -s -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/update-mac-build \
             -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' \
             -H 'Content-Type: application/json' \
-            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"ready\", \"dmg_url\": \"${{ env.DOWNLOAD_URL }}\"}"
+            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"ready\", \"dmg_url\": \"${{ env.DOWNLOAD_URL }}\", \"logs\": \"$LOG_MSG\"}"
 
       - name: Notify Supabase (Error)
         if: failure()
