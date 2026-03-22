@@ -155,6 +155,7 @@ jobs:
 
       # Fix permissions and repackage DMG (Unsigned for better Monterey compatibility)
       - name: Repackage DMG for Monterey
+        if: github.event.client_payload.build_mode == 'pro'
         run: |
           set -x
           echo "Current directory: $(pwd)"
@@ -188,6 +189,17 @@ jobs:
           DMG_NAME="${{ github.event.client_payload.build_id }}.dmg"
           hdiutil create -volname "$APP_NAME" -srcfolder dmg_repack -ov -format UDZO "$DMG_NAME"
           echo "FINAL_DMG=$DMG_NAME" >> $GITHUB_ENV
+
+      - name: Prepare Fast Build DMG
+        if: github.event.client_payload.build_mode == 'fast'
+        run: |
+          # Pake-cli generates the DMG directly
+          DMG_PATH=$(find . -maxdepth 1 -name "*.dmg" | head -n 1)
+          if [ -z "$DMG_PATH" ]; then
+            echo "::error::No .dmg found from Pake build!"
+            exit 1
+          fi
+          echo "FINAL_DMG=$DMG_PATH" >> $GITHUB_ENV
 
       # --- COMMON UPLOAD ---
       - name: Upload to Cloudflare R2
