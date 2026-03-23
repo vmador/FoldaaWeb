@@ -117,12 +117,12 @@ jobs:
               .build.distDir = "../dist" |
               .tauri.windows[0].width = ($user_config.window.width // 1200) |
               .tauri.windows[0].height = ($user_config.window.height // 800) |
-              .tauri.windows[0].resizable = ($user_config.behavior.resizable // true) |
-              .tauri.windows[0].fullscreen = ($user_config.window.fullscreen // false) |
-              .tauri.windows[0].decorations = ($user_config.window.frameless | not // true) |
-              .tauri.windows[0].transparent = ($user_config.window.transparent // true) |
-              .tauri.windows[0].alwaysOnTop = ($user_config.behavior.always_on_top // false) |
-              .tauri.windows[0].titleBarStyle = (if $user_config.toolbar.style == "Hidden" then "Overlay" else ($user_config.toolbar.style // "Overlay") end)' \
+              .tauri.windows[0].resizable = (if $user_config.behavior.resizable != null then $user_config.behavior.resizable else true end) |
+              .tauri.windows[0].fullscreen = (if $user_config.window.fullscreen != null then $user_config.window.fullscreen else false end) |
+              .tauri.windows[0].decorations = (if $user_config.window.frameless == true or $user_config.toolbar.style == "Hidden" then false else true end) |
+              .tauri.windows[0].transparent = (if $user_config.window.transparent != null then $user_config.window.transparent else true end) |
+              .tauri.windows[0].alwaysOnTop = (if $user_config.behavior.always_on_top != null then $user_config.behavior.always_on_top else false end) |
+              .tauri.windows[0].titleBarStyle = (if $user_config.toolbar.style == "Hidden" then "Transparent" else ($user_config.toolbar.style // "Overlay") end)' \
              tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
 
           # Inject the actual URL into the dummy index.html for production redirect

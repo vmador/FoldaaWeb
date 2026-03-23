@@ -4,7 +4,7 @@ import { useProjects } from '@/lib/hooks/useProjects';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { formatDistanceToNow, format } from 'date-fns';
-import { Loader2, Check, Globe, Activity, ExternalLink, ChevronRight, Monitor, Download, AlertCircle } from 'lucide-react';
+import { Loader2, Check, Globe, Activity, ExternalLink, ChevronRight, Monitor, Download, AlertCircle, RefreshCw } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import clsx from 'clsx';
 import { useToast } from '@/context/ToastContext';
@@ -89,6 +89,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
     const [loadingMacBuild, setLoadingMacBuild] = useState(true);
     const [hasExploded, setHasExploded] = useState(false);
     const [selectedBuildMode, setSelectedBuildMode] = useState<'fast' | 'pro'>('fast');
+    const [showVortex, setShowVortex] = useState(false);
     const lastStatus = useRef<string | undefined>(undefined);
     
     // Pro Build Settings State
@@ -147,11 +148,10 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             audio.play().catch(e => console.log("Audio play failed:", e));
         }
         lastStatus.current = macBuild?.status;
-    }, [macBuild?.status]);
-    
-    // Reset explosion state when a new build starts
-    useEffect(() => {
-        if (macBuild?.status === 'pending' || macBuild?.status === 'building') {
+
+        // Manage Vortex lifecycle: show if building or pending
+        if (macBuild?.status === 'building' || macBuild?.status === 'pending') {
+            setShowVortex(true);
             setHasExploded(false);
         }
     }, [macBuild?.status]);
@@ -224,30 +224,49 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
         if (!projectId) return;
         
         const fetchBuild = async () => {
-            setLoadingMacBuild(true);
+            if (!projectId) return;
             const { data } = await supabase
                 .from('mac_builds')
                 .select('*')
                 .eq('project_id', projectId)
                 .order('created_at', { ascending: false })
                 .limit(1)
-                .single();
+                .maybeSingle(); // V31: Use maybeSingle to avoid errors on empty
             if (data) setMacBuild(data);
             setLoadingMacBuild(false);
         };
         fetchBuild();
 
         const subscription = supabase
-            .channel('mac_builds_changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'mac_builds', filter: `project_id=eq.${projectId}` }, (payload) => {
-                setMacBuild(payload.new);
+            .channel(`mac_builds_${projectId}`)
+            .on('postgres_changes', { 
+                event: '*', 
+                schema: 'public', 
+                table: 'mac_builds', 
+                filter: `project_id=eq.${projectId}` 
+            }, (payload) => {
+                console.log("Terminal UI: Received mac_build update:", payload.eventType);
+                if (payload.eventType === 'DELETE') {
+                    setMacBuild(null);
+                } else {
+                    setMacBuild(payload.new);
+                }
             })
             .subscribe();
 
+        // Safety Polling Fallback (Runs every 10s only if building)
+        const pollingInterval = setInterval(() => {
+            if (macBuild?.status === 'building' || macBuild?.status === 'pending') {
+                console.log("Terminal UI: Running safety polling for active build...");
+                fetchBuild();
+            }
+        }, 12000);
+
         return () => {
             supabase.removeChannel(subscription);
+            clearInterval(pollingInterval);
         };
-    }, [projectId]);
+    }, [projectId, macBuild?.status === 'building' || macBuild?.status === 'pending']);
 
     useEffect(() => {
         if (project?.banner_config?.deployment_pending) {
@@ -538,6 +557,14 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         <span>Published</span>
                         <Check className="w-3.5 h-3.5 text-green-400" />
                     </div>
+                    <button 
+                        disabled={actionLoading === 'redeploy'}
+                        onClick={handleRedeploy}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-fuchsia-500/10 border border-fuchsia-500/20 rounded-[10px] text-fuchsia-400 font-bold text-xs hover:bg-fuchsia-500/20 transition-all disabled:opacity-50"
+                    >
+                        {actionLoading === 'redeploy' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                        <span>Redeploy</span>
+                    </button>
                 </div>
             </div>
 
@@ -638,6 +665,14 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     <div className="flex items-center gap-4">
                         <span className="text-[#333] text-[10px] font-mono">{formatDistanceToNow(new Date(project.updated_at || project.created_at), { addSuffix: true })}</span>
                         <div className="flex items-center gap-2">
+                            <button 
+                                disabled={actionLoading === 'redeploy'}
+                                onClick={handleRedeploy}
+                                className="px-3 py-1.5 rounded-[8px] border border-fuchsia-500/10 text-fuchsia-500/60 text-[11px] font-bold hover:bg-fuchsia-500/5 hover:text-fuchsia-400 transition-colors flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {actionLoading === 'redeploy' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                <span>Redeploy</span>
+                            </button>
                             <button className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors">Edit</button>
                             <a 
                                 href={project.worker_url || `https://${project.subdomain}.foldaa.com`} 
@@ -664,16 +699,16 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 
         <div className="flex flex-col gap-4">
                 {/* ASCII Build Animation (Vortex) */}
-                {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
+                {showVortex && (
                     <AsciiVortexAnimation 
-                        status={macBuild.status} 
+                        status={macBuild?.status} 
                         onExploded={() => {
-                            // Optionally refresh after explosion if needed
+                            setShowVortex(false);
                         }}
                     />
                 )}
 
-                {(macBuild?.status !== 'building' && macBuild?.status !== 'pending') && (
+                {!showVortex && (
                     <div className={clsx(
                         "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden",
                         (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-fuchsia-500/30 bg-fuchsia-500/[0.02]"

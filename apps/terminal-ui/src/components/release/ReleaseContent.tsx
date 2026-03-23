@@ -8,7 +8,9 @@ import {
     Edit2,
     X,
     ExternalLink,
-    Smartphone
+    Smartphone,
+    AlertCircle,
+    Check
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import clsx from "clsx"
@@ -18,27 +20,211 @@ import { AppleIcon } from "./AppleIcon"
 import CertificateUploader from "./CertificateUploader"
 import AppStoreMetadataForm from "./AppStoreMetadataForm"
 
-// Placeholders for missing components
-const AppleConnect = () => (
-    <div className="p-6 border border-[#1C1C1E] rounded-[10px] bg-[#0A0A0B] text-center">
-        <p className="text-xs text-[#666]">Apple Developer Account Connection (Placeholder)</p>
-        <button className="mt-3 px-4 py-2 bg-white text-black text-xs font-bold rounded-[10px] hover:bg-white/90">
-            Connect Account
-        </button>
-    </div>
-)
+import AppleConnect from "./AppleConnect"
 
-const BuildConfigurator = ({ projectId, onBuildStarted }: { projectId: string, onBuildStarted: () => void }) => (
-    <div className="p-6 border border-[#1C1C1E] rounded-[10px] bg-[#0A0A0B] text-center">
-        <p className="text-xs text-[#666]">Build Configurator (Placeholder)</p>
-        <button 
-            onClick={onBuildStarted}
-            className="mt-3 px-4 py-2 bg-white text-black text-xs font-bold rounded-[10px] hover:bg-white/90"
-        >
-            Start iOS Build
-        </button>
-    </div>
-)
+const BuildHistory = ({ projectId }: { projectId: string }) => {
+    const [builds, setBuilds] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        loadBuilds()
+        
+        const channel = supabase
+            .channel(`ios_builds_${projectId}`)
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'ios_builds', filter: `project_id=eq.${projectId}` },
+                () => loadBuilds()
+            )
+            .subscribe()
+
+        return () => { supabase.removeChannel(channel) }
+    }, [projectId])
+
+    const loadBuilds = async () => {
+        const { data } = await supabase
+            .from("ios_builds")
+            .select("*")
+            .eq("project_id", projectId)
+            .order("created_at", { ascending: false })
+            .limit(10)
+        setBuilds(data || [])
+        setIsLoading(false)
+    }
+
+    if (isLoading) return <Loader2 className="w-5 h-5 animate-spin mx-auto py-10" />
+
+    if (builds.length === 0) return (
+        <div className="py-10 text-center border border-dashed border-[#1C1C1E] rounded-[10px]">
+            <p className="text-xs text-[#444]">No build history found</p>
+        </div>
+    )
+
+    return (
+        <div className="space-y-3">
+            {builds.map(build => (
+                <div key={build.id} className="bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className={clsx(
+                            "w-2 h-2 rounded-full",
+                            build.status === 'completed' ? "bg-green-500" :
+                            build.status === 'failed' ? "bg-red-500" : "bg-yellow-500 animate-pulse"
+                        )} />
+                        <div>
+                            <div className="text-xs font-bold text-white uppercase tracking-wider">
+                                {build.version} ({build.build_number})
+                            </div>
+                            <div className="text-[10px] text-[#444] font-mono">
+                                {new Date(build.created_at).toLocaleString()}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className="text-[10px] font-bold text-[#666] uppercase">{build.status}</span>
+                        {build.ipa_url && (
+                            <a href={build.ipa_url} target="_blank" className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+                                <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                        ) || build.error_message && (
+                            <div className="group relative">
+                                <AlertCircle className="w-3.5 h-3.5 text-red-400 cursor-help" />
+                                <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-[#1C1C1E] text-[10px] text-red-300 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-red-900/50">
+                                    {build.error_message}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+const BuildConfigurator = ({ projectId, onBuildStarted }: { projectId: string; onBuildStarted: () => void }) => {
+    const [certificates, setCertificates] = useState<any[]>([])
+    const [selectedCert, setSelectedCert] = useState("")
+    const [version, setVersion] = useState("1.0.0")
+    const [buildNumber, setBuildNumber] = useState("1")
+    const [isLoading, setIsLoading] = useState(true)
+    const [isBuilding, setIsBuilding] = useState(false)
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        loadCertificates()
+    }, [projectId])
+
+    const loadCertificates = async () => {
+        const { data } = await supabase
+            .from("ios_certificates")
+            .select("*")
+            .eq("project_id", projectId)
+            .eq("is_valid", true)
+        setCertificates(data || [])
+        if (data && data.length > 0) setSelectedCert(data[0].id)
+        setIsLoading(false)
+    }
+
+    const handleStartBuild = async () => {
+        if (!selectedCert) {
+            setError("Please select a certificate")
+            return
+        }
+        setIsBuilding(true)
+        setError("")
+        try {
+            const { data: { session } } = await supabase.auth.getSession()
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/build-ios`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session?.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        project_id: projectId,
+                        version,
+                        build_number: buildNumber,
+                        certificate_id: selectedCert,
+                    }),
+                }
+            )
+            const result = await response.json()
+            if (!result.success) throw new Error(result.error)
+            onBuildStarted()
+        } catch (err: any) {
+            setError(err.message)
+        } finally {
+            setIsBuilding(false)
+        }
+    }
+
+    if (isLoading) return <Loader2 className="w-5 h-5 animate-spin mx-auto py-10" />
+
+    return (
+        <div className="space-y-6 text-left">
+            {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-[10px] text-xs text-red-400 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    {error}
+                </div>
+            )}
+
+            <div className="space-y-4">
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Signing Certificate</label>
+                    <select
+                        value={selectedCert}
+                        onChange={(e) => setSelectedCert(e.target.value)}
+                        className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                    >
+                        {certificates.length === 0 && <option value="">No valid certificates found</option>}
+                        {certificates.map(cert => (
+                            <option key={cert.id} value={cert.id} className="bg-[#0A0A0B]">
+                                {cert.cert_name} ({cert.profile_bundle_id})
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Version</label>
+                        <input
+                            type="text"
+                            value={version}
+                            onChange={(e) => setVersion(e.target.value)}
+                            placeholder="1.0.0"
+                            className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                        />
+                    </div>
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Build Number</label>
+                        <input
+                            type="text"
+                            value={buildNumber}
+                            onChange={(e) => setBuildNumber(e.target.value)}
+                            placeholder="1"
+                            className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <button
+                onClick={handleStartBuild}
+                disabled={isBuilding || certificates.length === 0}
+                className={clsx(
+                    "w-full h-12 rounded-[10px] text-sm font-bold transition-all flex items-center justify-center gap-2",
+                    isBuilding || certificates.length === 0 ? "bg-[#1C1C1E] text-[#444]" : "bg-white text-black hover:bg-[#E0E0E0]"
+                )}
+            >
+                {isBuilding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
+                {isBuilding ? "Requesting Build..." : "Start iOS Build"}
+            </button>
+        </div>
+    )
+}
 
 interface ReleaseContentProps {
     project: any
@@ -215,7 +401,7 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                                 </span>
                                 <h4 className="text-xs font-bold text-white/80 uppercase tracking-widest">Apple Developer Account</h4>
                             </div>
-                            <AppleConnect />
+                            <AppleConnect onConnected={loadStatus} />
                         </div>
 
                         {/* Step 2: iOS Certificates */}
@@ -327,10 +513,16 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                         </div>
                         
                         <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                            <BuildConfigurator 
-                                projectId={projectId} 
-                                onBuildStarted={() => setShowAppStoreDrawer(false)} 
-                            />
+                            <div className="space-y-8">
+                                <BuildConfigurator 
+                                    projectId={projectId} 
+                                    onBuildStarted={() => setShowAppStoreDrawer(false)} 
+                                />
+                                <div className="pt-8 border-t border-[#1C1C1E]">
+                                    <h3 className="text-sm font-bold text-white mb-4">Build History</h3>
+                                    <BuildHistory projectId={projectId} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

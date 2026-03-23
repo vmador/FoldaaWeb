@@ -198,6 +198,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                         description: (listingData as any)?.description || metaData?.description || project?.app_description || project?.og_description || '',
                         privacy_policy_url: (listingData as any)?.privacy_policy_url || metaData?.privacy_choices_url || '',
                         icon_url: (listingData as any)?.icon_url || metaData?.icon_url || project?.icon_512_url || project?.icon_192_url || project?.apple_touch_icon_url || project?.favicon_url || null,
+                        logo_url: project?.logo_url || null,
                         cover_image_url: (listingData as any)?.cover_image_url || metaData?.cover_image_url || null,
                         asking_price: (listingData as any)?.asking_price || metaData?.asking_price || 0,
                         monthly_revenue: (listingData as any)?.monthly_revenue || metaData?.monthly_revenue || 0,
@@ -251,6 +252,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                         reason_for_selling: '',
                         included_in_sale: ['source_code'],
                         icon_url: project?.icon_512_url || project?.icon_192_url || project?.apple_touch_icon_url || project?.favicon_url || null,
+                        logo_url: project?.logo_url || null,
                         live_url: project?.worker_url || ''
                     });
                     setImagePreviews({
@@ -385,6 +387,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                     og_title: metadata.name,
                     og_description: metadata.subtitle,
                     app_description: metadata.description,
+                    logo_url: metadata.logo_url,
                     banner_config: {
                         ...(project.banner_config || {}),
                         deployment_pending: true
@@ -635,6 +638,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 name: prev.name || result.assets.metadata.title || project.name,
                 subtitle: prev.subtitle || result.assets.metadata.description?.slice(0, 80) || "",
                 description: prev.description || result.assets.metadata.description || "",
+                logo_url: prev.logo_url || result.assets.icons.logo || null,
             }));
 
             setImagePreviews({
