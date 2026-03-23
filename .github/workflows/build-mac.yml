@@ -79,9 +79,9 @@ jobs:
         if: github.event.client_payload.build_mode == 'fast'
         run: |
           echo "Building Universal binary with Pake..."
-          npx pake-cli ${{ env.LIVE_URL }} \
-            --name "${{ env.PROJECT_NAME }}" \
-            ${{ env.icon_args }} \
+          npx pake-cli $LIVE_URL \
+            --name "$PROJECT_NAME" \
+            $icon_args \
             --multi-arch
 
       # --- PRO BUILD (TAURI) ---
@@ -208,14 +208,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
         run: |
-          if [ -z "${{ env.FINAL_DMG }}" ]; then
+          if [ -z "$FINAL_DMG" ]; then
             echo "Error: Final DMG not found!"
             exit 1
           fi
           
           # Upload DMG to R2 Bucket
           R2_ENDPOINT="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          aws s3 cp "${{ env.FINAL_DMG }}" "s3://${{ secrets.R2_BUCKET_NAME }}/${{ github.event.client_payload.build_id }}.dmg" \
+          aws s3 cp "$FINAL_DMG" "s3://${{ secrets.R2_BUCKET_NAME }}/${{ github.event.client_payload.build_id }}.dmg" \
             --endpoint-url $R2_ENDPOINT \
             --content-type "application/x-apple-diskimage" \
             --content-disposition "attachment; filename=\"${{ github.event.client_payload.project_name }}.dmg\""
@@ -231,7 +231,7 @@ jobs:
           curl -s -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/update-mac-build \
             -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' \
             -H 'Content-Type: application/json' \
-            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"ready\", \"dmg_url\": \"${{ env.DOWNLOAD_URL }}\", \"logs\": \"$LOG_MSG\"}"
+            -d "{\"build_id\": \"${{ github.event.client_payload.build_id }}\", \"status\": \"ready\", \"dmg_url\": \"$DOWNLOAD_URL\", \"logs\": \"$LOG_MSG\"}"
 
       - name: Notify Supabase (Error)
         if: failure()
