@@ -95,13 +95,13 @@ const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any)
                 value={value}
                 onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-2 text-[#D8D8D8] outline-none font-mono text-xs h-28 resize-none focus:border-fuchsia-500/30 transition-colors placeholder:text-[#222]"
+                className="bg-black border border-[#2A2A2E] rounded px-3 py-2 text-[#D8D8D8] outline-none font-mono text-xs h-28 resize-none focus:border-white/20 transition-colors placeholder:text-[#222]"
             />
         ) : type === 'select' ? (
             <select
                 value={value}
                 onChange={e => onChange(e.target.value)}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-fuchsia-500/30 transition-colors"
+                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-white/20 transition-colors"
             >
                 {CATEGORIES.map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.emoji} {cat.label}</option>
@@ -113,7 +113,7 @@ const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any)
                 value={value}
                 onChange={e => onChange(type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value)}
                 placeholder={placeholder}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-fuchsia-500/30 transition-colors placeholder:text-[#222]"
+                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-white/20 transition-colors placeholder:text-[#222]"
             />
         )}
     </div>
@@ -306,7 +306,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('type', type);
-                formData.append('project_id', projectId); // Better organization in R2
+                formData.append('project_id', projectId); // Better grouping in R2
 
                 const { data, error } = await supabase.functions.invoke('upload-image', {
                     body: formData
@@ -678,7 +678,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     onClick={() => setPreviewMode(device.id as any)}
                                     className={clsx(
                                         "p-1.5 rounded transition-all",
-                                        previewMode === device.id ? "bg-fuchsia-500/10 text-fuchsia-400" : "text-[#444] hover:text-[#666]"
+                                        previewMode === device.id ? "bg-white/10 text-white" : "text-[#444] hover:text-[#666]"
                                     )}
                                 >
                                     <Icon size={14} />
@@ -690,7 +690,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                     <button
                         onClick={handleSaveMetadata}
                         disabled={saving}
-                        className="flex items-center gap-2 px-4 py-1.5 bg-[#111] hover:bg-[#1A1A1A] border border-[#333] hover:border-fuchsia-500/30 text-white rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-1.5 bg-[#111] hover:bg-[#1A1A1A] border border-[#333] hover:border-white/20 text-white rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
                     >
                         {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                         <span>Save and update</span>
@@ -712,36 +712,33 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     onClick={() => setMetadata({...metadata, is_public: !metadata.is_public})}
                                     className={clsx(
                                         "w-10 h-5 rounded-full relative transition-all duration-300",
-                                        metadata.is_public ? "bg-fuchsia-500 shadow-[0_0_10px_rgba(6,182,212,0.3)]" : "bg-[#1A1A1A]"
+                                        metadata.is_public ? "bg-white/20" : "bg-[#1A1A1A]"
                                     )}
                                 >
-                                    <div className={clsx(
-                                        "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform duration-300",
                                         metadata.is_public ? "translate-x-5" : "translate-x-0"
-                                    )} />
                                 </button>
                             </div>
 
                             {/* Automation */}
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-fuchsia-500/80 text-xs uppercase tracking-widest font-bold">Automation</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-fuchsia-500/10" />
+                                    <label className="text-white/60 text-xs uppercase tracking-widest font-bold">Automation</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.05]" />
                                 </div>
                                 
                                 {!isExtractingAssets ? (
                                     <button
                                         onClick={handleExtractAssets}
                                         disabled={saving || isExtractingAssets || !project?.worker_url}
-                                        className="w-full flex items-center justify-center gap-2 py-3 bg-fuchsia-500/5 hover:bg-fuchsia-500/10 border border-fuchsia-500/20 rounded-xl text-fuchsia-400 text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-30 group"
+                                        className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-30 group"
                                     >
                                         <RefreshCw size={14} className={clsx("transition-transform group-hover:rotate-180 duration-500")} />
                                         <span>Auto-Sync Details from Site</span>
                                     </button>
                                 ) : (
-                                    <div className="w-full flex items-center justify-center gap-3 py-3 bg-fuchsia-500/5 border border-fuchsia-500/10 rounded-xl">
-                                        <Loader2 size={16} className="animate-spin text-fuchsia-500" />
-                                        <span className="text-fuchsia-500/80 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
+                                    <div className="w-full flex items-center justify-center gap-3 py-3 bg-white/5 border border-white/10 rounded-xl">
+                                        <Loader2 size={16} className="animate-spin text-white" />
+                                        <span className="text-white/40 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
                                     </div>
                                 )}
                             </div>
@@ -931,7 +928,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                 className={clsx(
                                                     "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
                                                     selectedTechCategory === key 
-                                                        ? "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]" 
+                                                        ? "bg-white/10 border-white/20 text-white shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
                                                         : "bg-white/[0.02] border-white/5 text-[#444] hover:border-white/10"
                                                 )}
                                             >
@@ -982,11 +979,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4">
-                                    <div className="w-full h-48 rounded-2xl bg-black border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-3 group hover:border-fuchsia-500/20 transition-all cursor-pointer relative overflow-hidden">
+                                    <div className="w-full h-48 rounded-2xl bg-black border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-3 group hover:border-white/20 transition-all cursor-pointer relative overflow-hidden">
                                         <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Upload size={20} className="text-[#444] group-hover:text-fuchsia-500" />
+                                            <Upload size={20} className="text-[#444] group-hover:text-white" />
                                         </div>
-                                        <span className="text-[#444] text-xs uppercase tracking-widest font-bold group-hover:text-fuchsia-500/80">Drag or paste images here</span>
+                                        <span className="text-[#444] text-xs uppercase tracking-widest font-bold group-hover:text-white/60">Drag or paste images here</span>
                                         <input 
                                             type="file" 
                                             multiple 
@@ -1033,8 +1030,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Marketplace Status */}
                             <div className="flex flex-col gap-6 relative z-20">
                                 <div className="flex items-center gap-2">
-                                     <label className="text-fuchsia-500/80 text-xs uppercase tracking-widest font-bold">Marketplace Status</label>
-                                     <div className="h-[1px] flex-1 bg-fuchsia-500/10" />
+                                     <label className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Marketplace Status</label>
+                                     <div className="h-[1px] flex-1 bg-white/[0.05]" />
                                 </div>
                                 
                                 <div className="flex items-center justify-between px-5 py-4 bg-white/[0.02] border border-white/[0.05] rounded-xl transition-colors hover:bg-white/[0.04]">
@@ -1046,11 +1043,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         onClick={() => setMetadata({...metadata, is_for_sale: !metadata.is_for_sale})}
                                         className={clsx(
                                             "w-10 h-5 rounded-full relative transition-all duration-300",
-                                            metadata.is_for_sale ? "bg-fuchsia-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]" : "bg-[#1A1A1A]"
+                                            metadata.is_for_sale ? "bg-white/20" : "bg-[#1A1A1A]"
                                         )}
                                     >
                                         <div className={clsx(
-                                            "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform duration-300",
+                                            "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform duration-300 border border-white/10",
                                             metadata.is_for_sale ? "translate-x-5" : "translate-x-0"
                                         )} />
                                     </button>
@@ -1125,7 +1122,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                                 )}
                                                             >
                                                                 {opt.label}
-                                                                {isSelected && <Check size={14} className="text-fuchsia-500" />}
+                                                                {isSelected && <Check size={14} className="text-[#444]" />}
                                                             </button>
                                                         );
                                                     })}
@@ -1145,8 +1142,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                                 {!sellerAccount ? (
                                     <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-8 flex flex-col items-center text-center gap-6">
-                                        <div className="w-16 h-16 rounded-full bg-fuchsia-500/5 flex items-center justify-center border border-fuchsia-500/10">
-                                            <CreditCard size={32} className="text-fuchsia-500/40" />
+                                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                                            <CreditCard size={32} className="text-white/20" />
                                         </div>
                                         <div className="flex flex-col gap-2 max-w-[280px]">
                                             <h3 className="text-[#D8D8D8] text-sm font-bold">Connect your Store</h3>
@@ -1185,7 +1182,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                                         {/* Checkout Management */}
                                         {metadata.is_for_sale && (
-                                            <div className="p-5 bg-fuchsia-500/[0.02] border border-fuchsia-500/10 rounded-xl flex flex-col gap-4">
+                                            <div className="p-5 bg-white/[0.02] border border-white/[0.05] rounded-xl flex flex-col gap-4">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col">
                                                         <span className="text-[#D8D8D8] text-xs font-medium uppercase tracking-widest">Marketplace Checkout</span>
@@ -1222,7 +1219,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                             <button 
                                                                 onClick={handleUpdateCheckoutPrice}
                                                                 disabled={saving}
-                                                                className="w-full flex items-center justify-center gap-2 py-2 bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-fuchsia-500/20 transition-all disabled:opacity-50"
+                                                                className="w-full flex items-center justify-center gap-2 py-2 bg-white/5 text-white/60 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
                                                             >
                                                                 {saving ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                                                                 Sync Price (${metadata.asking_price})
@@ -1257,7 +1254,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     <div className="flex items-center gap-3">
                                         <h2 className="text-[#D8D8D8] text-lg font-bold tracking-tight leading-none truncate">{metadata.name || project?.name}</h2>
                                         {metadata.is_for_sale && (
-                                            <span className="px-1.5 py-0.5 bg-fuchsia-500/10 text-fuchsia-500 text-xs font-bold rounded border border-fuchsia-500/20 uppercase tracking-widest">
+                                            <span className="px-1.5 py-0.5 bg-white/10 text-white text-[10px] font-bold rounded border border-white/10 uppercase tracking-widest">
                                                 PRO
                                             </span>
                                         )}
@@ -1266,11 +1263,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         {metadata.subtitle || "Your application tagline goes here"}
                                     </p>
                                     <div className="flex items-center gap-3 mt-1">
-                                        <div className="w-6 h-6 rounded-full bg-fuchsia-500/10 flex items-center justify-center border border-fuchsia-500/20 overflow-hidden">
+                                        <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center border border-white/10 overflow-hidden">
                                             {publisher?.avatar_url || publisher?.profile_picture_url || publisher?.avatar_path ? (
                                                 <img src={publisher.avatar_url || publisher.profile_picture_url || publisher.avatar_path} alt={publisher.username} className="w-full h-full object-cover" />
                                             ) : (
-                                                <Users size={12} className="text-fuchsia-500" />
+                                                <Users size={12} className="text-white/60" />
                                             )}
                                         </div>
                                         <span className="text-xs text-[#D8D8D8] font-medium">{publisher?.username || publisher?.first_name || 'Anonymous Developer'}</span>
@@ -1328,7 +1325,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                 )}
                                 {metadata.is_for_sale && (
                                     <button className={clsx(
-                                        "flex-[2] flex items-center justify-center gap-2 py-3 bg-[#111] border border-fuchsia-500/30 text-fuchsia-400 hover:text-fuchsia-300 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#1A1A1A] hover:border-fuchsia-500/50 transition-colors shadow-[0_0_15px_rgba(217,70,239,0.05)]",
+                                        "flex-[2] flex items-center justify-center gap-2 py-3 bg-[#111] border border-white/20 text-white hover:text-white/60 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#1A1A1A] hover:border-white/40 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.05)]",
                                         !metadata.live_url && "w-full"
                                     )}>
                                         <CreditCard size={14} />
@@ -1367,7 +1364,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         {Object.entries(metadata.tech_stack).map(([cat, techs]: [string, any]) => 
                                             techs.map((tech: string) => (
                                                 <div key={`${cat}-${tech}`} className="px-2.5 py-1 bg-white/[0.03] border border-white/10 rounded-lg flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]" />
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.1)]" />
                                                     <span className="text-xs text-[#D8D8D8] font-mono">{tech}</span>
                                                 </div>
                                             ))
@@ -1417,8 +1414,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             </div>
 
                             {/* Developer Support Section */}
-                            <div className="p-4 bg-fuchsia-500/5 border border-fuchsia-500/10 rounded-2xl flex flex-col gap-2">
-                                <div className="flex items-center gap-2 text-fuchsia-400">
+                            <div className="p-5 bg-[#080808] border border-white/[0.05] rounded-2xl flex flex-col gap-2">
+                                <div className="flex items-center gap-2 text-white/60">
                                     <Shield size={14} />
                                     <h3 className="text-xs font-bold uppercase tracking-widest">Developer Support</h3>
                                 </div>
@@ -1430,7 +1427,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         href={metadata.support_url} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="mt-1 flex items-center gap-2 text-fuchsia-400 text-xs font-bold hover:underline"
+                                        className="mt-1 flex items-center gap-2 text-white/40 text-xs font-bold hover:underline"
                                     >
                                         <ExternalLink size={10} />
                                         Support Resource

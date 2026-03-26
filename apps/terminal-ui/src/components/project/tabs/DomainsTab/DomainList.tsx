@@ -22,7 +22,7 @@ export default function DomainList({ domains, onViewDetail, onRefresh }: DomainL
                 </p>
                 <button
                     onClick={() => (window as any).dispatchEvent(new CustomEvent('open-add-domain'))}
-                    className="text-fuchsia-400 text-xs font-bold uppercase tracking-widest hover:text-fuchsia-300 transition-colors"
+                    className="text-brand-400 text-xs font-bold uppercase tracking-widest hover:text-brand-300 transition-colors"
                 >
                     ADD_FIRST_DOMAIN
                 </button>

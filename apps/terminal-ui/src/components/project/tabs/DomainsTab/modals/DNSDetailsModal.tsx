@@ -34,7 +34,7 @@ export default function DNSDetailsModal({ domain, onClose }: DNSDetailsModalProp
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2A2E]">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-[#2A2A2E] flex items-center justify-center border border-[#2A2A2E]">
-                            <Server className="w-4 h-4 text-fuchsia-400" />
+                            <Server className="w-4 h-4 text-brand-400" />
                         </div>
                         <h3 className="text-white font-bold uppercase tracking-widest text-sm">DNS Configuration</h3>
                     </div>
@@ -44,9 +44,9 @@ export default function DNSDetailsModal({ domain, onClose }: DNSDetailsModalProp
                 </div>
 
                 <div className="p-6 flex flex-col gap-6">
-                    <div className="p-4 bg-fuchsia-500/5 border border-fuchsia-500/10 rounded-lg flex gap-3">
-                        <Info className="w-4 h-4 text-fuchsia-400 shrink-0 mt-0.5" />
-                        <p className="text-xs text-fuchsia-200/70 leading-relaxed">
+                    <div className="p-4 bg-brand-500/5 border border-brand-500/10 rounded-lg flex gap-3">
+                        <Info className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
+                        <p className="text-xs text-brand-200/70 leading-relaxed">
                             To activate <span className="text-white font-bold">{domain.domain_name}</span>, update your DNS records at your domain registrar (e.g. GoDaddy, Namecheap, Cloudflare) with the values below.
                         </p>
                     </div>
@@ -61,14 +61,14 @@ export default function DNSDetailsModal({ domain, onClose }: DNSDetailsModalProp
                         </div>
 
                         {records.map((record, i) => (
-                            <div key={i} className="grid grid-cols-[80px_1fr_1fr_60px_40px] items-center gap-2 p-3 bg-[#1C1C1E] border border-[#2A2A2E] rounded group hover:border-fuchsia-500/30 transition-colors">
-                                <div className="text-xs font-bold text-fuchsia-400 font-mono">{record.type}</div>
+                            <div key={i} className="grid grid-cols-[80px_1fr_1fr_60px_40px] items-center gap-2 p-3 bg-[#1C1C1E] border border-[#2A2A2E] rounded group hover:border-brand-500/30 transition-colors">
+                                <div className="text-xs font-bold text-brand-400 font-mono">{record.type}</div>
                                 <div className="text-xs text-white font-mono truncate">{record.host}</div>
                                 <div className="text-xs text-white font-mono truncate">{record.value}</div>
                                 <div className="text-xs text-[#444] font-mono">{record.ttl}</div>
                                 <button 
                                     onClick={() => copyToClipboard(record.value)}
-                                    className="p-1.5 hover:bg-[#2A2A2E] rounded text-[#333] hover:text-fuchsia-400 transition-colors"
+                                    className="p-1.5 hover:bg-[#2A2A2E] rounded text-[#333] hover:text-brand-400 transition-colors"
                                 >
                                     <Copy className="w-3.5 h-3.5" />
                                 </button>

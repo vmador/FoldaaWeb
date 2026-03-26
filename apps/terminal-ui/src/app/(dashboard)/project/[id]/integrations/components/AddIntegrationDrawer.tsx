@@ -55,7 +55,7 @@ export default function AddIntegrationDrawer({
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-[#2A2A2E] bg-black/40">
                     <div className="flex items-center gap-2">
-                        <Plus className="w-4 h-4 text-fuchsia-500/60" />
+                        <Plus className="w-4 h-4 text-brand-500/60" />
                         <span className="text-xs font-bold text-[#D8D8D8] tracking-widest uppercase font-mono">
                             INSTALL_PLUGIN
                         </span>
@@ -71,11 +71,11 @@ export default function AddIntegrationDrawer({
                 {/* Search */}
                 <div className="p-4 border-b border-[#2A2A2E] bg-black/20">
                     <div className="relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#444] group-focus-within:text-fuchsia-500/50 transition-colors" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#444] group-focus-within:text-brand-500/50 transition-colors" />
                         <input 
                             type="text"
                             placeholder="SEARCH_REGISTRY"
-                            className="w-full bg-black border border-[#2A2A2E] rounded-md py-2 pl-9 pr-4 text-xs text-[#A0A0A0] font-mono focus:outline-none focus:border-fuchsia-500/30 transition-colors uppercase placeholder:text-[#333]"
+                            className="w-full bg-black border border-[#2A2A2E] rounded-md py-2 pl-9 pr-4 text-xs text-[#A0A0A0] font-mono focus:outline-none focus:border-brand-500/30 transition-colors uppercase placeholder:text-[#333]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />

@@ -4,20 +4,23 @@ import { User, Shield, Sliders, ChevronLeft, Terminal } from "lucide-react"
 import Link from "next/link"
 import clsx from "clsx"
 
-export type SettingsTab = "account" | "cloudflare" | "apple" | "lemonsqueezy" | "apikeys" | "subscription" | "support"
+export type SettingsTab = "account" | "general" | "cloudflare" | "apple" | "lemonsqueezy" | "apikeys" | "subscription" | "support"
 
 interface SettingsLayoutProps {
     activeTab: SettingsTab
     onTabChange: (tab: SettingsTab) => void
+    title?: string
+    description?: string
     children: React.ReactNode
 }
 
-export default function SettingsLayout({ activeTab, onTabChange, children }: SettingsLayoutProps) {
+export default function SettingsLayout({ activeTab, onTabChange, title, description, children }: SettingsLayoutProps) {
     const navCategories = [
         {
             title: "PROFILE & ACCOUNT",
             items: [
-                { id: "account", label: "Account" },
+                { id: "account", label: "Profile" },
+                { id: "general", label: "Preferences" },
             ]
         },
         {
@@ -51,15 +54,22 @@ export default function SettingsLayout({ activeTab, onTabChange, children }: Set
     return (
         <div className="flex-1 flex flex-col min-w-0 bg-black font-sans">
             {/* Header */}
-            <div className="h-12 flex-shrink-0 flex items-center justify-between px-6 border-b border-[#2A2A2E]">
-                <div className="flex items-center gap-3">
-                    <Link href="/dashboard" className="p-1 hover:bg-[#2A2A2E] rounded text-[#666] hover:text-white transition-colors">
-                        <ChevronLeft className="w-4 h-4" />
-                    </Link>
-                    <h1 className="text-white font-medium text-sm leading-none">Settings</h1>
+            <div className="h-[44.5px] flex-shrink-0 flex items-center justify-between px-6 border-b border-[#2A2A2E] bg-black/40 backdrop-blur-sm sticky top-0 z-30">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <Link href="/dashboard" className="p-1 hover:bg-[#2A2A2E] rounded text-[#666] hover:text-white transition-colors">
+                            <ChevronLeft className="w-4 h-4" />
+                        </Link>
+                        <h2 className="text-white font-bold text-sm tracking-tight">{title || 'Settings'}</h2>
+                    </div>
+                    {description && (
+                        <span className="text-xs text-[#666] font-medium border-l border-[#333336] pl-3 h-4 flex items-center">
+                            {description}
+                        </span>
+                    )}
                 </div>
-                <button className="px-3 py-1.5 bg-[#2B4E54] hover:bg-[#325A62] text-white/90 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5">
-                    Save and update <span className="text-white/50">⌘+S</span>
+                <button className="px-3 py-1 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.05] text-white/70 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2">
+                    Save and update <span className="text-white/30 font-mono lowercase">⌘+S</span>
                 </button>
             </div>
 

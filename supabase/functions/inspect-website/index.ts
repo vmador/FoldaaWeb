@@ -249,7 +249,7 @@ Deno.serve(async (req) => {
   }
   
   try {
-    const { url } = await req.json()
+    const { url, refresh } = await req.json()
     
     if (!url) {
       return new Response(
@@ -265,13 +265,17 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
     
-    // Check cache
-    const cached = await checkCache(supabase, domain)
-    if (cached) {
-      return new Response(
-        JSON.stringify(cached),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    // Check cache (unless refresh is requested)
+    if (!refresh) {
+      const cached = await checkCache(supabase, domain)
+      if (cached) {
+        return new Response(
+          JSON.stringify(cached),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    } else {
+      console.log('🔄 Forced refresh requested, bypassing cache for:', domain)
     }
     
     // Extract

@@ -19,10 +19,10 @@ export default function IntegrationsSection() {
                     <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Security & Encryption</h3>
                     <div className="h-px flex-1 bg-[#2A2A2E]"></div>
                 </div>
-                <div className="p-4 bg-black border border-fuchsia-500/10 rounded-xl flex items-center justify-between group transition-all shadow-xl shadow-fuchsia-500/5">
+                <div className="p-4 bg-black border border-white/[0.05] rounded-xl flex items-center justify-between group transition-all shadow-xl">
                     <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 flex items-center justify-center border border-fuchsia-500/20">
-                            <Shield className="w-4 h-4 text-fuchsia-400" />
+                        <div className="w-8 h-8 rounded-lg bg-white/[0.03] flex items-center justify-center border border-white/[0.08]">
+                            <Shield className="w-4 h-4 text-zinc-500" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-bold text-white uppercase tracking-wider">AES-256-GCM Protection</span>

@@ -20,6 +20,7 @@ export default function ProfileSection() {
                 website: profile.website || "",
                 location: profile.location || "",
                 company: profile.company || "",
+                role: profile.role || "",
                 twitter: profile.twitter || "",
                 github: profile.github || "",
             })
@@ -170,8 +171,8 @@ export default function ProfileSection() {
                     <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Role</label>
                     <input
                         type="text"
-                        value={formData.company || ""}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        value={formData.role || ""}
+                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                         className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs focus:border-[#333] outline-none transition-all placeholder-[#333]"
                         placeholder="Design Engineer"
                     />

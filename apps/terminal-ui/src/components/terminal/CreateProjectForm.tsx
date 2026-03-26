@@ -29,6 +29,7 @@ import {
 import { useUI } from "@/lib/contexts/UIContext"
 import { useUserProfile } from "@/lib/hooks/useUserProfile"
 import { useProjects } from "@/lib/hooks/useProjects"
+import { useWorkspaces } from "@/lib/contexts/WorkspaceContext"
 import { supabase } from "@/lib/supabase"
 import clsx from "clsx"
 
@@ -36,6 +37,7 @@ export default function CreateProjectForm() {
     const { setCreateModalOpen, addToast } = useUI()
     const { profile } = useUserProfile()
     const { projects } = useProjects()
+    const { activeWorkspace } = useWorkspaces()
     
     const isFree = profile?.subscriptionPlan !== 'pro'
     const hasReachedLimit = isFree && projects.length >= 3
@@ -73,6 +75,7 @@ export default function CreateProjectForm() {
             if (backgroundColor) command += ` --background "${backgroundColor}"`
             if (ignoreSafeArea) command += ` --safe-area`
             if (isPWA) command += ` --pwa`
+            if (activeWorkspace?.id) command += ` --workspace ${activeWorkspace.id}`
             
             const res = await fetch('/api/foldaa/command', {
                 method: 'POST',
@@ -385,7 +388,7 @@ export default function CreateProjectForm() {
                             onClick={() => handleSubmit()}
                             className={clsx(
                                 "flex items-center justify-center gap-2 px-5 rounded-[6px] transition-all font-bold tracking-tight border border-white/[0.03] active:scale-[0.97]",
-                                url !== "https://" && !isSubmitting && !hasReachedLimit ? "bg-[#2D454A] text-[#D0EBF0]" : "bg-white/[0.02] text-zinc-800"
+                                url !== "https://" && !isSubmitting && !hasReachedLimit ? "bg-white text-black hover:bg-zinc-200" : "bg-white/[0.02] text-zinc-800"
                             )}
                             style={{ height: '24.5px' }}
                         >

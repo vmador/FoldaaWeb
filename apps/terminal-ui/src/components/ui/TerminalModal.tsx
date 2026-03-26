@@ -62,7 +62,7 @@ export const TerminalModal: React.FC<TerminalModalProps> = ({
                         {/* Header */}
                         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2A2A2E] bg-black/40">
                             <div className="flex items-center gap-2">
-                                <Terminal className="w-4 h-4 text-fuchsia-500/60" />
+                                <Terminal className="w-4 h-4 text-brand-500/60" />
                                 <span className="text-xs font-bold text-[#D8D8D8] tracking-widest uppercase font-mono">
                                     {title}
                                 </span>

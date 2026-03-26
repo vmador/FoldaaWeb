@@ -7,11 +7,12 @@ import { supabase } from "@/lib/supabase"
 
 interface AddRouteModalProps {
     domainId: string
+    projectId: string
     onClose: () => void
     onSuccess: () => void
 }
 
-export default function AddRouteModal({ domainId, onClose, onSuccess }: AddRouteModalProps) {
+export default function AddRouteModal({ domainId, projectId, onClose, onSuccess }: AddRouteModalProps) {
     const [path, setPath] = useState("/")
     const [targetPort, setTargetPort] = useState("3000")
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -28,23 +29,20 @@ export default function AddRouteModal({ domainId, onClose, onSuccess }: AddRoute
                 throw new Error("Path must start with /")
             }
 
-            const portNum = parseInt(targetPort)
-            if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
-                throw new Error("Invalid target port (1-65535)")
-            }
+            // Removed port validation as Cloudflare routes don't use ports (everything is 80/443 pointing to Workers)
 
             const { error: insertError } = await supabase
                 .from("domain_routes")
                 .insert({
                     domain_id: domainId,
-                    path: path,
-                    target_port: portNum,
-                    is_active: true
+                    project_id: projectId,
+                    pattern: path,
+                    is_enabled: true
                 })
 
             if (insertError) {
                 if (insertError.code === "23505") {
-                    throw new Error("A route with this path already exists for this domain.")
+                    throw new Error("A route with this pattern already exists for this domain.")
                 }
                 throw insertError
             }
@@ -68,7 +66,7 @@ export default function AddRouteModal({ domainId, onClose, onSuccess }: AddRoute
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2A2E]">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-[#2A2A2E] flex items-center justify-center border border-[#2A2A2E]">
-                            <Link2 className="w-4 h-4 text-fuchsia-400" />
+                            <Link2 className="w-4 h-4 text-brand-400" />
                         </div>
                         <h3 className="text-white font-bold uppercase tracking-widest text-sm">Add Routing Rule</h3>
                     </div>
@@ -88,22 +86,18 @@ export default function AddRouteModal({ domainId, onClose, onSuccess }: AddRoute
                                     placeholder="/"
                                     value={path}
                                     onChange={(e) => setPath(e.target.value)}
-                                    className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-fuchsia-500/50 transition-colors font-mono"
+                                    className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-brand-500/50 transition-colors font-mono"
                                 />
                              </div>
                              <p className="text-xs text-[#444]">The external URL path (e.g. /, /api, /blog)</p>
                         </div>
 
                         <div className="flex flex-col gap-2">
-                             <label className="text-xs font-bold text-[#666] uppercase tracking-wider">Internal Port</label>
-                             <input 
-                                type="text"
-                                placeholder="3000"
-                                value={targetPort}
-                                onChange={(e) => setTargetPort(e.target.value)}
-                                className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-fuchsia-500/50 transition-colors font-mono"
-                             />
-                             <p className="text-xs text-[#444]">The port where your application is running inside the container.</p>
+                             <label className="text-xs font-bold text-[#666] uppercase tracking-wider">Target Project</label>
+                             <div className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-[#AAA] text-base cursor-not-allowed font-mono">
+                                 Automatically bound to current project
+                             </div>
+                             <p className="text-xs text-[#444]">This route will direct traffic to the Cloudflare Worker of this project.</p>
                         </div>
                     </div>
 
@@ -124,7 +118,7 @@ export default function AddRouteModal({ domainId, onClose, onSuccess }: AddRoute
                         <button 
                             onClick={handleAdd}
                             disabled={isSubmitting}
-                            className="px-6 py-2 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 rounded font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50 flex items-center gap-2"
+                            className="px-6 py-2 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50 flex items-center gap-2"
                         >
                             {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
                             CREATE_RULE

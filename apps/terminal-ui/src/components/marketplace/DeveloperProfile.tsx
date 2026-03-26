@@ -31,7 +31,7 @@ export default function DeveloperProfile({ developerId, username, currentUser, o
         border: isDark ? "rgba(255, 255, 255, 0.08)" : "#E0E0E0",
         bg: isDark ? "#000000" : "#FFFFFF",
         cardBg: isDark ? "#080808" : "#FFFFFF",
-        accent: "#79D9EC",
+        accent: "#FFFFFF",
     }
 
     useEffect(() => {
@@ -312,7 +312,7 @@ export default function DeveloperProfile({ developerId, username, currentUser, o
                         </>
                     )}
                     <span style={{ color: colors.textSecondary }}>developers</span>
-                    <span style={{ color: colors.accent, fontWeight: "bold" }}>/{profile.username || "profile"}</span>
+                    <span style={{ color: colors.textSecondary, fontWeight: "bold" }}>/{profile.username || "profile"}</span>
                 </div>
 
                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -400,7 +400,7 @@ export default function DeveloperProfile({ developerId, username, currentUser, o
                                     borderRadius: "6px",
                                     padding: "6px 12px",
                                     cursor: "pointer",
-                                    color: colors.accent,
+                                    color: "#FFF",
                                     fontSize: "12px",
                                     display: "flex",
                                     alignItems: "center",
@@ -705,7 +705,7 @@ export default function DeveloperProfile({ developerId, username, currentUser, o
                             <div style={{ borderBottom: `1px solid ${colors.border}`, display: "flex", gap: "32px", paddingBottom: "1px" }}>
                                 <div style={{
                                     paddingBottom: "16px",
-                                    borderBottom: `2px solid ${colors.accent}`,
+                                    borderBottom: `2px solid #FFF`,
                                     color: colors.text,
                                     fontSize: "14px",
                                     fontWeight: "700",
@@ -713,11 +713,11 @@ export default function DeveloperProfile({ developerId, username, currentUser, o
                                     alignItems: "center",
                                     gap: "8px"
                                 }}>
-                                    <span style={{ color: colors.accent }}>∷</span> Published Assets
+                                    <span style={{ color: "#FFF" }}>∷</span> Published Assets
                                     <span style={{
                                         fontSize: "11px",
-                                        backgroundColor: "rgba(121, 217, 236, 0.1)",
-                                        color: colors.accent,
+                                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                        color: "#FFF",
                                         padding: "2px 8px",
                                         borderRadius: "6px",
                                         marginLeft: "4px"

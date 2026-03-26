@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import clsx from "clsx";
 
@@ -7,12 +7,19 @@ interface DropdownProps {
     trigger: React.ReactNode;
     children: React.ReactNode;
     align?: "left" | "right";
+    side?: "top" | "bottom";
     className?: string;
 }
 
-export function Dropdown({ trigger, children, align = "right", className }: DropdownProps) {
+export function Dropdown({ 
+    trigger, 
+    children, 
+    align = "right", 
+    side = "bottom",
+    className 
+}: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+    const [coords, setCoords] = useState<{ top: number; left: number; width: number } | null>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -20,14 +27,14 @@ export function Dropdown({ trigger, children, align = "right", className }: Drop
         if (triggerRef.current) {
             const rect = triggerRef.current.getBoundingClientRect();
             setCoords({
-                top: rect.bottom + window.scrollY,
-                left: rect.left + window.scrollX,
+                top: side === "top" ? rect.top : rect.bottom,
+                left: rect.left,
                 width: rect.width
             });
         }
-    }, []);
+    }, [side]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isOpen) {
             updatePosition();
             window.addEventListener("resize", updatePosition);
@@ -65,22 +72,30 @@ export function Dropdown({ trigger, children, align = "right", className }: Drop
                 <div
                     ref={menuRef}
                     style={{
-                        position: "absolute",
-                        top: `${coords.top + 8}px`,
+                        position: "fixed",
+                        top: coords 
+                            ? (side === "top" ? 'auto' : `${coords.top + 8}px`)
+                            : "0px",
+                        bottom: coords && side === "top"
+                            ? `${window.innerHeight - coords.top + 8}px`
+                            : "auto",
+                        zIndex: 9999,
                         // Handle alignment and collision detection
                         ...(align === "right"
                             ? {
                                 left: "auto",
-                                right: `${window.innerWidth - (coords.left + coords.width)}px`
+                                right: coords ? `${window.innerWidth - (coords.left + coords.width)}px` : "1rem"
                             }
                             : {
-                                left: `${coords.left}px`,
+                                left: coords ? `${coords.left}px` : "1rem",
                                 right: "auto"
                             }
-                        )
+                        ),
+                        // Prevent flash before coordinates are calculated
+                        visibility: coords ? "visible" : "hidden",
                     }}
                     className={clsx(
-                        "z-[9999] min-w-[192px] bg-[#1C1C1E] border border-[#333336] rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-1 animate-in fade-in zoom-in-95 duration-100",
+                        "min-w-[192px] bg-[#080808] border border-[#333336] rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-1 animate-in fade-in zoom-in-95 duration-100",
                         className
                     )}
                 >
@@ -107,7 +122,7 @@ export function DropdownItem({
         <div
             onClick={onClick}
             className={clsx(
-                "flex items-center gap-2 px-3 py-2 text-sm text-[#A0A0A0] hover:bg-[#2A2A2E] hover:text-white transition-colors cursor-pointer",
+                "flex items-center gap-2 px-3 py-1.5 text-sm text-[#A0A0A0] hover:bg-[#111111] hover:text-white transition-colors cursor-pointer",
                 className
             )}
         >

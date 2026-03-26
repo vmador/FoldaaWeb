@@ -88,7 +88,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
 
     const SwitchRow = ({ label, checked, onChange }: any) => (
         <div className="flex items-center gap-3 py-1.5 cursor-pointer group" onClick={onChange}>
-            <div className={clsx("w-8 h-4 rounded-full flex items-center p-0.5 transition-colors", checked ? "bg-fuchsia-500" : "bg-[#2A2A2E] group-hover:bg-[#333336]")}>
+            <div className={clsx("w-8 h-4 rounded-full flex items-center p-0.5 transition-colors", checked ? "bg-brand-500" : "bg-[#2A2A2E] group-hover:bg-[#333336]")}>
                 <div className={clsx("w-3 h-3 bg-white rounded-full transition-transform shadow-sm", checked ? "translate-x-4" : "translate-x-0")} />
             </div>
             <span className="text-[#D8D8D8] text-xs font-medium group-hover:text-white transition-colors">{label}</span>

@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 import { UserProvider } from '@/lib/contexts/UserContext'
 import { UIProvider } from '@/lib/contexts/UIContext'
+import { WorkspaceProvider } from '@/lib/contexts/WorkspaceContext'
+import { ProjectProvider } from '@/lib/contexts/ProjectContext'
 
 export default function RootLayout({
   children,
@@ -24,7 +26,11 @@ export default function RootLayout({
       <body className={`${inter.variable} ${jetbrains.variable} font-sans min-h-screen bg-black text-[#D8D8D8] antialiased selection:bg-[#343A46]`}>
         <UserProvider>
           <UIProvider>
-            {children}
+            <WorkspaceProvider>
+              <ProjectProvider>
+                {children}
+              </ProjectProvider>
+            </WorkspaceProvider>
           </UIProvider>
         </UserProvider>
       </body>

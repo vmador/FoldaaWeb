@@ -38,7 +38,7 @@ export default function AdvancedSettings({
                             onChange={(e) =>
                                 setSessionDuration(parseInt(e.target.value) || 7)
                             }
-                            className="w-20 bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-fuchsia-500/50 outline-none font-mono text-sm"
+                            className="w-20 bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-brand-500/50 outline-none font-mono text-sm"
                         />
                         <span className="text-[#444] text-xs font-bold uppercase tracking-widest">DAYS</span>
                     </div>
@@ -56,7 +56,7 @@ export default function AdvancedSettings({
                         onClick={() => setRequireEmailVerification(!requireEmailVerification)}
                         className={clsx(
                             "font-mono text-xs px-2 py-0.5 rounded border transition-all font-bold",
-                            requireEmailVerification ? "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
+                            requireEmailVerification ? "bg-brand-500/10 text-brand-400 border-brand-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
                         )}
                     >
                         {requireEmailVerification ? 'MANDATORY' : 'OPTIONAL'}
@@ -73,7 +73,7 @@ export default function AdvancedSettings({
                         onClick={() => setAllowSignups(!allowSignups)}
                         className={clsx(
                             "font-mono text-xs px-2 py-0.5 rounded border transition-all font-bold",
-                            allowSignups ? "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
+                            allowSignups ? "bg-brand-500/10 text-brand-400 border-brand-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
                         )}
                     >
                         {allowSignups ? 'OPEN_ACCESS' : 'INVITE_ONLY'}

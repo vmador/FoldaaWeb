@@ -143,9 +143,9 @@ export default function MarketplaceCard() {
                     </div>
                 </div>
                 {hasCredentials && !showEditForm && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 bg-fuchsia-500/10 rounded-full">
-                        <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
-                        <span className="text-xs font-bold text-fuchsia-400 uppercase tracking-widest">Live</span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-500/10 rounded-full">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+                        <span className="text-xs font-bold text-brand-400 uppercase tracking-widest">Live</span>
                     </div>
                 )}
             </div>
@@ -237,7 +237,7 @@ export default function MarketplaceCard() {
                     
                     {(error || success) && (
                         <div className={`p-4 rounded-xl border text-xs flex items-center gap-3 animate-in fade-in slide-in-from-top-2 ${
-                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-fuchsia-500/5 border-fuchsia-500/20 text-fuchsia-400"
+                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-brand-500/5 border-brand-500/20 text-brand-400"
                         }`}>
                             {error ? <AlertCircle className="w-4 h-4 shrink-0" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
                             {error || success}

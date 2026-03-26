@@ -23,6 +23,8 @@ import {
     Info
 } from "@phosphor-icons/react";
 import { useUI } from '@/lib/contexts/UIContext';
+import { useProjectData } from '@/lib/contexts/ProjectContext';
+import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 
 interface TerminalProps {
   supabaseUrl: string;
@@ -109,6 +111,12 @@ const useFramerTheme = () => {
 const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) => {
   const theme = useFramerTheme();
   const { addToast } = useUI();
+  const { folders } = useProjectData();
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+
+  const selectedFolder = useMemo(() => {
+    return folders.find(f => f.id === selectedFolderId) || null;
+  }, [folders, selectedFolderId]);
   
   const colors = useMemo(() => {
     const isDark = theme === "dark"
@@ -126,9 +134,9 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
         textLabel: isDark ? "#9CA3AF" : "#6B7280",
         border: isDark ? "#262626" : "#D1D5DB",
         borderLight: isDark ? "#1A1A1A" : "#E5E7EB",
-        buttonPrimaryBg: isDark ? "#5B21B6" : "#7C3AED",
-        buttonPrimaryText: "#FFFFFF",
-        iconAccent: isDark ? "#5B21B6" : "#7C3AED",
+        buttonPrimaryBg: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
+        buttonPrimaryText: isDark ? "#FFFFFF" : "#000000",
+        iconAccent: isDark ? "#FFFFFF" : "#000000",
         iconMuted: isDark ? "#9CA3AF" : "#6B7280",
         success: isDark ? "#10B981" : "#059669",
         error: isDark ? "#EF4444" : "#DC2626",
@@ -693,7 +701,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
 
                     <button 
                       onClick={() => window.open(block.result?.previewUrl, '_blank')}
-                      className="w-full py-2 rounded-lg font-bold flex items-center justify-center gap-2"
+                      className="w-full py-1.5 rounded-lg font-bold flex items-center justify-center gap-2 border border-white/[0.05] hover:bg-white/[0.08] transition-all"
                       style={{ backgroundColor: colors.buttonPrimaryBg, color: colors.buttonPrimaryText }}
                     >
                       <Eye size={16} weight="bold" />
@@ -718,22 +726,53 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
       >
         <div className="flex flex-col gap-4">
           {/* Folder Pill */}
-          <div 
-            className="flex items-center gap-2 w-fit px-2 py-1 rounded border"
-            style={{ backgroundColor: colors.kbdBg, borderColor: colors.kbdBorder }}
+          <Dropdown
+            align="left"
+            side="top"
+            trigger={
+              <div 
+                className="flex items-center gap-2 w-fit px-2 py-1 rounded border cursor-pointer hover:bg-white/5 transition-colors"
+                style={{ backgroundColor: colors.kbdBg, borderColor: colors.kbdBorder }}
+              >
+                {isExecuting ? (
+                  <CircleDashed size={14} className="animate-spin" style={{ color: colors.iconAccent }} />
+                ) : (
+                  <Folder size={14} weight="bold" style={{ color: colors.terminalPrompt }} />
+                )}
+                <span className="text-xs font-bold" style={{ color: colors.textTertiary }}>
+                  {selectedFolder ? `/${selectedFolder.name}` : '/Foldaa'}
+                </span>
+              </div>
+            }
           >
-            {isExecuting ? (
-              <CircleDashed size={14} className="animate-spin" style={{ color: colors.iconAccent }} />
-            ) : (
-              <Folder size={14} weight="bold" style={{ color: colors.terminalPrompt }} />
-            )}
-            <span className="text-xs font-bold" style={{ color: colors.textTertiary }}>/Foldaa</span>
-          </div>
+            <div className="px-3 py-2 border-b border-[#202020] mb-1">
+              <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Select Folder</p>
+            </div>
+            <div className="max-h-[200px] overflow-y-auto py-1 px-1 flex flex-col gap-0.5">
+              <DropdownItem 
+                onClick={() => setSelectedFolderId(null)}
+                className={clsx(selectedFolderId === null && "bg-white/5 text-white")}
+              >
+                <Folder size={14} />
+                <span className="truncate">/Foldaa (Root)</span>
+              </DropdownItem>
+              {folders.map((folder) => (
+                <DropdownItem 
+                  key={folder.id} 
+                  onClick={() => setSelectedFolderId(folder.id)}
+                  className={clsx(selectedFolderId === folder.id && "bg-white/5 text-white")}
+                >
+                  <Folder size={14} />
+                  <span className="truncate">/{folder.name}</span>
+                </DropdownItem>
+              ))}
+            </div>
+          </Dropdown>
 
           <div className="flex items-center gap-3 group/input">
-            {/* Input Icon */}
-            <div className="shrink-0 opacity-40 flex items-center h-6">
-                <Info size={18} weight="bold" style={{ color: colors.textPrimary }} />
+            {/* Input Icon (፨) */}
+            <div className="shrink-0 opacity-80 flex items-center h-6">
+                <span className="text-xl font-bold text-white select-none">፨</span>
             </div>
             
             <div className="flex-1 flex items-center gap-0 min-w-0 h-6 relative">
@@ -742,8 +781,8 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
                   className="absolute left-0 top-1/2 -translate-y-1/2 text-xs pointer-events-none truncate select-none tracking-tight font-medium"
                   style={{ color: colors.textMuted }}
                 >
-                  <span style={{ color: colors.iconAccent, opacity: 0.3, marginRight: '4px' }}>|</span>
-                  Try: foldaa arpal.framer.website --pwa
+                  <span style={{ color: colors.iconAccent, opacity: 0.5, marginRight: '6px' }}>|</span>
+                  <span className="opacity-60">foldaa arpal.framer.website --pwa</span>
                 </span>
               )}
 

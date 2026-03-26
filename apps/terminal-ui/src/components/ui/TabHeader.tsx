@@ -35,14 +35,20 @@ export function TabHeader({ title, description, action, secondaryAction, backAct
                 onClick={btn.onClick}
                 disabled={btn.disabled || btn.loading}
                 className={clsx(
-                    "flex items-center gap-1.5 px-2 py-1 rounded transition-all disabled:opacity-50",
-                    isPrimary ? "bg-[#111] hover:bg-[#1A1A1A] border border-[#333] hover:border-fuchsia-500/30 text-white" :
-                    isDanger ? "bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-500" :
-                    "bg-[#2A2A2E] hover:bg-[#1A1A1A] border border-[#333336] text-[#666] hover:text-[#888]"
+                    "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all disabled:opacity-50 group border",
+                    isPrimary ? "bg-[#111] hover:bg-[#1A1A1A] border-transparent hover:border-[#1A1A1A] text-white" :
+                    isDanger ? "bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-500" :
+                    "bg-[#2A2A2E] hover:bg-[#1A1A1A] border-[#333336] text-[#666] hover:text-[#888]"
                 )}
             >
-                {btn.loading ? <Loader2 className="w-3 h-3 animate-spin" /> : btn.icon && <btn.icon className="w-3 h-3" />}
-                <span className="text-xs font-bold whitespace-nowrap">{btn.label}</span>
+                {btn.loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin border border-[#333] rounded-sm p-0.5" />
+                ) : btn.icon ? (
+                    <btn.icon className={clsx("w-4 h-4 border rounded-sm p-0.5 transition-colors", 
+                        isPrimary ? "border-[#333] group-hover:border-[#666]" : "border-transparent" 
+                    )} />
+                ) : null}
+                <span className="text-sm font-medium whitespace-nowrap">{btn.label}</span>
                 {btn.shortcut && (
                     <span className="ml-1 px-1 py-0.5 bg-black/20 rounded text-xs font-mono opacity-40 lowercase">
                         {btn.shortcut}

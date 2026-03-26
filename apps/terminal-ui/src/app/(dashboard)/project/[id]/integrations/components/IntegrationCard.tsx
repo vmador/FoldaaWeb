@@ -34,7 +34,7 @@ export function IntegrationCard({
                 <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
                         {isEnabled ? (
-                            <Check className="w-4 h-4 text-fuchsia-500 font-bold" />
+                            <Check className="w-4 h-4 text-brand-500 font-bold" />
                         ) : (
                             <Square className="w-4 h-4 text-[#444]" />
                         )}
@@ -77,7 +77,7 @@ export function IntegrationCard({
             
             <div className="px-3 flex items-center justify-between text-xs font-mono text-[#333]">
                 <span>UUID: {integration.id}</span>
-                {isEnabled && <span className="text-fuchsia-900 uppercase tracking-tighter">Running</span>}
+                {isEnabled && <span className="text-brand-900 uppercase tracking-tighter">Running</span>}
             </div>
         </div>
     );

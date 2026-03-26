@@ -64,29 +64,16 @@ export default function CloudflareCard() {
         setSuccess("")
 
         try {
-            const { data: { session } } = await supabase.auth.getSession()
-            if (!session) throw new Error("Not authenticated")
+            const { data: result, error: functionError } = await supabase.functions.invoke("encrypt-cloudflare-token", {
+                body: {
+                    api_token: apiToken.trim(),
+                    account_id: accountId.trim(),
+                    zone_id: zoneId.trim() || null,
+                },
+            })
 
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/encrypt-cloudflare-token`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${session.access_token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        api_token: apiToken.trim(),
-                        account_id: accountId.trim(),
-                        zone_id: zoneId.trim() || null,
-                    }),
-                }
-            )
-
-            const result = await response.json()
-            if (!response.ok || !result.success) {
-                throw new Error(result.error || "Failed to connect Cloudflare")
-            }
+            if (functionError) throw functionError
+            if (!result?.success) throw new Error(result?.error || "Failed to connect Cloudflare")
 
             setSuccess("Credentials saved successfully")
             await checkCredentials()
@@ -142,9 +129,9 @@ export default function CloudflareCard() {
                     </div>
                 </div>
                 {hasCredentials && !showEditForm && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 bg-fuchsia-500/10 rounded-full">
-                        <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
-                        <span className="text-xs font-bold text-fuchsia-400 uppercase tracking-widest">Live</span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/40 animate-pulse" />
+                        <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Live</span>
                     </div>
                 )}
             </div>
@@ -219,7 +206,7 @@ export default function CloudflareCard() {
                         <button
                             onClick={handleConnect}
                             disabled={loading || !accountId || !apiToken}
-                            className="flex-1 px-4 py-2 bg-[#2B4E54] hover:bg-[#325A62] text-white/90 rounded-md text-xs font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-md text-xs font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                             {hasCredentials ? 'Update Credentials' : 'Connect Cloudflare'}
@@ -236,7 +223,7 @@ export default function CloudflareCard() {
                     
                     {(error || success) && (
                         <div className={`p-4 rounded-xl border text-xs flex items-center gap-3 animate-in fade-in slide-in-from-top-2 ${
-                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-fuchsia-500/5 border-fuchsia-500/20 text-fuchsia-400"
+                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-white/5 border-white/10 text-white/80"
                         }`}>
                             {error ? <AlertCircle className="w-4 h-4 shrink-0" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
                             {error || success}

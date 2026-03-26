@@ -29,7 +29,7 @@ function ConfigField({ id, label, type, required, options, value, onChange }: Co
                     id={id}
                     value={value || ""}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full bg-black border border-[#2A2A2E] rounded p-2 text-xs text-[#D8D8D8] outline-none focus:border-fuchsia-500/50 transition-colors uppercase font-mono"
+                    className="w-full bg-black border border-[#2A2A2E] rounded p-2 text-xs text-[#D8D8D8] outline-none focus:border-brand-500/50 transition-colors uppercase font-mono"
                 >
                     <option value="" disabled>SELECT_OPTION</option>
                     {options?.map((opt) => (
@@ -48,7 +48,7 @@ function ConfigField({ id, label, type, required, options, value, onChange }: Co
                             onChange(e.target.value);
                         }
                     }}
-                    className="w-full h-32 bg-black border border-[#2A2A2E] rounded p-3 text-xs font-mono text-fuchsia-500/80 outline-none focus:border-fuchsia-500/50 transition-colors resize-none custom-scrollbar uppercase placeholder:text-[#333]"
+                    className="w-full h-32 bg-black border border-[#2A2A2E] rounded p-3 text-xs font-mono text-brand-500/80 outline-none focus:border-brand-500/50 transition-colors resize-none custom-scrollbar uppercase placeholder:text-[#333]"
                 />
             ) : (
                 <input
@@ -57,7 +57,7 @@ function ConfigField({ id, label, type, required, options, value, onChange }: Co
                     value={value || ""}
                     onChange={(e) => onChange(type === "number" ? parseFloat(e.target.value) : e.target.value)}
                     placeholder={`ENTER_${id.toUpperCase()}`}
-                    className="w-full bg-black border border-[#2A2A2E] rounded p-2 text-xs text-[#D8D8D8] outline-none focus:border-fuchsia-500/50 transition-colors font-mono uppercase placeholder:text-[#333]"
+                    className="w-full bg-black border border-[#2A2A2E] rounded p-2 text-xs text-[#D8D8D8] outline-none focus:border-brand-500/50 transition-colors font-mono uppercase placeholder:text-[#333]"
                     autoComplete="off"
                 />
             )}

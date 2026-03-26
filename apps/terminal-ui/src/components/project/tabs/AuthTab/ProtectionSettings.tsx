@@ -58,13 +58,13 @@ export default function ProtectionSettings({
                                 }
                             }}
                             placeholder="ADMIN, EDITOR..."
-                            className="flex-1 bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-fuchsia-500/50 outline-none font-mono text-sm uppercase"
+                            className="flex-1 bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-brand-500/50 outline-none font-mono text-sm uppercase"
                         />
                         <button
                             type="button"
                             onClick={handleAddRole}
                             disabled={!newRole.trim()}
-                            className="px-3 py-1.5 bg-[#2A2A2E] hover:bg-[#1a1a1a] text-[#666] hover:text-fuchsia-400 border border-[#333336] rounded transition-all disabled:opacity-30 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest"
+                            className="px-3 py-1.5 bg-[#2A2A2E] hover:bg-[#1a1a1a] text-[#666] hover:text-brand-400 border border-[#333336] rounded transition-all disabled:opacity-30 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest"
                         >
                             <Plus size={14} /> ADD
                         </button>
@@ -75,7 +75,7 @@ export default function ProtectionSettings({
                             {allowedRoles.map((role) => (
                                 <div
                                     key={role}
-                                    className="flex items-center gap-2 px-2 py-1 bg-fuchsia-500/5 border border-fuchsia-500/20 rounded text-fuchsia-400 text-xs font-mono group transition-all"
+                                    className="flex items-center gap-2 px-2 py-1 bg-brand-500/5 border border-brand-500/20 rounded text-brand-400 text-xs font-mono group transition-all"
                                 >
                                     <span>{role.toUpperCase()}</span>
                                     <button
@@ -99,7 +99,7 @@ export default function ProtectionSettings({
                         value={redirectAfterLogin}
                         onChange={(e) => setRedirectAfterLogin(e.target.value)}
                         placeholder="/"
-                        className="bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-fuchsia-500/50 outline-none font-mono text-sm"
+                        className="bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-brand-500/50 outline-none font-mono text-sm"
                     />
                 </div>
 
@@ -110,7 +110,7 @@ export default function ProtectionSettings({
                         value={redirectAfterLogout}
                         onChange={(e) => setRedirectAfterLogout(e.target.value)}
                         placeholder="/"
-                        className="bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-fuchsia-500/50 outline-none font-mono text-sm"
+                        className="bg-[#1C1C1E] border border-[#333336] rounded px-3 py-1.5 text-white focus:border-brand-500/50 outline-none font-mono text-sm"
                     />
                 </div>
             </div>

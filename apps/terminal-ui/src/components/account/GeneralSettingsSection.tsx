@@ -1,6 +1,6 @@
 "use client"
 import React from "react"
-import { Monitor, Moon, Sun, Bell, Terminal, ExternalLink, Save, Loader2, Sliders } from "lucide-react"
+import { ExternalLink, Loader2, Check } from "lucide-react"
 import { useUserProfile, UserSettings } from "@/lib/hooks/useUserProfile"
 
 export default function GeneralSettingsSection() {
@@ -9,115 +9,146 @@ export default function GeneralSettingsSection() {
     if (loading || !settings) return null
 
     const themeOptions = [
-        { id: 'light', label: 'Light', icon: Sun },
-        { id: 'dark', label: 'Dark', icon: Moon },
-        { id: 'auto', label: 'System', icon: Monitor },
+        { id: 'light', label: 'Light Theme' },
+        { id: 'dark', label: 'Dark Theme' },
+        { id: 'auto', label: 'System Default' },
     ]
 
-    return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div>
-                <h2 className="text-lg font-semibold text-white tracking-tight">Application Settings</h2>
-                <p className="text-[#666] text-sm mt-1">Configure your dashboard experience and developer preferences.</p>
-            </div>
+    const accentColors = [
+        { id: 'fuchsia', bgClass: 'bg-fuchsia-500' },
+        { id: 'emerald', bgClass: 'bg-emerald-500' },
+        { id: 'blue', bgClass: 'bg-blue-500' },
+        { id: 'amber', bgClass: 'bg-amber-500' },
+        { id: 'rose', bgClass: 'bg-rose-500' },
+        { id: 'violet', bgClass: 'bg-violet-500' },
+        { id: 'cyan', bgClass: 'bg-cyan-500' },
+    ]
 
-            <div className="space-y-10">
-                {/* Theme Selection */}
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                        <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Appearance</h3>
-                        <div className="h-px flex-1 bg-[#2A2A2E]"></div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4">
-                        {themeOptions.map((option) => (
+    const SwitchRow = ({ label, checked, onChange }: any) => (
+        <div className="flex items-center justify-between py-2 cursor-pointer group" onClick={onChange}>
+            <span className="text-[#D8D8D8] text-xs font-medium group-hover:text-white transition-colors">{label}</span>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${checked ? "bg-brand-500" : "bg-[#2A2A2E] group-hover:bg-[#333336]"}`}>
+                <div className={`w-3 h-3 bg-white rounded-full transition-transform shadow-sm ${checked ? "translate-x-4" : "translate-x-0"}`} />
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="flex flex-col gap-8 text-sm pb-12 animate-in fade-in duration-500 max-w-xl">
+            <div className="flex flex-col gap-8">
+                
+                {/* Theme Mode */}
+                <div className="flex flex-col gap-3">
+                    <label className="text-[#666] text-[10px] tracking-widest uppercase font-mono">Appearance</label>
+                    <div className="flex flex-wrap items-center gap-2">
+                        {themeOptions.map((opt) => (
                             <button
-                                key={option.id}
-                                onClick={() => updateSettings({ theme: option.id as UserSettings['theme'] })}
-                                className={`flex flex-col items-center gap-2.5 p-4 rounded-xl border transition-all ${
-                                    settings.theme === option.id 
-                                        ? "bg-white/5 border-white/20 text-white shadow-lg shadow-white/5" 
-                                        : "bg-[#1C1C1E] border-[#2A2A2E] text-[#444] hover:border-[#333336] hover:text-[#888]"
+                                key={opt.id}
+                                onClick={() => updateSettings({ theme: opt.id as UserSettings['theme'] })}
+                                className={`px-3 py-1.5 text-xs rounded border transition-all ${
+                                    settings.theme === opt.id 
+                                        ? "bg-[#2A2A2E] border-[#444] text-white" 
+                                        : "bg-transparent border-[#2A2A2E] text-[#888] hover:text-[#D8D8D8]"
                                 }`}
                             >
-                                <option.icon className={`w-4 h-4 ${settings.theme === option.id ? "text-fuchsia-400" : ""}`} />
-                                <span className="text-xs font-bold uppercase tracking-widest">{option.label}</span>
+                                {opt.label}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Automation Preferences */}
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                        <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Automation</h3>
-                        <div className="h-px flex-1 bg-[#2A2A2E]"></div>
-                    </div>
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3.5 bg-[#1C1C1E] border border-[#2A2A2E] rounded-xl hover:border-[#2A2A2E] transition-colors group">
-                            <div className="flex items-center gap-4">
-                                <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                                    <Terminal className="w-4 h-4 text-blue-400" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-bold text-[#D8D8D8]">Auto-open Projects</span>
-                                    <span className="text-xs text-[#444]">Automatically open the last project context on startup</span>
-                                </div>
-                            </div>
-                            <button 
-                                onClick={() => updateSettings({ auto_open_projects: !settings.auto_open_projects })}
-                                className={`w-10 h-5 rounded-full relative transition-all duration-300 border ${
-                                    settings.auto_open_projects ? "bg-fuchsia-500/20 border-fuchsia-500/50" : "bg-[#2A2A2E] border-[#333336]"
-                                }`}
-                            >
-                                <div className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-                                    settings.auto_open_projects ? "bg-fuchsia-400 left-[22px]" : "bg-[#444] left-1"
-                                }`} />
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-between p-3.5 bg-[#1C1C1E] border border-[#2A2A2E] rounded-xl hover:border-[#2A2A2E] transition-colors group">
-                            <div className="flex items-center gap-4">
-                                <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                                    <Bell className="w-4 h-4 text-emerald-400" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-bold text-[#D8D8D8]">Desktop Notifications</span>
-                                    <span className="text-xs text-[#444]">Get notified about deployment status and important alerts</span>
+                {/* Accent Color */}
+                <div className="flex flex-col gap-3">
+                    <label className="text-[#666] text-[10px] tracking-widest uppercase font-mono">Accent Color</label>
+                    <div className="flex flex-wrap items-center gap-3">
+                        {accentColors.map((color) => {
+                            const isSelected = (settings.accent_color || 'fuchsia') === color.id;
+                            return (
+                                <button
+                                    key={color.id}
+                                    onClick={() => updateSettings({ accent_color: color.id })}
+                                    className={`w-6 h-6 rounded-full transition-all flex items-center justify-center ${color.bgClass} ${
+                                        isSelected ? 'ring-2 ring-brand-500/50 ring-offset-2 ring-offset-black scale-110 shadow-lg' : 'opacity-60 hover:opacity-100 hover:scale-105'
+                                    }`}
+                                    title={color.id.charAt(0).toUpperCase() + color.id.slice(1)}
+                                >
+                                    {isSelected && <Check className="w-3.5 h-3.5 text-white/90" strokeWidth={3} />}
+                                </button>
+                            );
+                        })}
+                        
+                        {/* Custom Hex Color Picker */}
+                        <div className="flex items-center gap-2 ml-2 pl-2 border-l border-[#2A2A2E]">
+                            <div className="relative">
+                                <input 
+                                    type="color" 
+                                    value={settings.accent_color?.startsWith('#') ? settings.accent_color : '#ffffff'}
+                                    onChange={(e) => updateSettings({ accent_color: e.target.value })}
+                                    className="w-6 h-6 rounded-full cursor-pointer opacity-0 absolute inset-0 z-10"
+                                />
+                                <div 
+                                    className={`w-6 h-6 rounded-full flex items-center justify-center border border-[#333] ${settings.accent_color?.startsWith('#') ? 'ring-2 ring-brand-500/50 ring-offset-2 ring-offset-black scale-110 shadow-lg' : 'opacity-60 hover:opacity-100 hover:scale-105 transition-all'}`}
+                                    style={{ backgroundColor: settings.accent_color?.startsWith('#') ? settings.accent_color : '#222' }}
+                                >
+                                    {settings.accent_color?.startsWith('#') ? <Check className="w-3.5 h-3.5 text-white mix-blend-difference" strokeWidth={3} /> : <span className="text-[10px] text-[#666] font-bold">+</span>}
                                 </div>
                             </div>
-                            <button 
-                                onClick={() => updateSettings({ notifications_enabled: !settings.notifications_enabled })}
-                                className={`w-10 h-5 rounded-full relative transition-all duration-300 border ${
-                                    settings.notifications_enabled ? "bg-fuchsia-500/20 border-fuchsia-500/50" : "bg-[#2A2A2E] border-[#333336]"
-                                }`}
-                            >
-                                <div className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-                                    settings.notifications_enabled ? "bg-fuchsia-400 left-[22px]" : "bg-[#444] left-1"
-                                }`} />
-                            </button>
+                            {settings.accent_color?.startsWith('#') && (
+                                <input 
+                                    type="text" 
+                                    value={settings.accent_color.toUpperCase()} 
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val.startsWith('#') && val.length <= 7) {
+                                            updateSettings({ accent_color: val });
+                                        } else if (!val.startsWith('#') && val.length <= 6) {
+                                            updateSettings({ accent_color: '#' + val });
+                                        }
+                                    }}
+                                    className="bg-[#111] border border-[#2A2A2E] text-[#AAA] text-[10px] font-mono uppercase rounded px-2 py-1 outline-none focus:border-[#444] w-[60px]"
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Developer Documentation */}
-                <div className="p-5 bg-black border border-fuchsia-500/10 rounded-xl flex items-center justify-between group cursor-pointer hover:border-fuchsia-500/30 transition-all shadow-xl shadow-fuchsia-500/5">
-                    <div className="flex items-center gap-4">
-                        <div className="w-9 h-9 rounded-lg bg-fuchsia-500/10 flex items-center justify-center border border-fuchsia-500/20">
-                            <Sliders className="w-4 h-4 text-fuchsia-400" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xs font-bold text-white uppercase tracking-widest pl-1">CLI & Developer Tools</span>
-                            <span className="text-xs text-[#444] pl-1">Access your tokens and developer documentation</span>
-                        </div>
+                <div className="h-px bg-[#2A2A2E] my-1" />
+
+                {/* Automation */}
+                <div className="flex flex-col gap-3">
+                    <label className="text-[#666] text-[10px] tracking-widest uppercase font-mono mb-1">Automation</label>
+                    <div className="flex flex-col">
+                        <SwitchRow 
+                            label="Auto-open last project context on startup" 
+                            checked={settings.auto_open_projects} 
+                            onChange={() => updateSettings({ auto_open_projects: !settings.auto_open_projects })} 
+                        />
+                        <div className="h-px bg-[#1C1C1E] w-full my-1.5" />
+                        <SwitchRow 
+                            label="Enable system notifications for deployments" 
+                            checked={settings.notifications_enabled} 
+                            onChange={() => updateSettings({ notifications_enabled: !settings.notifications_enabled })} 
+                        />
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-[#444] group-hover:text-fuchsia-400 transition-colors" />
                 </div>
+
+                <div className="h-px bg-[#2A2A2E] my-1" />
+
+                {/* Developer */}
+                <div className="flex flex-col gap-3">
+                    <label className="text-[#666] text-[10px] tracking-widest uppercase font-mono mb-1">Developer Links</label>
+                    <a href="#" className="flex items-center justify-between py-1.5 group cursor-pointer w-fit gap-2">
+                        <span className="text-[#888] text-xs font-medium group-hover:text-brand-400 transition-colors border-b border-transparent group-hover:border-brand-400/30">Access CLI & API Documentation</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-[#444] group-hover:text-brand-400 transition-colors" />
+                    </a>
+                </div>
+
             </div>
 
             {saving && (
-                <div className="fixed bottom-8 right-8 flex items-center gap-3 px-4 py-2 bg-[#2A2A2E] border border-[#333336] rounded-lg text-xs font-mono text-fuchsia-400 animate-in fade-in slide-in-from-right-4">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    SYNCING_CONFIG...
+                <div className="fixed bottom-8 right-8 flex items-center gap-2 px-3 py-1.5 bg-[#2A2A2E] border border-[#333336] rounded text-[10px] font-mono text-brand-400 animate-in fade-in">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    SYNCING
                 </div>
             )}
         </div>

@@ -123,18 +123,18 @@ export default function AsciiVortexAnimation({ status, onExploded }: { status?: 
     <div className="flex flex-col w-full bg-black rounded-[10px] border border-[#222] relative overflow-hidden group mb-4">
       <div className="flex justify-between w-full px-4 py-2 border-b border-[#222] bg-[#0A0A0B]">
         <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isExploding ? 'bg-white animate-ping' : 'bg-fuchsia-500 animate-pulse'}`}></span>
+            <span className={`w-2 h-2 rounded-full ${isExploding ? 'bg-white animate-ping' : 'bg-brand-500 animate-pulse'}`}></span>
             <span className="text-zinc-400 text-[10px] font-mono tracking-widest uppercase">
                 {isExploding ? 'UNPACKING BUNDLE...' : 'CONSTRUCTING ASSETS...'}
             </span>
         </div>
-        <span className="text-fuchsia-400 text-[10px] font-mono tracking-widest">
+        <span className="text-brand-400 text-[10px] font-mono tracking-widest">
             {isExploding ? 'READY' : 'MAC APP BUILD IN PROGRESS'}
         </span>
       </div>
       
       <div className="relative w-full h-[150px] overflow-hidden bg-black flex items-center justify-center">
-        <pre className={`${isExploding ? 'text-white' : 'text-fuchsia-500'} font-mono text-[8px] leading-[8px] sm:text-[10px] sm:leading-[10px] tracking-[2px] whitespace-pre overflow-hidden select-none pointer-events-none w-full h-full p-2 flex items-center justify-center`} style={{ textShadow: isExploding ? '0px 0px 12px rgba(255, 255, 255, 0.8)' : '0px 0px 8px rgba(217, 70, 239, 0.4)' }}>
+        <pre className={`${isExploding ? 'text-white' : 'text-brand-500'} font-mono text-[8px] leading-[8px] sm:text-[10px] sm:leading-[10px] tracking-[2px] whitespace-pre overflow-hidden select-none pointer-events-none w-full h-full p-2 flex items-center justify-center`} style={{ textShadow: isExploding ? '0px 0px 12px rgba(255, 255, 255, 0.8)' : '0px 0px 8px rgba(217, 70, 239, 0.4)' }}>
             {renderString}
         </pre>
         

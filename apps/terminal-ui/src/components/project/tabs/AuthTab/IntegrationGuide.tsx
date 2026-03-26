@@ -70,7 +70,7 @@ export default function ProtectedPage() {
                             href="https://supabase.com/docs/guides/auth" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-fuchsia-400 hover:text-fuchsia-300 text-xs transition-colors w-fit"
+                            className="flex items-center gap-2 text-brand-400 hover:text-brand-300 text-xs transition-colors w-fit"
                         >
                             <ExternalLink className="w-3 h-3" />
                             OFFICIAL_SUPABASE_DOCS
@@ -83,12 +83,12 @@ export default function ProtectedPage() {
                         <div key={snippet.id} className="bg-[#1C1C1E] border border-[#2A2A2E] rounded-lg overflow-hidden">
                             <div className="flex items-center justify-between px-3 py-2 bg-[#2A2A2E] border-b border-[#2A2A2E]">
                                 <div className="flex items-center gap-2">
-                                    <Code2 className="w-3 h-3 text-fuchsia-500" />
+                                    <Code2 className="w-3 h-3 text-brand-500" />
                                     <span className="text-xs font-bold text-white uppercase tracking-wider">{snippet.title}</span>
                                 </div>
                                 <button
                                     onClick={() => copyToClipboard(snippet.code, snippet.id)}
-                                    className="text-[#444] hover:text-fuchsia-400 transition-colors"
+                                    className="text-[#444] hover:text-brand-400 transition-colors"
                                 >
                                     {copied === snippet.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                 </button>

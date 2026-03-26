@@ -151,42 +151,21 @@ export default function SubscriptionSection() {
     }
 
     return (
-        <div className="animate-in fade-in slide-in-from-bottom-1 duration-500">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 pb-4 border-b border-[#2A2A2E]">
-                <div>
-                    <h2 className="text-xs font-bold text-[#666] uppercase tracking-[0.2em] leading-none mb-2">Billing & Plans</h2>
-                    <p className="text-xs text-white font-medium max-w-lg">
-                        {plan === 'pro' 
-                            ? "Subscription active. All premium features unlocked." 
-                            : "Upgrade to Pro to unlock unlimited projects and priority updates."}
-                    </p>
-                </div>
-
-                {plan === "pro" && (
-                    <button
-                        onClick={() => window.open("https://amador.lemonsqueezy.com/billing", "_blank")}
-                        className="px-3 py-1.5 bg-[#1C1C1E] border border-[#2A2A2E] text-[#888] hover:text-white hover:border-[#333] rounded text-xs font-bold transition-all uppercase tracking-widest flex items-center gap-2"
-                    >
-                        Billing Portal <ExternalLink className="w-3 h-3" />
-                    </button>
-                )}
-            </div>
-
+        <div className="animate-in fade-in slide-in-from-bottom-1 duration-500 pt-2">
             {/* Plans Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {/* Free Plan */}
                 <div className={clsx(
                     "p-5 rounded-xl border transition-all duration-300",
                     plan === 'free' 
-                        ? 'bg-[#030303] border-fuchsia-500/20 shadow-[0_0_20px_rgba(6,182,212,0.02)]' 
+                        ? 'bg-[#030303] border-brand-500/20 shadow-[0_0_20px_rgba(6,182,212,0.02)]' 
                         : 'bg-transparent border-[#2A2A2E] opacity-60 grayscale'
                 )}>
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-mono text-[#444] uppercase tracking-widest px-1.5 py-0.5 bg-[#1C1C1E] border border-[#2A2A2E] rounded">Free</span>
                         {plan === 'free' && (
-                            <div className="flex items-center gap-1.5 text-fuchsia-500/80">
-                                <span className="w-1 h-1 rounded-full bg-fuchsia-500 animate-pulse" />
+                            <div className="flex items-center gap-1.5 text-zinc-500">
+                                <span className="w-1 h-1 rounded-full bg-zinc-600 animate-pulse" />
                                 <span className="text-xs font-bold uppercase tracking-widest">Active</span>
                             </div>
                         )}
@@ -214,7 +193,7 @@ export default function SubscriptionSection() {
                         className={clsx(
                             "w-full py-2 rounded text-xs font-bold uppercase tracking-widest transition-all",
                             plan === 'free'
-                                ? 'bg-fuchsia-500/5 text-fuchsia-500/50 border border-fuchsia-500/10 cursor-default'
+                                ? 'bg-white/[0.05] text-zinc-500 border border-white/[0.08] cursor-default'
                                 : 'bg-[#1C1C1E] border border-[#2A2A2E] text-[#666] hover:text-white hover:border-[#333]'
                         )}
                     >
@@ -226,19 +205,19 @@ export default function SubscriptionSection() {
                 <div className={clsx(
                     "p-5 rounded-xl border transition-all duration-300 relative overflow-hidden",
                     plan === 'pro' 
-                        ? 'bg-[#030303] border-fuchsia-500/40 shadow-[0_0_30px_rgba(6,182,212,0.05)]' 
+                        ? 'bg-[#030303] border-brand-500/40 shadow-[0_0_30px_rgba(6,182,212,0.05)]' 
                         : 'bg-[#030303] border-[#2A2A2E] hover:border-[#333]'
                 )}>
                     {/* Subtle Gradient Glow */}
                     {plan === 'pro' && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-transparent to-transparent pointer-events-none" />
                     )}
 
                     <div className="flex items-center justify-between mb-4 relative z-10">
-                        <span className="text-xs font-mono text-fuchsia-400 uppercase tracking-widest px-1.5 py-0.5 bg-fuchsia-500/5 border border-fuchsia-500/20 rounded">Pro</span>
+                        <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest px-1.5 py-0.5 bg-white/[0.05] border border-white/[0.1] rounded">Pro</span>
                         {plan === 'pro' && (
-                            <div className="flex items-center gap-1.5 text-fuchsia-400">
-                                <span className="w-1 h-1 rounded-full bg-fuchsia-400 animate-pulse" />
+                            <div className="flex items-center gap-1.5 text-zinc-400">
+                                <span className="w-1 h-1 rounded-full bg-zinc-500 animate-pulse" />
                                 <span className="text-xs font-bold uppercase tracking-widest">Active</span>
                             </div>
                         )}
@@ -258,7 +237,7 @@ export default function SubscriptionSection() {
                             "New features access",
                         ].map((feature, i) => (i < 5 && (
                             <div key={i} className="flex items-center gap-2.5">
-                                <Check className="w-3 h-3 text-fuchsia-500/50 stroke-[3]" />
+                                <Check className="w-3 h-3 text-zinc-600 stroke-[3]" />
                                 <span className="text-xs text-[#AAA] font-mono tracking-tight">{feature}</span>
                             </div>
                         )))}
@@ -267,7 +246,7 @@ export default function SubscriptionSection() {
                     {/* Action Area */}
                     <div className="relative z-10">
                         {plan === "pro" ? (
-                            <button className="w-full py-2 rounded text-xs font-bold uppercase tracking-widest bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 cursor-default">
+                            <button className="w-full py-2 rounded text-xs font-bold uppercase tracking-widest bg-white/[0.05] text-zinc-400 border border-white/[0.1] cursor-default">
                                 Active Plan
                             </button>
                         ) : !showLicenseInput ? (
@@ -286,8 +265,8 @@ export default function SubscriptionSection() {
                                 </button>
                             </div>
                         ) : (
-                            <div className="animate-in slide-in-from-top-1 bg-black border border-[#2A2A2E] rounded-lg p-3 space-y-3">
-                                <div className="flex items-center justify-between">
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 pt-2">
+                                <div className="flex items-center justify-between px-3 py-2 bg-[#030303] border border-[#2A2A2E] rounded-lg">
                                     <span className="text-xs font-mono uppercase tracking-widest text-[#444]">Activation</span>
                                     <button onClick={() => setShowLicenseInput(false)} className="text-[#444] hover:text-white transition-colors">
                                         <X className="w-3 h-3" />
@@ -299,13 +278,13 @@ export default function SubscriptionSection() {
                                     onChange={(e) => setLicenseKey(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="LMSQ-XXXX..."
-                                    className="w-full bg-black border border-[#2A2A2E] rounded px-2.5 py-1.5 text-white text-xs font-mono focus:border-fuchsia-500/30 outline-none transition-all placeholder-[#222]"
+                                    className="w-full bg-black border border-[#2A2A2E] rounded px-2.5 py-1.5 text-white text-xs font-mono focus:border-brand-500/30 outline-none transition-all placeholder-[#222]"
                                 />
                                 {error && <p className="text-red-500 text-xs font-mono">{error}</p>}
                                 <button
                                     onClick={handleActivateLicense}
                                     disabled={!licenseKey.trim() || activating}
-                                    className="w-full py-1.5 bg-fuchsia-500/10 text-fuchsia-400 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                                    className="w-full py-1.5 bg-white/[0.05] text-zinc-400 hover:bg-white/[0.1] border border-white/[0.1] rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
                                 >
                                     {activating ? "Processing..." : "Activate"}
                                 </button>

@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import SettingsLayout, { SettingsTab } from "@/components/account/SettingsLayout"
 import ProfileSection from "@/components/account/ProfileSection"
 import AccountSection from "@/components/account/AccountSection"
+import GeneralSettingsSection from "@/components/account/GeneralSettingsSection"
 import CloudflareCard from "@/components/account/integrations/CloudflareCard"
 import AppleCard from "@/components/account/integrations/AppleCard"
 import MarketplaceCard from "@/components/account/integrations/MarketplaceCard"
@@ -32,7 +33,9 @@ function AccountSettingsContent() {
     const renderContent = () => {
         switch (activeTab) {
             case "account":
-                return <ProfileSection /> // We will rename/merge Profile/Account in next step
+                return <ProfileSection />
+            case "general":
+                return <GeneralSettingsSection />
             case "cloudflare":
                 return <CloudflareCard />
             case "apple":
@@ -54,8 +57,26 @@ function AccountSettingsContent() {
         }
     }
 
+    const tabMetadata = {
+        account: { title: "Profile", description: "Manage your personal information and security settings." },
+        general: { title: "Preferences", description: "Manage your dashboard appearance and automation behavior." },
+        cloudflare: { title: "Cloudflare", description: "Configure your Cloudflare integration for automated DNS." },
+        apple: { title: "Apple Developer", description: "Manage your Apple Developer account for native iOS builds." },
+        lemonsqueezy: { title: "Marketplace", description: "Configure your Lemon Squeezy integration for payments." },
+        apikeys: { title: "API Keys", description: "Manage your personal access tokens for the Foldaa CLI." },
+        subscription: { title: "Subscription", description: "Manage your billing and plan details." },
+        support: { title: "Support", description: "Get in touch with the Foldaa team." }
+    };
+
+    const currentMetadata = tabMetadata[activeTab] || tabMetadata.account;
+
     return (
-        <SettingsLayout activeTab={activeTab} onTabChange={handleTabChange}>
+        <SettingsLayout 
+            activeTab={activeTab} 
+            onTabChange={handleTabChange}
+            title={currentMetadata.title}
+            description={currentMetadata.description}
+        >
             {renderContent()}
         </SettingsLayout>
     )

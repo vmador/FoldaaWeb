@@ -1,0 +1,51 @@
+
+> @foldaa/terminal-ui@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/workspace/FoldaaWeb/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/workspace/FoldaaWeb/apps/terminal-ui/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.1s
+  Running TypeScript ...
+Failed to compile.
+
+./src/components/onboarding/OnboardingModal.tsx:157:21
+Type error: Type '{ hidden: { opacity: number; scale: number; }; visible: { opacity: number; scale: number; transition: { duration: number; ease: number[]; }; }; exit: { opacity: number; scale: number; transition: { duration: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; scale: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; scale: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; scale: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: number[]; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: number[]; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: number[]; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'number[]' is not assignable to type 'Easing | Easing[] | undefined'.
+                      Type 'number[]' is not assignable to type 'EasingFunction | Easing[]'.
+                        Type 'number[]' is not assignable to type 'Easing[]'.
+                          Type 'number' is not assignable to type 'Easing'.
+
+[0m [90m 155 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"relative z-10 h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-transparent via-black/20 to-black/40"[39m[33m>[39m
+ [90m 156 |[39m                 [33m<[39m[33mmotion[39m[33m.[39mdiv 
+[31m[1m>[22m[39m[90m 157 |[39m                     variants[33m=[39m{containerVariants}
+ [90m     |[39m                     [31m[1m^[22m[39m
+ [90m 158 |[39m                     initial[33m=[39m[32m"hidden"[39m
+ [90m 159 |[39m                     animate[33m=[39m[32m"visible"[39m
+ [90m 160 |[39m                     exit[33m=[39m[32m"exit"[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /Users/workspace/FoldaaWeb/apps/terminal-ui
+npm error workspace @foldaa/terminal-ui@0.1.0
+npm error location /Users/workspace/FoldaaWeb/apps/terminal-ui
+npm error command failed
+npm error command sh -c next build

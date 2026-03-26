@@ -94,6 +94,7 @@ export class FoldaaClient {
     name: string; 
     type: 'url' | 'bundle'; 
     source: string;
+    workspaceId?: string;
   }): Promise<{ projectId: string }> {
     const { data: { user } } = await this.supabase.auth.getUser();
     if (!user) throw new Error('Unauthorized');
@@ -117,6 +118,7 @@ export class FoldaaClient {
         name: params.name,
         original_url: params.source,
         user_id: user.id,
+        workspace_id: params.workspaceId,
         status: 'deploying'
       })
       .select().single();

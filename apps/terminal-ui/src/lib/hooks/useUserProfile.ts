@@ -14,11 +14,14 @@ export type UserProfile = {
     twitter: string | null;
     github: string | null;
     subscriptionPlan?: 'free' | 'pro';
+    onboarding_completed: boolean;
+    role: string | null;
 }
 
 export type UserSettings = {
     user_id: string;
     theme: 'light' | 'dark' | 'auto';
+    accent_color: string;
     auto_open_projects: boolean;
     notifications_enabled: boolean;
 }

@@ -72,20 +72,20 @@ export default function DomainRow({ domain, onViewDetail, onRefresh }: DomainRow
         >
             {/* Domain Name */}
             <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-md bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center group-hover:border-fuchsia-500/30 transition-colors">
-                    <span className="text-xs font-bold text-[#444] group-hover:text-fuchsia-400 capitalize">
+                <div className="w-8 h-8 rounded-md bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center group-hover:border-brand-500/30 transition-colors">
+                    <span className="text-xs font-bold text-[#444] group-hover:text-brand-400 capitalize">
                         {domain.domain_name?.charAt(0) || "D"}
                     </span>
                 </div>
                 <div className="flex flex-col">
                     <button 
                         onClick={() => onViewDetail(domain.id)}
-                        className="text-sm font-medium text-white hover:text-fuchsia-400 transition-colors text-left truncate max-w-[200px]"
+                        className="text-sm font-medium text-white hover:text-brand-400 transition-colors text-left truncate max-w-[200px]"
                     >
                         {domain.domain_name}
                     </button>
                     {domain.is_primary && (
-                        <span className="text-xs font-bold text-fuchsia-400 tracking-widest uppercase">Primary</span>
+                        <span className="text-xs font-bold text-brand-400 tracking-widest uppercase">Primary</span>
                     )}
                 </div>
             </div>

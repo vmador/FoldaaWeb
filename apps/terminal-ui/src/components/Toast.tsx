@@ -29,9 +29,9 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
     }, [id, persistent, onClose]);
 
     const icons = {
-        success: <CheckCircle2 size={14} className="text-[#D946EF]" />,
-        error: <AlertCircle size={14} className="text-red-400" />,
-        info: <Info size={14} className="text-blue-400" />
+        success: <CheckCircle2 size={14} className="text-white/40" />,
+        error: <AlertCircle size={14} className="text-red-500/40" />,
+        info: <Info size={14} className="text-white/40" />
     };
 
     return (
@@ -40,10 +40,8 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             className={clsx(
-                "flex items-center gap-3 px-4 py-3 bg-[#1C1C1E] border rounded-lg shadow-2xl min-w-[300px] max-w-md",
-                type === 'success' ? "border-[#D946EF]/30" : 
-                type === 'error' ? "border-red-500/30" : 
-                "border-blue-500/30"
+                "flex items-center gap-3 px-4 py-3 bg-[#080808] border border-white/[0.08] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[320px] max-w-md animate-in fade-in slide-in-from-bottom-2 duration-300",
+                type === 'error' && "border-red-500/10"
             )}
         >
             <div className="flex-shrink-0">{icons[type]}</div>
@@ -55,7 +53,7 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
                             e.stopPropagation();
                             action.onClick();
                         }}
-                        className="flex-shrink-0 px-2.5 py-1 bg-[#1A3A3A] hover:bg-[#204A4A] border border-[#255656] text-[#D946EF] rounded text-xs font-bold uppercase tracking-widest transition-all"
+                        className="flex-shrink-0 px-3 py-1 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.05] text-white/70 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all"
                     >
                         {action.label}
                     </button>

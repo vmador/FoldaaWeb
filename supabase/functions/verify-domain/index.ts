@@ -1,42 +1,11 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
-async function checkDnsTxt(domain: string, token: string): Promise<boolean> {
-  try {
-    const res = await fetch(`https://dns.google/resolve?name=_foldaa-challenge.${domain}&type=TXT`);
-    if (!res.ok) return false;
-    const data = await res.json();
-    
-    if (data.Answer && Array.isArray(data.Answer)) {
-      for (const record of data.Answer) {
-        if (record.data && record.data.includes(token)) {
-          return true;
-        }
-      }
-    }
-  } catch (e) {
-    console.error("DNS check failed", e);
-  }
-  return false;
-}
-
-async function checkHttp(domain: string, token: string): Promise<boolean> {
-  try {
-    const res = await fetch(`https://${domain}/.well-known/foldaa.txt`, { signal: AbortSignal.timeout(5000) });
-    if (res.ok) {
-      const text = await res.text();
-      if (text.trim() === token) return true;
-    }
-  } catch (e) {
-    console.error("HTTP check failed", e);
-  }
-  return false;
-}
+const ENCRYPTION_KEY = Deno.env.get("ENCRYPTION_KEY")!
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -55,51 +24,92 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
     if (authError || !user) throw new Error("Unauthorized")
 
-    const body = await req.json()
-    const { domain } = body
-
+    const { domain } = await req.json()
     if (!domain) throw new Error("Domain is required")
 
-    // Fetch the pending verification
-    const { data: verification, error: fetchError } = await supabaseClient
-      .from("domain_verifications")
+    // Fetch the domain
+    const { data: domainData, error: dbError } = await supabaseClient
+      .from("domains")
       .select("*")
-      .eq("user_id", user.id)
-      .eq("domain", domain.toLowerCase())
+      .eq("domain_name", domain.toLowerCase())
       .single()
 
-    if (fetchError || !verification) {
-      throw new Error("No pending verification found for this domain. Run claim first.")
-    }
+    if (dbError || !domainData) throw new Error("Domain not found in database")
 
-    if (verification.status === "verified") {
+    if (domainData.status === "verified") {
       return new Response(JSON.stringify({ success: true, message: "Already verified" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       })
     }
 
-    const { token } = verification
-    const isVerifiedDns = await checkDnsTxt(domain, token)
-    const isVerifiedHttp = await checkHttp(domain, token)
+    if (domainData.zone_id) {
+      // Cloudflare Verification
+      const { data: credentials } = await supabaseClient
+        .from("cloudflare_credentials")
+        .select("*")
+        .eq("user_id", user.id)
+        .single()
 
-    if (isVerifiedDns || isVerifiedHttp) {
-      const now = new Date().toISOString()
-      await supabaseClient
-        .from("domain_verifications")
-        .update({ status: "verified", verified_at: now, last_checked_at: now })
-        .eq("id", verification.id)
+      if (!credentials) throw new Error("Cloudflare credentials missing")
 
-      return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      const apiToken = await decryptToken(credentials.encrypted_api_token, user.id)
+      const cfRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${domainData.zone_id}`, {
+        headers: { "Authorization": `Bearer ${apiToken}` }
       })
+      const cfData = await cfRes.json()
+
+      if (cfData.result?.status === "active") {
+        await supabaseClient.from("domains").update({ status: "verified" }).eq("id", domainData.id)
+        return new Response(JSON.stringify({ success: true, message: "Verified via Cloudflare" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        })
+      } else {
+        // Trigger activation check
+        await fetch(`https://api.cloudflare.com/client/v4/zones/${domainData.zone_id}/activation_check`, {
+          method: "PUT",
+          headers: { "Authorization": `Bearer ${apiToken}` }
+        })
+        throw new Error("Cloudflare zone is still pending. Try again in a few minutes.")
+      }
     } else {
-      throw new Error(`DNS record not found. Please add a TXT record to _foldaa-challenge.${domain} with value: ${token}`)
+      throw new Error("Only Cloudflare automated domains are supported right now.")
     }
 
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400
+      status: 200
     })
   }
 })
+
+async function decryptToken(encryptedToken: string, userId: string): Promise<string> {
+  const parts = encryptedToken.split(":")
+  if (parts.length !== 2) throw new Error("Invalid format: expected iv:cipher")
+  const [ivHex, cipherHex] = parts
+  const iv = new Uint8Array(ivHex.match(/.{1,2}/g)!.map((byte: any) => parseInt(byte, 16)))
+  const cipher = new Uint8Array(cipherHex.match(/.{1,2}/g)!.map((byte: any) => parseInt(byte, 16)))
+  const encoder = new TextEncoder()
+  const masterKeys = [ENCRYPTION_KEY, Deno.env.get("INTEGRATION_ENCRYPTION_KEY")].filter(Boolean) as string[]
+  const saltStrings = [`foldaa-v2-2025-${userId}`, userId, "cloudflare-api-token-salt", "foldaa-v2-2025"]
+
+  for (const masterKey of masterKeys) {
+    const keyMaterials = [{ name: "StringKey", data: encoder.encode(masterKey) }]
+    if (/^[0-9a-fA-F]+$/.test(masterKey) && masterKey.length % 2 === 0) {
+      keyMaterials.push({ name: "BinaryKey", data: new Uint8Array(masterKey.match(/.{1,2}/g)!.map(x => parseInt(x, 16))) })
+    }
+    for (const km of keyMaterials) {
+      for (const saltStr of saltStrings) {
+        try {
+          const keyMaterial = await crypto.subtle.importKey("raw", km.data, { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"])
+          const salt = encoder.encode(saltStr)
+          const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 100000, hash: "SHA-256" }, keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"])
+          const dec = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, cipher)
+          const result = new TextDecoder().decode(dec)
+          if (result) return result
+        } catch (e) { continue }
+      }
+    }
+  }
+  throw new Error("Decryption failed")
+}

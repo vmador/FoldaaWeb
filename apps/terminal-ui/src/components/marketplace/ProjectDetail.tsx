@@ -24,7 +24,7 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
         border: isDark ? "rgba(255, 255, 255, 0.08)" : "#E0E0E0",
         bg: isDark ? "#000000" : "#FFFFFF",
         cardBg: isDark ? "#080808" : "#FFFFFF",
-        accent: "#79D9EC", // Light Blue accent
+        accent: "#FFFFFF",
     }
 
     const [selectedRes, setSelectedRes] = useState(RESOLUTIONS[0])
@@ -131,7 +131,7 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                     )}
                     <button 
                         style={{ 
-                            background: colors.accent, 
+                            background: "#FFFFFF", 
                             color: "#000", 
                             border: "none", 
                             padding: "6px 14px", 
@@ -143,8 +143,10 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                             alignItems: "center",
                             gap: "6px",
                             textTransform: "uppercase",
-                            letterSpacing: "0.05em"
+                            letterSpacing: "0.05em",
+                            transition: "all 0.2s ease"
                         }}
+                        className="hover:bg-[#E0E0E0] active:scale-[0.98]"
                         onClick={() => {
                             if (listing.is_for_sale && listing.ls_checkout_url) {
                                 window.open(listing.ls_checkout_url, "_blank");
@@ -201,9 +203,9 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                                 display: "inline-block",
                                 padding: "2px 8px",
                                 borderRadius: "4px",
-                                background: "rgba(121, 217, 236, 0.1)",
-                                border: "1px solid rgba(121, 217, 236, 0.2)",
-                                color: colors.accent,
+                                background: "rgba(255, 255, 255, 0.05)",
+                                border: "1px solid rgba(255, 255, 255, 0.1)",
+                                color: colors.textSecondary,
                                 fontSize: "10px",
                                 fontWeight: "700",
                                 textTransform: "uppercase",
@@ -456,7 +458,7 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                                                 color: colors.textSecondary,
                                                 fontFamily: "monospace"
                                             }}>
-                                                <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: colors.accent, boxShadow: `0 0 10px ${colors.accent}` }} />
+                                                <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#444" }} />
                                                 {tech}
                                             </div>
                                         ))
@@ -539,7 +541,7 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ fontWeight: "600", fontSize: "14px", color: colors.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{developerName}</div>
-                                <div style={{ fontSize: "11px", color: colors.accent, fontWeight: "600" }}>View Profile</div>
+                                <div style={{ fontSize: "11px", color: colors.textMuted, fontWeight: "600" }}>View Profile</div>
                             </div>
                         </div>
 
@@ -723,12 +725,12 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                     {/* Support Box */}
                     <div style={{ 
                         padding: "16px", 
-                        background: "rgba(121, 217, 236, 0.05)", 
-                        border: "1px solid rgba(121, 217, 236, 0.1)", 
+                        background: "rgba(255, 255, 255, 0.03)", 
+                        border: "1px solid rgba(255, 255, 255, 0.05)", 
                         borderRadius: "10px" 
                     }}>
-                        <h5 style={{ fontSize: "12px", fontWeight: "600", color: "#79D9EC", marginBottom: "8px" }}>Developer Support</h5>
-                        <p style={{ fontSize: "11px", color: "rgba(121, 217, 236, 0.7)", lineHeight: "1.5", marginBottom: "12px" }}>
+                        <h5 style={{ fontSize: "12px", fontWeight: "600", color: "#FFF", marginBottom: "8px" }}>Developer Support</h5>
+                        <p style={{ fontSize: "11px", color: colors.textMuted, lineHeight: "1.5", marginBottom: "12px" }}>
                             Need help with this template? Contact {listing.profiles?.first_name || "the developer"} directly.
                         </p>
                         {listing.support_email && (
@@ -736,9 +738,9 @@ export default function ProjectDetail({ listing, onBack, onViewDeveloperProfile 
                                 onClick={() => window.location.href = `mailto:${listing.support_email}`}
                                 style={{
                                     width: "100%",
-                                    background: "rgba(121, 217, 236, 0.15)",
-                                    border: "1px solid rgba(121, 217, 236, 0.2)",
-                                    color: "#79D9EC",
+                                    background: "rgba(255, 255, 255, 0.05)",
+                                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                                    color: "#FFF",
                                     padding: "8px",
                                     borderRadius: "6px",
                                     fontSize: "11px",

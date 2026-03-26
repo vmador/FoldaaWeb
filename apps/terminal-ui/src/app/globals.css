@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 @theme {
+  --color-brand-50: var(--theme-brand-50);
+  --color-brand-100: var(--theme-brand-100);
+  --color-brand-200: var(--theme-brand-200);
+  --color-brand-300: var(--theme-brand-300);
+  --color-brand-400: var(--theme-brand-400);
+  --color-brand-500: var(--theme-brand-500);
+  --color-brand-600: var(--theme-brand-600);
+  --color-brand-700: var(--theme-brand-700);
+  --color-brand-800: var(--theme-brand-800);
+  --color-brand-900: var(--theme-brand-900);
+  --color-brand-950: var(--theme-brand-950);
+
   --color-background: hsl(0 0% 0%);
   --color-foreground: hsl(0 0% 98%);
 
@@ -47,4 +59,97 @@
   0% { transform: translateX(-100%); }
   50% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
+}
+@layer base {
+  :root, [data-accent="fuchsia"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-fuchsia-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-fuchsia-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-fuchsia-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-fuchsia-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-fuchsia-500) 75%, transparent);
+    --theme-brand-500: var(--color-fuchsia-500);
+    --theme-brand-600: var(--color-fuchsia-600);
+    --theme-brand-700: var(--color-fuchsia-700);
+    --theme-brand-800: var(--color-fuchsia-800);
+    --theme-brand-900: var(--color-fuchsia-900);
+    --theme-brand-950: var(--color-fuchsia-950);
+  }
+  [data-accent="emerald"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-emerald-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-emerald-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-emerald-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-emerald-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-emerald-500) 75%, transparent);
+    --theme-brand-500: var(--color-emerald-500);
+    --theme-brand-600: var(--color-emerald-600);
+    --theme-brand-700: var(--color-emerald-700);
+    --theme-brand-800: var(--color-emerald-800);
+    --theme-brand-900: var(--color-emerald-900);
+    --theme-brand-950: var(--color-emerald-950);
+  }
+  [data-accent="blue"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-blue-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-blue-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-blue-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-blue-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-blue-500) 75%, transparent);
+    --theme-brand-500: var(--color-blue-500);
+    --theme-brand-600: var(--color-blue-600);
+    --theme-brand-700: var(--color-blue-700);
+    --theme-brand-800: var(--color-blue-800);
+    --theme-brand-900: var(--color-blue-900);
+    --theme-brand-950: var(--color-blue-950);
+  }
+  [data-accent="amber"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-amber-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-amber-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-amber-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-amber-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-amber-500) 75%, transparent);
+    --theme-brand-500: var(--color-amber-500);
+    --theme-brand-600: var(--color-amber-600);
+    --theme-brand-700: var(--color-amber-700);
+    --theme-brand-800: var(--color-amber-800);
+    --theme-brand-900: var(--color-amber-900);
+    --theme-brand-950: var(--color-amber-950);
+  }
+  [data-accent="rose"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-rose-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-rose-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-rose-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-rose-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-rose-500) 75%, transparent);
+    --theme-brand-500: var(--color-rose-500);
+    --theme-brand-600: var(--color-rose-600);
+    --theme-brand-700: var(--color-rose-700);
+    --theme-brand-800: var(--color-rose-800);
+    --theme-brand-900: var(--color-rose-900);
+    --theme-brand-950: var(--color-rose-950);
+  }
+  [data-accent="violet"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-violet-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-violet-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-violet-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-violet-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-violet-500) 75%, transparent);
+    --theme-brand-500: var(--color-violet-500);
+    --theme-brand-600: var(--color-violet-600);
+    --theme-brand-700: var(--color-violet-700);
+    --theme-brand-800: var(--color-violet-800);
+    --theme-brand-900: var(--color-violet-900);
+    --theme-brand-950: var(--color-violet-950);
+  }
+  [data-accent="cyan"] {
+    --theme-brand-50: color-mix(in srgb, var(--color-cyan-500) 6%, transparent);
+    --theme-brand-100: color-mix(in srgb, var(--color-cyan-500) 12%, transparent);
+    --theme-brand-200: color-mix(in srgb, var(--color-cyan-500) 25%, transparent);
+    --theme-brand-300: color-mix(in srgb, var(--color-cyan-500) 50%, transparent);
+    --theme-brand-400: color-mix(in srgb, var(--color-cyan-500) 75%, transparent);
+    --theme-brand-500: var(--color-cyan-500);
+    --theme-brand-600: var(--color-cyan-600);
+    --theme-brand-700: var(--color-cyan-700);
+    --theme-brand-800: var(--color-cyan-800);
+    --theme-brand-900: var(--color-cyan-900);
+    --theme-brand-950: var(--color-cyan-950);
+  }
 }

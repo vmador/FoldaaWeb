@@ -201,8 +201,8 @@ const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
                 {/* Holographic/Gradient Background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A2E] to-[#0A0A0B]" />
                 <div className="absolute inset-0 opacity-40 mix-blend-screen">
-                    <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[120%] bg-fuchsia-500/20 blur-[120px] rounded-full animate-pulse" />
-                    <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[100%] bg-blue-500/10 blur-[100px] rounded-full" />
+                    <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[120%] bg-white/5 blur-[120px] rounded-full animate-pulse" />
+                    <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[100%] bg-white/5 blur-[100px] rounded-full" />
                 </div>
                 
                 {/* Banner Image (if available) */}

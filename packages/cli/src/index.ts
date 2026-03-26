@@ -32,6 +32,7 @@ program
   .option('-b, --background <color>', 'Background color')
   .option('-s, --safe-area', 'Ignore safe area (full height)')
   .option('-p, --pwa', 'Enable PWA features')
+  .option('-w, --workspace <id>', 'Target workspace ID')
   .action(async (url, options) => {
     const { wrapCommand } = await import('./commands/wrap.js');
     await wrapCommand(url, options);

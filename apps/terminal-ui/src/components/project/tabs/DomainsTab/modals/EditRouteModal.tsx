@@ -12,13 +12,12 @@ interface EditRouteModalProps {
 }
 
 export default function EditRouteModal({ route, onClose, onSuccess }: EditRouteModalProps) {
-    const [path, setPath] = useState(route.path)
-    const [targetPort, setTargetPort] = useState(route.target_port.toString())
+    const [path, setPath] = useState(route.pattern || route.path)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const handleSave = async () => {
-        if (!path || !targetPort) return
+        if (!path) return
         setError(null)
         setIsSubmitting(true)
 
@@ -28,22 +27,16 @@ export default function EditRouteModal({ route, onClose, onSuccess }: EditRouteM
                 throw new Error("Path must start with /")
             }
 
-            const portNum = parseInt(targetPort)
-            if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
-                throw new Error("Invalid target port (1-65535)")
-            }
-
             const { error: updateError } = await supabase
                 .from("domain_routes")
                 .update({
-                    path: path,
-                    target_port: portNum,
+                    pattern: path
                 })
                 .eq("id", route.id)
 
             if (updateError) {
                 if (updateError.code === "23505") {
-                    throw new Error("A route with this path already exists for this domain.")
+                    throw new Error("A route with this pattern already exists for this domain.")
                 }
                 throw updateError
             }
@@ -67,7 +60,7 @@ export default function EditRouteModal({ route, onClose, onSuccess }: EditRouteM
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2A2E]">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-[#2A2A2E] flex items-center justify-center border border-[#2A2A2E]">
-                            <Link2 className="w-4 h-4 text-fuchsia-400" />
+                            <Link2 className="w-4 h-4 text-brand-400" />
                         </div>
                         <h3 className="text-white font-bold uppercase tracking-widest text-sm">Edit Routing Rule</h3>
                     </div>
@@ -86,19 +79,16 @@ export default function EditRouteModal({ route, onClose, onSuccess }: EditRouteM
                                 placeholder="/"
                                 value={path}
                                 onChange={(e) => setPath(e.target.value)}
-                                className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-fuchsia-500/50 transition-colors font-mono"
+                                className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-brand-500/50 transition-colors font-mono"
                              />
                         </div>
 
                         <div className="flex flex-col gap-2">
-                             <label className="text-xs font-bold text-[#666] uppercase tracking-wider">Internal Port</label>
-                             <input 
-                                type="text"
-                                placeholder="3000"
-                                value={targetPort}
-                                onChange={(e) => setTargetPort(e.target.value)}
-                                className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-white text-base focus:outline-none focus:border-fuchsia-500/50 transition-colors font-mono"
-                             />
+                             <label className="text-xs font-bold text-[#666] uppercase tracking-wider">Target Project</label>
+                             <div className="w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-md px-4 py-3 text-[#AAA] text-base cursor-not-allowed font-mono">
+                                 Automatically bound to current project
+                             </div>
+                             <p className="text-xs text-[#444]">This route will direct traffic to the Cloudflare Worker of this project.</p>
                         </div>
                     </div>
 

@@ -16,7 +16,7 @@ const StatCard = ({ label, value, icon: Icon, color }: any) => (
             <span className="text-[#666] text-xs font-bold uppercase tracking-widest">{label}</span>
             <div className={clsx(
                 "p-2 rounded-lg bg-opacity-10 transition-transform group-hover:scale-110",
-                color === 'cyan' ? "bg-fuchsia-500 text-fuchsia-400" :
+                color === 'cyan' ? "bg-brand-500 text-brand-400" :
                 color === 'purple' ? "bg-purple-500 text-purple-400" :
                 color === 'green' ? "bg-green-500 text-green-400" :
                 "bg-blue-500 text-blue-400"
@@ -113,7 +113,7 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-[#444] font-bold text-xs uppercase tracking-widest">LIVE</span>
-                        <span className="text-fuchsia-400 text-lg font-bold font-mono">{stats?.live_visitors?.toString() || "0"}</span>
+                        <span className="text-brand-400 text-lg font-bold font-mono">{stats?.live_visitors?.toString() || "0"}</span>
                     </div>
                 </div>
 
@@ -126,7 +126,7 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
                             onClick={() => setPeriod(p)}
                             className={clsx(
                                 "px-2 py-0.5 rounded text-xs font-mono transition-all",
-                                period === p ? "bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20" : "text-[#666] hover:text-[#A0A0A0]"
+                                period === p ? "bg-brand-500/10 text-brand-400 border border-brand-500/20" : "text-[#666] hover:text-[#A0A0A0]"
                             )}
                         >
                             {p.toUpperCase()}

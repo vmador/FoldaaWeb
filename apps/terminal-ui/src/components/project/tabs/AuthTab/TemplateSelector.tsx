@@ -97,7 +97,7 @@ export default function TemplateSelector({
                         onClick={() => setShowAdvanced(!showAdvanced)}
                         className={clsx(
                             "flex items-center gap-1.5 px-2 py-1 rounded text-xs font-bold transition-all",
-                            showAdvanced ? "bg-fuchsia-500/20 text-fuchsia-400" : "text-[#444] hover:text-[#666]"
+                            showAdvanced ? "bg-brand-500/20 text-brand-400" : "text-[#444] hover:text-[#666]"
                         )}
                     >
                         <Settings2 className="w-3 h-3" />
@@ -122,7 +122,7 @@ export default function TemplateSelector({
                                 onClick={() => onSelect(template.id)}
                                 className={clsx(
                                     "relative aspect-[3/4] rounded-lg overflow-hidden border transition-all duration-300 bg-[#1C1C1E] cursor-pointer",
-                                    isSelected ? "border-fuchsia-500/50 ring-1 ring-fuchsia-500/20" : "border-[#2A2A2E] group-hover:border-[#333336]"
+                                    isSelected ? "border-brand-500/50 ring-1 ring-brand-500/20" : "border-[#2A2A2E] group-hover:border-[#333336]"
                                 )}
                             >
                                 <img
@@ -137,7 +137,7 @@ export default function TemplateSelector({
                                     isSelected && "opacity-100"
                                 )}>
                                     {isSelected && (
-                                        <div className="bg-fuchsia-500 text-black rounded-full p-1.5 shadow-xl shadow-fuchsia-500/20">
+                                        <div className="bg-brand-500 text-black rounded-full p-1.5 shadow-xl shadow-brand-500/20">
                                             <Check size={14} strokeWidth={3} />
                                         </div>
                                     )}
@@ -166,7 +166,7 @@ export default function TemplateSelector({
                             >
                                 <span className={clsx(
                                     "text-xs font-bold uppercase tracking-wider transition-colors",
-                                    isSelected ? "text-fuchsia-400" : "text-[#444] group-hover:text-[#666]"
+                                    isSelected ? "text-brand-400" : "text-[#444] group-hover:text-[#666]"
                                 )}>
                                     {template.name}
                                 </span>
@@ -182,10 +182,10 @@ export default function TemplateSelector({
             {/* Advanced Override Editor */}
             {showAdvanced && selectedTemplateId && (
                 <div className="animate-in slide-in-from-top-2 duration-300">
-                    <div className="bg-[#1C1C1E] border border-fuchsia-500/20 rounded-lg overflow-hidden">
-                        <div className="flex items-center gap-2 px-3 py-2 bg-fuchsia-500/5 border-b border-fuchsia-500/10">
-                            <Settings2 className="w-3.5 h-3.5 text-fuchsia-400" />
-                            <span className="text-xs font-bold text-fuchsia-400 uppercase tracking-widest">Advanced Configuration Overrides</span>
+                    <div className="bg-[#1C1C1E] border border-brand-500/20 rounded-lg overflow-hidden">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-brand-500/5 border-b border-brand-500/10">
+                            <Settings2 className="w-3.5 h-3.5 text-brand-400" />
+                            <span className="text-xs font-bold text-brand-400 uppercase tracking-widest">Advanced Configuration Overrides</span>
                         </div>
                         <div className="p-4 flex flex-col gap-4">
                             <div className="flex items-start gap-3 p-3 bg-blue-500/5 border border-blue-500/10 rounded-md">
@@ -197,7 +197,7 @@ export default function TemplateSelector({
                             <textarea
                                 value={localOverrides}
                                 onChange={(e) => handleOverrideChange(e.target.value)}
-                                className="w-full h-40 bg-black border border-[#333336] rounded p-3 font-mono text-xs text-fuchsia-300 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/20 outline-none transition-all"
+                                className="w-full h-40 bg-black border border-[#333336] rounded p-3 font-mono text-xs text-brand-300 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 outline-none transition-all"
                                 placeholder='{ "title": "Welcome Back", "primaryColor": "#00E0FF" }'
                             />
                         </div>
@@ -212,7 +212,7 @@ export default function TemplateSelector({
                         <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2A2E]">
                             <div className="flex flex-col gap-1">
                                 <h3 className="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
-                                    <Eye className="w-4 h-4 text-fuchsia-400" />
+                                    <Eye className="w-4 h-4 text-brand-400" />
                                     Preview: {previewTemplate.name}
                                 </h3>
                                 <p className="text-xs text-[#444] uppercase font-mono">{previewTemplate.description}</p>

@@ -35,7 +35,7 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
             >
                 {/* Header */}
                 <div className="p-6 border-b border-[#2A2A2E] flex items-center gap-4 bg-black">
-                    <div className="w-10 h-10 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
                         <CheckCircle className="w-5 h-5" />
                     </div>
                     <div>
@@ -58,14 +58,14 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Your API Key</label>
                         <div className="relative bg-black border border-[#2A2A2E] rounded-lg p-3 pr-14 flex items-center">
-                            <code className="text-sm text-fuchsia-400 font-mono break-all leading-relaxed">
+                            <code className="text-sm text-white/90 font-mono break-all leading-relaxed">
                                 {apiKey}
                             </code>
                             <button
                                 onClick={copyToClipboard}
                                 className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-md border flex items-center justify-center transition-all ${
                                     copied 
-                                    ? "bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-400" 
+                                    ? "bg-white/10 border-white/20 text-white" 
                                     : "bg-[#2A2A2E] border-[#333336] text-[#888] hover:text-white hover:border-[#333]"
                                 }`}
                             >
@@ -205,7 +205,7 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                                             })}
                                             className="peer sr-only"
                                         />
-                                        <div className="w-4 h-4 rounded-[4px] border border-[#333] bg-black peer-checked:bg-fuchsia-500 peer-checked:border-fuchsia-500 flex items-center justify-center transition-colors">
+                                        <div className="w-4 h-4 rounded-[4px] border border-[#333] bg-black peer-checked:bg-white peer-checked:border-white flex items-center justify-center transition-colors">
                                            {formData.scopes[scope] && <CheckCircle className="w-3 h-3 text-black stroke-[3]" />}
                                         </div>
                                     </div>
@@ -266,7 +266,7 @@ const ApiKeyCard = ({ apiKey, onDelete }: { apiKey: any, onDelete: (key: any) =>
         <div className="bg-black border border-[#2A2A2E] rounded-xl p-5 hover:border-[#333336] transition-colors relative group">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 shrink-0">
                         <Key className="w-4 h-4" />
                     </div>
                     <div>
@@ -317,7 +317,7 @@ const ApiKeyCard = ({ apiKey, onDelete }: { apiKey: any, onDelete: (key: any) =>
                 {apiKey.last_used_at && (
                     <div>
                         <span className="text-xs text-[#444] font-mono uppercase tracking-widest block mb-1">Last Used</span>
-                        <span className="text-xs text-fuchsia-400 font-mono">{new Date(apiKey.last_used_at).toLocaleDateString()}</span>
+                        <span className="text-xs text-white/80 font-mono">{new Date(apiKey.last_used_at).toLocaleDateString()}</span>
                     </div>
                 )}
             </div>
@@ -387,22 +387,7 @@ export default function ApiKeysSection() {
     }
 
     return (
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                <div>
-                    <h2 className="text-sm font-bold text-white uppercase tracking-widest leading-none mb-1.5">API Keys</h2>
-                    <p className="text-xs text-[#666] font-mono">{apiKeys.length} {apiKeys.length === 1 ? "key" : "keys"} active</p>
-                </div>
-                <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="self-start sm:self-auto px-4 py-2 bg-white text-black hover:bg-[#E5E5E5] rounded-md text-xs font-bold transition-all shadow-xl shadow-white/5 flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    NEW API KEY
-                </button>
-            </div>
-
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 pt-2">
             {/* List */}
             {apiKeys.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-12 bg-black border border-[#2A2A2E] border-dashed rounded-xl">

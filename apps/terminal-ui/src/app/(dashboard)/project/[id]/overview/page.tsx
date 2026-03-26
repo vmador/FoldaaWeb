@@ -4,7 +4,7 @@ import { useProjects } from '@/lib/hooks/useProjects';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { formatDistanceToNow, format } from 'date-fns';
-import { Loader2, Check, Globe, Activity, ExternalLink, ChevronRight, Monitor, Download, AlertCircle, RefreshCw } from 'lucide-react';
+import { Loader2, Check, Globe, Activity, ExternalLink, ChevronRight, Monitor, Download, AlertCircle, RefreshCw, Smartphone } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import clsx from 'clsx';
 import { useToast } from '@/context/ToastContext';
@@ -12,9 +12,15 @@ import { useToast } from '@/context/ToastContext';
 import { TabHeader } from '@/components/ui/TabHeader';
 import AsciiVortexAnimation from './AsciiVortexAnimation';
 
-const AnalyticsCard = ({ title, value, percentage, points, color, isInverse }: any) => {
+const AnalyticsCard = ({ title, value, percentage, points, color, isInverse, onClick }: any) => {
     return (
-        <div className="bg-[#080808] border border-[#111] rounded-[10px] p-4 flex flex-col gap-1 group hover:border-[#1c1c1e] transition-all relative overflow-hidden h-[100px]">
+        <div 
+            onClick={onClick}
+            className={clsx(
+                "bg-[#080808] border border-[#111] rounded-[10px] p-4 flex flex-col gap-1 group hover:border-[#1c1c1e] transition-all relative overflow-hidden h-[100px]",
+                onClick && "cursor-pointer active:scale-[0.98]"
+            )}
+        >
             <div className="flex justify-between items-start relative z-10">
                 <div className="flex flex-col">
                     <span className="text-[#333] text-[9px] font-bold uppercase tracking-widest mb-1">{title}</span>
@@ -97,6 +103,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
     const [macConfig, setMacConfig] = useState<any>(null);
     const [isSavingConfig, setIsSavingConfig] = useState(false);
 
+    // iOS Build State
+    const [iosBuild, setIosBuild] = useState<any>(null);
+    const [loadingIosBuild, setLoadingIosBuild] = useState(true);
+    const [brandUpdateTimestamp, setBrandUpdateTimestamp] = useState(Date.now());
+
     // Sync macConfig with project data when it loads
     useEffect(() => {
         if (project) {
@@ -139,6 +150,39 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             }
         }
     }, [project?.id, project?.name, project?.icon_512_url]);
+    
+    const handleTogglePublish = async () => {
+        if (!project) return;
+        const listing = project.marketplace_listings?.[0];
+        
+        if (!listing) {
+            showToast("Please configure your store listing first", "info");
+            router.push(`/project/${projectId}/store`);
+            return;
+        }
+
+        const isPublished = listing.status === 'published';
+        const newStatus = isPublished ? 'unlisted' : 'published';
+        
+        setActionLoading('publishing');
+        try {
+            const { error } = await supabase
+                .from('marketplace_listings')
+                .update({ 
+                    status: newStatus,
+                    published_at: (newStatus === 'published' && !listing.published_at) ? new Date().toISOString() : listing.published_at
+                })
+                .eq('id', listing.id);
+
+            if (error) throw error;
+            showToast(`App ${newStatus === 'published' ? 'published' : 'hidden'} successfully`, 'success');
+        } catch (err) {
+            console.error("Error toggling publish:", err);
+            showToast("Failed to update status", "error");
+        } finally {
+            setActionLoading(null);
+        }
+    };
 
     // Play success sound when build becomes ready
     useEffect(() => {
@@ -269,6 +313,43 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
     }, [projectId, macBuild?.status === 'building' || macBuild?.status === 'pending']);
 
     useEffect(() => {
+        if (!projectId) return;
+        
+        const fetchIosBuild = async () => {
+            const { data } = await supabase
+                .from('ios_builds')
+                .select('*')
+                .eq('project_id', projectId)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+            if (data) setIosBuild(data);
+            setLoadingIosBuild(false);
+        };
+        fetchIosBuild();
+
+        const subscription = supabase
+            .channel(`ios_builds_overview_${projectId}`)
+            .on('postgres_changes', { 
+                event: '*', 
+                schema: 'public', 
+                table: 'ios_builds', 
+                filter: `project_id=eq.${projectId}` 
+            }, (payload) => {
+                if (payload.eventType === 'DELETE') {
+                    setIosBuild(null);
+                } else {
+                    setIosBuild(payload.new);
+                }
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(subscription);
+        };
+    }, [projectId]);
+
+    useEffect(() => {
         if (project?.banner_config?.deployment_pending) {
             showToast('Changes pending. Redeploy required to apply to live site.', 'info', {
                 id: 'deploy-pending',
@@ -317,9 +398,25 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             }
 
             showToast('Redeployment initiated successfully');
-        } catch (error) {
-            console.error('Redeploy error:', error);
-            showToast('Failed to initiate redeployment', 'error');
+        } catch (error: any) {
+            console.error('Redeploy error object:', error);
+            
+            let errMsg = error.message || 'Unknown error';
+            
+            // Try to extract detailed message from Supabase FunctionsHttpError
+            if (error.context && typeof error.context.json === 'function') {
+                try {
+                    const details = await error.context.json();
+                    if (details.error) errMsg = details.error;
+                    if (details.details) errMsg += ` (${details.details})`;
+                } catch (e) {
+                    console.error('Failed to parse error body:', e);
+                }
+            } else if (error.details) {
+                errMsg = error.details;
+            }
+
+            showToast(`Failed to initiate redeployment: ${errMsg}`, 'error');
         } finally {
             setActionLoading(null);
         }
@@ -346,6 +443,43 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             console.error('Build mac error:', error);
             showToast('Failed to start Mac build', 'error');
             setMacBuild((prev: any) => ({ ...prev, status: 'error' }));
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    const handleBuildIosApp = async () => {
+        if (!projectId) return;
+        setActionLoading('build-ios');
+        
+        try {
+            // Get latest certificate for this project
+            const { data: certs } = await supabase
+                .from('ios_certificates')
+                .select('id')
+                .eq('project_id', projectId)
+                .eq('is_valid', true)
+                .order('created_at', { ascending: false })
+                .limit(1);
+
+            if (!certs || certs.length === 0) {
+                showToast('No valid iOS certificate found. Please set one up in the Release tab.', 'error');
+                return;
+            }
+
+            const { error } = await supabase.functions.invoke('build-ios', {
+                body: { 
+                    project_id: projectId,
+                    certificate_id: certs[0].id,
+                    version_number: '1.0.0',
+                    build_number: String(Date.now()).slice(-6)
+                }
+            });
+            if (error) throw error;
+            showToast('iOS Build started successfully', 'success');
+        } catch (error) {
+            console.error('Build ios error:', error);
+            showToast('Failed to start iOS build', 'error');
         } finally {
             setActionLoading(null);
         }
@@ -386,7 +520,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
         
         try {
             const { data, error } = await supabase.functions.invoke('inspect-website', {
-                body: { url: project.original_url }
+                body: { url: project.original_url, refresh: true }
             });
 
             if (error) throw error;
@@ -409,6 +543,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 .eq('id', projectId);
 
             if (updateError) throw updateError;
+            
+            setBrandUpdateTimestamp(Date.now());
             
             showToast('Brand assets updated successfully. You may need to Redeploy to apply them.', 'success', {
                 persistent: true,
@@ -505,7 +641,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 style={{ backgroundColor: projectIcon ? '#000' : (project.theme_color || '#111') }}
                             >
                                 {projectIcon ? (
-                                    <img src={projectIcon} alt="" className="w-full h-full object-cover" />
+                                    <img 
+                                        src={`${projectIcon}${projectIcon.includes('?') ? '&' : '?'}t=${brandUpdateTimestamp}`} 
+                                        alt="" 
+                                        className="w-full h-full object-cover" 
+                                    />
                                 ) : (
                                     <span className="font-bold text-white/20 text-xl select-none">
                                         {project.name.charAt(0).toUpperCase()}
@@ -530,13 +670,13 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                 setIsEditingName(false);
                                             }
                                         }}
-                                        className="bg-[#1C1C1E] border border-[#333] rounded px-2 py-0.5 text-white font-bold text-xl outline-none focus:border-fuchsia-500/50"
+                                        className="bg-[#1C1C1E] border border-[#333] rounded px-2 py-0.5 text-white font-bold text-xl outline-none focus:border-white/20"
                                     />
                                 </div>
                             ) : (
                                 <h1 
                                     onClick={() => setIsEditingName(true)}
-                                    className="text-white font-bold text-2xl tracking-tight cursor-text hover:text-fuchsia-400 transition-colors"
+                                    className="text-white font-bold text-2xl tracking-tight cursor-text hover:text-white/60 transition-colors"
                                 >
                                     {project.name}
                                 </h1>
@@ -553,18 +693,40 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         <span className="text-[#333] text-[9px] font-bold tracking-[0.2em] uppercase">Visibility</span>
                         <p className="text-[10px] text-[#444] leading-tight">Publish on Store...</p>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1c1c1e] border border-[#2a2a2e] rounded-[10px] text-white font-bold text-xs shadow-sm group hover:border-[#3a3a3e] transition-colors">
-                        <span>Published</span>
-                        <Check className="w-3.5 h-3.5 text-green-400" />
-                    </div>
-                    <button 
-                        disabled={actionLoading === 'redeploy'}
-                        onClick={handleRedeploy}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-fuchsia-500/10 border border-fuchsia-500/20 rounded-[10px] text-fuchsia-400 font-bold text-xs hover:bg-fuchsia-500/20 transition-all disabled:opacity-50"
-                    >
-                        {actionLoading === 'redeploy' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                        <span>Redeploy</span>
-                    </button>
+                    {(() => {
+                        const listing = project.marketplace_listings?.[0];
+                        const marketplaceStatus = listing?.status;
+                        const isPublished = marketplaceStatus === 'published';
+                        const isPublishing = actionLoading === 'publishing';
+                        
+                        return (
+                            <button 
+                                onClick={handleTogglePublish}
+                                disabled={isPublishing}
+                                className={clsx(
+                                    "flex items-center gap-2 px-3 py-1.5 rounded-[10px] font-bold text-xs shadow-sm transition-all duration-300 group",
+                                    isPublished 
+                                        ? "bg-[#1c1c1e] border border-green-500/30 text-white shadow-[0_0_15px_rgba(34,197,94,0.1)] hover:border-green-500/50" 
+                                        : "bg-[#111] border border-[#222] text-[#444] hover:border-[#333] hover:text-[#666]"
+                                )}
+                            >
+                                <span className={clsx(isPublishing && "opacity-0")}>
+                                    {isPublished ? 'Published' : (marketplaceStatus === 'unlisted' ? 'Unlisted' : 'Publish')}
+                                </span>
+                                {isPublishing ? (
+                                    <div className="absolute inset-x-0 flex justify-center">
+                                        <Loader2 className="w-3 h-3 animate-spin text-white" />
+                                    </div>
+                                ) : (
+                                    isPublished ? (
+                                        <Check className="w-3.5 h-3.5 text-green-400 animate-in zoom-in duration-500 group-hover:scale-110 transition-transform" />
+                                    ) : (
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#333] group-hover:bg-white transition-colors" />
+                                    )
+                                )}
+                            </button>
+                        );
+                    })()}
                 </div>
             </div>
 
@@ -574,15 +736,18 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     <h2 className="text-white font-bold text-base tracking-tight">PWA Settings</h2>
                     <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[#1c1c1e] border border-[#2a2a2e] rounded-full text-[9px] font-bold text-[#666] tracking-widest uppercase">
                         <span>Viewport Size</span>
-                        <div className="w-1 h-1 rounded-full bg-fuchsia-500 animate-pulse" />
-                        <span className="text-fuchsia-400">PWA</span>
+                        <div className="w-1 h-1 rounded-full bg-white/40 animate-pulse" />
+                        <span className="text-white/60">PWA</span>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#222]" />
+                    <ChevronRight 
+                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        onClick={() => router.push(`/project/${projectId}/banner`)}
+                    />
                 </div>
 
                 <div className="flex items-center justify-center gap-16 bg-black border border-[#111] rounded-[10px] p-10 relative overflow-hidden group min-h-[320px]">
-                    {/* Background subtle glow centered */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-fuchsia-500/5 blur-[120px] pointer-events-none" />
+                    {/* Background subtle glow removed per user request for neutral aesthetic */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 pointer-events-none" />
                     
                     {/* Mockup */}
                     <div className="relative flex-shrink-0">
@@ -605,7 +770,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 {(() => {
                                     const projectIcon = project.icon_512_url || project.icon_192_url || project.apple_touch_icon_url || project.favicon_url;
                                     return projectIcon ? (
-                                        <img src={projectIcon} alt="" className="w-full h-full object-cover" />
+                                        <img 
+                                            src={`${projectIcon}${projectIcon.includes('?') ? '&' : '?'}t=${brandUpdateTimestamp}`} 
+                                            alt="" 
+                                            className="w-full h-full object-cover" 
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-white/20 font-bold text-xs select-none">
                                             {project.name.charAt(0).toUpperCase()}
@@ -639,11 +808,14 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 </div>
             </div>
 
-            {/* 3. Domains Section */}
+            {/* 3. Web Experience Section */}
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between px-1">
-                    <h2 className="text-white font-bold text-base tracking-tight">Domains</h2>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#222]" />
+                    <h2 className="text-white font-bold text-base tracking-tight">Web Experience</h2>
+                    <ChevronRight 
+                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        onClick={() => router.push(`/project/${projectId}/domains`)}
+                    />
                 </div>
                 
                 <div className="flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-colors">
@@ -668,17 +840,25 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             <button 
                                 disabled={actionLoading === 'redeploy'}
                                 onClick={handleRedeploy}
-                                className="px-3 py-1.5 rounded-[8px] border border-fuchsia-500/10 text-fuchsia-500/60 text-[11px] font-bold hover:bg-fuchsia-500/5 hover:text-fuchsia-400 transition-colors flex items-center gap-2 disabled:opacity-50"
+                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors flex items-center gap-2 disabled:opacity-50"
                             >
                                 {actionLoading === 'redeploy' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                                 <span>Redeploy</span>
+                            </button>
+                            <button 
+                                disabled={actionLoading === 'update-brand'}
+                                onClick={handleUpdateBrand}
+                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {actionLoading === 'update-brand' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                <span>Regenerate Brand</span>
                             </button>
                             <button className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors">Edit</button>
                             <a 
                                 href={project.worker_url || `https://${project.subdomain}.foldaa.com`} 
                                 target="_blank" 
                                 rel="noreferrer" 
-                                className="px-3 py-1.5 rounded-[8px] bg-[#111] border border-fuchsia-500/20 text-fuchsia-400 text-[11px] font-bold hover:bg-fuchsia-500/10 transition-colors flex items-center gap-2"
+                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-white transition-colors flex items-center gap-2"
                             >
                                 <span>Open Live</span>
                                 <ExternalLink className="w-2.5 h-2.5" />
@@ -688,401 +868,418 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 </div>
             </div>
 
-            {/* 3.5 Mac App Section */}
-            <div className="flex flex-col gap-3">
+
+            {/* 4. Native Platforms Section */}
+            <div className="flex flex-col gap-6 pt-4 border-t border-[#111]/50">
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-baseline gap-3">
-                        <h2 className="text-white font-bold text-base tracking-tight">Desktop App</h2>
-                        <span className="text-fuchsia-400 text-[10px] font-bold uppercase tracking-[0.2em] bg-fuchsia-500/10 px-2 py-0.5 rounded-full">New</span>
+                        <h2 className="text-white font-bold text-base tracking-tight">Native Platforms</h2>
+                        <span className="text-[#333] text-[10px] font-bold uppercase tracking-[0.2em]">Desktop & Mobile</span>
                     </div>
-                </div>
-                
-        <div className="flex flex-col gap-4">
-                {/* ASCII Build Animation (Vortex) */}
-                {showVortex && (
-                    <AsciiVortexAnimation 
-                        status={macBuild?.status} 
-                        onExploded={() => {
-                            setShowVortex(false);
-                        }}
+                    <ChevronRight 
+                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        onClick={() => router.push(`/project/${projectId}/release`)}
                     />
-                )}
+                </div>
 
-                {!showVortex && (
-                    <div className={clsx(
-                        "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden",
-                        (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-fuchsia-500/30 bg-fuchsia-500/[0.02]"
-                    )}>
-                    {/* Animated Progress Bar */}
-                    {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
-                        <div className="absolute bottom-0 left-0 h-[1.5px] bg-fuchsia-500 animate-[progress_3s_infinite_ease-in-out] shadow-[0_0_10px_#d946ef]" style={{ width: '40%' }} />
-                    )}
-
-                    <div className="flex flex-col gap-6 w-full">
-                        <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center gap-4">
-                                <div className={clsx(
-                                    "w-10 h-10 rounded-[10px] bg-[#111] border border-[#222] flex items-center justify-center transition-all",
-                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') && "animate-pulse border-fuchsia-500/50 shadow-[0_0_15px_rgba(217,70,239,0.1)]"
-                                )}>
-                                    <Monitor className={clsx(
-                                        "w-5 h-5 transition-colors",
-                                        (macBuild?.status === 'building' || macBuild?.status === 'pending') ? "text-fuchsia-400" : "text-white"
-                                    )} />
+                <div className="grid grid-cols-1 gap-8">
+                    {/* 4.1 macOS Build Section */}
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between px-1">
+                            <span className="text-[#555] text-[10px] font-bold uppercase tracking-widest">macOS</span>
+                            {macBuild?.status === 'ready' && (
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                                    <span className="text-[#333] text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
+                                        Last build: {formatDistanceToNow(new Date(macBuild.updated_at), { addSuffix: true })}
+                                    </span>
                                 </div>
-                                <div className="flex flex-col gap-0.5">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[#CCC] font-bold tracking-tight text-sm">macOS Application</span>
-                                        {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
-                                            <span className="text-fuchsia-400 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
-                                        )}
-                                    </div>
-                                    <span className="text-[#555] text-[11px] font-medium tracking-wide">Build a native installer (DMG) for your project.</span>
-                                </div>
-                            </div>
+                            )}
+                        </div>
 
-                        {/* Build Action Buttons */}
-                        <div className="flex items-center gap-2">
-                            <button 
-                                onClick={handleBuildMacApp}
-                                disabled={actionLoading === 'build-mac' || macBuild?.status === 'pending' || macBuild?.status === 'building'}
+                        {/* ASCII Build Animation (Vortex) or Main Card */}
+                        {showVortex ? (
+                            <AsciiVortexAnimation 
+                                status={macBuild?.status} 
+                                onExploded={() => setShowVortex(false)} 
+                            />
+                        ) : (
+                            <div 
+                                onClick={() => router.push(`/project/${projectId}/release`)}
                                 className={clsx(
-                                    "px-4 py-2 rounded-[8px] text-[11px] font-black transition-all flex items-center gap-2 disabled:opacity-50",
-                                    macBuild?.status === 'ready' 
-                                        ? "bg-black/40 border border-[#111] text-[#444] hover:text-[#666]" 
-                                        : "bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 hover:bg-fuchsia-500/20 shadow-[0_0_15px_rgba(217,70,239,0.05)]"
+                                    "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
+                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-white/20 bg-white/[0.02]"
                                 )}
                             >
-                                {actionLoading === 'build-mac' || macBuild?.status === 'pending' || macBuild?.status === 'building' ? (
-                                    <><Loader2 className="w-3 h-3 animate-spin" /> {macBuild?.status === 'building' ? 'Building...' : 'Starting...'}</>
-                                ) : (
-                                    <>{macBuild?.status === 'ready' ? 'Rebuild App' : 'Build Mac App'}</>
+                                {/* Animated Progress Bar */}
+                                {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
+                                    <div className="absolute bottom-0 left-0 h-[1.5px] bg-white animate-[progress_3s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '40%' }} />
                                 )}
-                            </button>
 
-                            {macBuild?.status === 'ready' && (
-                                <a 
-                                    href={macBuild.dmg_url}
-                                    download
-                                    className="px-4 py-2 rounded-[8px] bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-[11px] font-black hover:bg-fuchsia-500/20 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(217,70,239,0.05)]"
-                                >
-                                    <span>Download .dmg</span>
-                                    <Download className="w-2.5 h-2.5" />
-                                </a>
-                            )}
-                        </div>
-                    </div>
+                                <div className="flex flex-col gap-6 w-full">
+                                    <div className="flex items-center justify-between w-full">
+                                        <div className="flex items-center gap-4">
+                                            <div className={clsx(
+                                                "w-10 h-10 rounded-[10px] bg-[#111] border border-[#222] flex items-center justify-center transition-all",
+                                                (macBuild?.status === 'building' || macBuild?.status === 'pending') && "animate-pulse border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                            )}>
+                                                <Monitor className={clsx(
+                                                    "w-5 h-5 transition-colors",
+                                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') ? "text-white/60" : "text-white"
+                                                )} />
+                                            </div>
+                                            <div className="flex flex-col gap-0.5">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[#CCC] font-bold tracking-tight text-sm">macOS Application</span>
+                                                    {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
+                                                        <span className="text-white/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
+                                                    )}
+                                                </div>
+                                                <span className="text-[#555] text-[11px] font-medium tracking-wide">Build a native installer (DMG) for your project.</span>
+                                            </div>
+                                        </div>
 
-                    {/* Build Configuration Row */}
-                    <div className="flex items-center justify-between pt-4 border-t border-[#111]">
-                        <div className="flex items-center gap-3">
-                            <div className="flex gap-2 p-1 bg-black/50 border border-[#111] rounded-[10px]">
-                                <button 
-                                    onClick={() => setSelectedBuildMode('fast')}
-                                    className={clsx(
-                                        "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2",
-                                        selectedBuildMode === 'fast' 
-                                            ? "bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 shadow-[0_0_15px_rgba(217,70,239,0.05)]" 
-                                            : "text-[#444] hover:text-[#777]"
-                                    )}
-                                >
-                                    <Activity className="w-3 h-3" />
-                                    Fast Build
-                                </button>
-                                <button 
-                                    onClick={() => setSelectedBuildMode('pro')}
-                                    className={clsx(
-                                        "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2 relative",
-                                        selectedBuildMode === 'pro' 
-                                            ? "bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20" 
-                                            : "text-[#444] hover:text-[#777]"
-                                    )}
-                                >
-                                    <Monitor className="w-3 h-3" />
-                                    Pro Build
-                                    {selectedBuildMode === 'pro' && <div className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-fuchsia-500 animate-pulse" />}
-                                </button>
-                            </div>
-
-                            {selectedBuildMode === 'pro' && (
-                                <button 
-                                    onClick={() => setShowProSettings(!showProSettings)}
-                                    className={clsx(
-                                        "px-3 py-1.5 rounded-[8px] border transition-all flex items-center gap-2 text-[10px] font-bold",
-                                        showProSettings ? "border-fuchsia-500/50 text-fuchsia-400 bg-fuchsia-500/5" : "border-[#1A1A1A] text-[#444] hover:border-[#333]"
-                                    )}
-                                >
-                                    <span>Settings</span>
-                                    <ChevronRight className={clsx("w-3 h-3 transition-transform", showProSettings && "rotate-90")} />
-                                </button>
-                            )}
-                        </div>
-
-                        {macBuild?.status === 'ready' && (
-                            <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                <span className="text-[#333] text-[9px] font-mono tracking-tighter uppercase">
-                                    Last build: {formatDistanceToNow(new Date(macBuild.updated_at), { addSuffix: true })} ({macBuild.build_mode})
-                                </span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Pro Settings Configurator */}
-                    {selectedBuildMode === 'pro' && showProSettings && macConfig && (
-                        <div className="flex flex-col gap-8 p-6 bg-[#050505] border border-[#111] rounded-[12px] animate-in slide-in-from-top-2 duration-300">
-                            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
-                                <div className="flex flex-col gap-8">
-                                    {/* 1. Window & Dimensions */}
-                                    <div className="flex flex-col gap-4">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                                            <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Window & Layout</h3>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-6">
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-[10px] font-bold text-[#444] uppercase">Width</label>
-                                                <div className="relative">
-                                                    <input 
-                                                        type="number"
-                                                        value={macConfig.window?.width}
-                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, width: parseInt(e.target.value)}})}
-                                                        className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-fuchsia-500/30 transition-colors"
-                                                    />
-                                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-[10px] font-bold text-[#444] uppercase">Height</label>
-                                                <div className="relative">
-                                                    <input 
-                                                        type="number"
-                                                        value={macConfig.window?.height}
-                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, height: parseInt(e.target.value)}})}
-                                                        className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-fuchsia-500/30 transition-colors"
-                                                    />
-                                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-6 pt-1">
-                                            <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={macConfig.window?.frameless}
-                                                    onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, frameless: e.target.checked}})}
-                                                    className="sr-only"
-                                                />
-                                                <div className={clsx(
-                                                    "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                    macConfig.window?.frameless ? "bg-fuchsia-500 border-fuchsia-400" : "bg-black"
-                                                )}>
-                                                    {macConfig.window?.frameless && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                </div>
-                                                <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Frameless</span>
-                                            </label>
-                                            <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={macConfig.window?.transparent}
-                                                    onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, transparent: e.target.checked}})}
-                                                    className="sr-only"
-                                                />
-                                                <div className={clsx(
-                                                    "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                    macConfig.window?.transparent ? "bg-fuchsia-500 border-fuchsia-400" : "bg-black"
-                                                )}>
-                                                    {macConfig.window?.transparent && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                </div>
-                                                <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Transparent</span>
-                                            </label>
+                                            <button 
+                                                onClick={handleBuildMacApp}
+                                                disabled={actionLoading === 'build-mac' || macBuild?.status === 'pending' || macBuild?.status === 'building'}
+                                                className={clsx(
+                                                    "px-4 py-2 rounded-[8px] text-[11px] font-black transition-all flex items-center gap-2 disabled:opacity-50",
+                                                    macBuild?.status === 'ready' 
+                                                        ? "bg-black/40 border border-[#111] text-[#444] hover:text-[#666]" 
+                                                        : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                                                )}
+                                            >
+                                                <>{macBuild?.status === 'ready' ? 'Rebuild App' : 'Build Mac App'}</>
+                                            </button>
+
+                                            {macBuild?.status === 'ready' && (
+                                                <a 
+                                                    href={macBuild.dmg_url}
+                                                    download
+                                                    className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all flex items-center gap-2"
+                                                >
+                                                    <span>Download</span>
+                                                    <Download className="w-2.5 h-2.5" />
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
 
-                                    {/* 2. Visual Effects & Toolbar */}
-                                    <div className="grid grid-cols-2 gap-10 border-t border-[#111] pt-6">
+                                    {/* Build Type Switcher */}
+                                    <div className="flex items-center gap-3 pt-4 border-t border-[#111]">
+                                        <div className="flex gap-2 p-1 bg-black/50 border border-[#111] rounded-[10px]">
+                                            <button 
+                                                onClick={() => setSelectedBuildMode('fast')}
+                                                className={clsx(
+                                                    "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2",
+                                                    selectedBuildMode === 'fast' ? "bg-white/10 text-white border border-white/20" : "text-[#444]"
+                                                )}
+                                            >
+                                                Fast Build
+                                            </button>
+                                            <button 
+                                                onClick={() => setSelectedBuildMode('pro')}
+                                                className={clsx(
+                                                    "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2",
+                                                    selectedBuildMode === 'pro' ? "bg-white/10 text-white border border-white/20" : "text-[#444]"
+                                                )}
+                                            >
+                                                Pro Build
+                                            </button>
+                                        </div>
+                                        {selectedBuildMode === 'pro' && (
+                                            <button 
+                                                onClick={() => setShowProSettings(!showProSettings)}
+                                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#444] text-[10px] font-bold hover:border-[#333] transition-all"
+                                            >
+                                                Configure Settings
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Pro Settings Configurator (Nested) */}
+                        {selectedBuildMode === 'pro' && showProSettings && macConfig && (
+                            <div className="flex flex-col gap-8 p-6 bg-[#050505] border border-[#111] rounded-[12px] animate-in slide-in-from-top-2 duration-300">
+                                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
+                                    <div className="flex flex-col gap-8">
+                                        {/* 1. Window & Dimensions */}
                                         <div className="flex flex-col gap-4">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                                                <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Visual Effects</h3>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                                                <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Window & Layout</h3>
                                             </div>
-                                            <div className="flex flex-col gap-4">
+                                            <div className="grid grid-cols-2 gap-6">
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Width</label>
+                                                    <div className="relative">
+                                                        <input 
+                                                            type="number"
+                                                            value={macConfig.window?.width}
+                                                            onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, width: parseInt(e.target.value)}})}
+                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors"
+                                                        />
+                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Height</label>
+                                                    <div className="relative">
+                                                        <input 
+                                                            type="number"
+                                                            value={macConfig.window?.height}
+                                                            onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, height: parseInt(e.target.value)}})}
+                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors"
+                                                        />
+                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-6 pt-1">
                                                 <label className="flex items-center gap-2.5 cursor-pointer group">
                                                     <input 
                                                         type="checkbox"
-                                                        checked={macConfig.vibrancy?.enabled}
-                                                        onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, enabled: e.target.checked}})}
+                                                        checked={macConfig.window?.frameless}
+                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, frameless: e.target.checked}})}
                                                         className="sr-only"
                                                     />
                                                     <div className={clsx(
                                                         "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                        macConfig.vibrancy?.enabled ? "bg-fuchsia-500 border-fuchsia-400" : "bg-black"
+                                                        macConfig.window?.frameless ? "bg-white border-white/40" : "bg-black"
                                                     )}>
-                                                        {macConfig.vibrancy?.enabled && <Check className="w-2 h-2 text-black stroke-[4]" />}
+                                                        {macConfig.window?.frameless && <Check className="w-2 h-2 text-black stroke-[4]" />}
                                                     </div>
-                                                    <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888]">Enable Blur (Vibrancy)</span>
+                                                    <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Frameless</span>
                                                 </label>
-                                                <div className="flex flex-col gap-2">
-                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Blur Type</label>
-                                                    <select 
-                                                        value={macConfig.vibrancy?.type}
-                                                        disabled={!macConfig.vibrancy?.enabled}
-                                                        onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, type: e.target.value}})}
-                                                        className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-fuchsia-500/30 transition-colors disabled:opacity-30"
-                                                    >
-                                                        <option value="under-window">Under Window</option>
-                                                        <option value="fullscreen-ui">Fullscreen UI</option>
-                                                        <option value="sidebar">Sidebar</option>
-                                                        <option value="menu">Menu</option>
-                                                    </select>
-                                                </div>
+                                                <label className="flex items-center gap-2.5 cursor-pointer group">
+                                                    <input 
+                                                        type="checkbox"
+                                                        checked={macConfig.window?.transparent}
+                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, transparent: e.target.checked}})}
+                                                        className="sr-only"
+                                                    />
+                                                    <div className={clsx(
+                                                        "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
+                                                        macConfig.window?.transparent ? "bg-white border-white/40" : "bg-black"
+                                                    )}>
+                                                        {macConfig.window?.transparent && <Check className="w-2 h-2 text-black stroke-[4]" />}
+                                                    </div>
+                                                    <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Transparent</span>
+                                                </label>
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col gap-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                                                <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Toolbar Style</h3>
-                                            </div>
-                                            <div className="flex flex-col gap-2">
-                                                <label className="text-[10px] font-bold text-[#444] uppercase">Mac Traffic Lights</label>
-                                                <div className="grid grid-cols-1 gap-2">
-                                                    {['Default', 'Hidden', 'Overlay'].map((style) => (
-                                                        <button
-                                                            key={style}
-                                                            onClick={() => setMacConfig({...macConfig, toolbar: { style }})}
-                                                            className={clsx(
-                                                                "px-3 py-2 rounded-[8px] border text-[10px] font-bold text-left transition-all",
-                                                                macConfig.toolbar?.style === style 
-                                                                    ? "bg-fuchsia-500/10 border-fuchsia-500/40 text-fuchsia-400" 
-                                                                    : "bg-black border-[#111] text-[#444] hover:border-[#222]"
-                                                            )}
+                                        {/* 2. Visual Effects & Toolbar */}
+                                        <div className="grid grid-cols-2 gap-10 border-t border-[#111] pt-6">
+                                            <div className="flex flex-col gap-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                                                    <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Visual Effects</h3>
+                                                </div>
+                                                <div className="flex flex-col gap-4">
+                                                    <label className="flex items-center gap-2.5 cursor-pointer group">
+                                                        <input 
+                                                            type="checkbox"
+                                                            checked={macConfig.vibrancy?.enabled}
+                                                            onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, enabled: e.target.checked}})}
+                                                            className="sr-only"
+                                                        />
+                                                        <div className={clsx(
+                                                            "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
+                                                            macConfig.vibrancy?.enabled ? "bg-white border-white/40" : "bg-black"
+                                                        )}>
+                                                            {macConfig.vibrancy?.enabled && <Check className="w-2 h-2 text-black stroke-[4]" />}
+                                                        </div>
+                                                        <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888]">Enable Blur (Vibrancy)</span>
+                                                    </label>
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-[10px] font-bold text-[#444] uppercase">Blur Type</label>
+                                                        <select 
+                                                            value={macConfig.vibrancy?.type}
+                                                            disabled={!macConfig.vibrancy?.enabled}
+                                                            onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, type: e.target.value}})}
+                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors disabled:opacity-30"
                                                         >
-                                                            {style}
-                                                        </button>
-                                                    ))}
+                                                            <option value="under-window">Under Window</option>
+                                                            <option value="fullscreen-ui">Fullscreen UI</option>
+                                                            <option value="sidebar">Sidebar</option>
+                                                            <option value="menu">Menu</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col gap-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                                                    <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Toolbar Style</h3>
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Mac Traffic Lights</label>
+                                                    <div className="grid grid-cols-1 gap-2">
+                                                        {['Default', 'Hidden', 'Overlay'].map((style) => (
+                                                            <button
+                                                                key={style}
+                                                                onClick={() => setMacConfig({...macConfig, toolbar: { style }})}
+                                                                className={clsx(
+                                                                    "px-3 py-2 rounded-[8px] border text-[10px] font-bold text-left transition-all",
+                                                                    macConfig.toolbar?.style === style 
+                                                                        ? "bg-white/10 border-white/20 text-white" 
+                                                                        : "bg-black border-[#111] text-[#444] hover:border-[#222]"
+                                                                )}
+                                                            >
+                                                                {style}
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* 4. Behavior & Controls */}
-                                    <div className="flex flex-col gap-4 border-t border-[#111] pt-6">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                                            <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Behavior</h3>
+                                    {/* Live Visual Preview Side Panel */}
+                                    <div className="flex flex-col gap-4 bg-black/40 border border-[#111] rounded-[12px] p-6 relative overflow-hidden group/preview">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[0.1em]">Visual Preview</h3>
+                                            <div className="px-1.5 py-0.5 rounded-md bg-[#111] border border-[#222] text-[8px] font-black text-[#666] uppercase tracking-widest">Live</div>
                                         </div>
-                                        <div className="flex items-center gap-6">
-                                            <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={macConfig.behavior?.resizable}
-                                                    onChange={(e) => setMacConfig({...macConfig, behavior: {...macConfig.behavior, resizable: e.target.checked}})}
-                                                    className="sr-only"
-                                                />
-                                                <div className={clsx(
-                                                    "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                    macConfig.behavior?.resizable ? "bg-fuchsia-500 border-fuchsia-400" : "bg-black"
-                                                )}>
-                                                    {macConfig.behavior?.resizable && <Check className="w-2 h-2 text-black stroke-[4]" />}
+                                        
+                                        {/* Mock macOS Window */}
+                                        <div className="flex-1 flex items-center justify-center py-6 relative">
+                                            {/* Mock Background (for vibrancy) */}
+                                            <div className="absolute inset-0 z-0 opacity-40 select-none pointer-events-none">
+                                                <div className="w-full h-full bg-gradient-to-br from-white/5 via-black to-white/5 rounded-lg blur-xl" />
+                                            </div>
+
+                                            <div className={clsx(
+                                                "relative w-full max-w-[200px] aspect-[1.4/1] bg-[#0A0A0A] border border-[#222] rounded-[10px] shadow-2xl transition-all duration-500 overflow-hidden",
+                                                macConfig.window?.transparent && "opacity-80",
+                                                macConfig.vibrancy?.enabled && "backdrop-blur-md bg-black/40"
+                                            )}>
+                                                {/* Toolbar Area */}
+                                                {macConfig.toolbar?.style !== 'Hidden' && (
+                                                    <div className={clsx(
+                                                        "h-8 w-full border-b border-[#111] flex items-center px-3 gap-1.5",
+                                                        macConfig.toolbar?.style === 'Overlay' && "absolute top-0 left-0 bg-transparent border-none z-10"
+                                                    )}>
+                                                        {/* Traffic Lights */}
+                                                        <div className="flex gap-1.5">
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57] shadow-sm" />
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-sm" />
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-[#28C840] shadow-sm" />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                <div className="p-4 flex flex-col gap-2">
+                                                    <div className="w-full h-2 rounded-full bg-[#111]" />
+                                                    <div className="w-2/3 h-2 rounded-full bg-[#111]" />
                                                 </div>
-                                                <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888]">Resizable Window</span>
-                                            </label>
-                                            <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={macConfig.behavior?.always_on_top}
-                                                    onChange={(e) => setMacConfig({...macConfig, behavior: {...macConfig.behavior, always_on_top: e.target.checked}})}
-                                                    className="sr-only"
-                                                />
-                                                <div className={clsx(
-                                                    "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                    macConfig.behavior?.always_on_top ? "bg-fuchsia-500 border-fuchsia-400" : "bg-black"
-                                                )}>
-                                                    {macConfig.behavior?.always_on_top && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                </div>
-                                                <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888]">Always on Top</span>
-                                            </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Live Visual Preview Side Panel */}
-                                <div className="flex flex-col gap-4 bg-black/40 border border-[#111] rounded-[12px] p-6 relative overflow-hidden group/preview">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[0.1em]">Visual Preview</h3>
-                                        <div className="px-1.5 py-0.5 rounded-md bg-fuchsia-500/10 border border-fuchsia-500/20 text-[8px] font-black text-fuchsia-400 uppercase tracking-widest">Live</div>
-                                    </div>
-                                    
-                                    {/* Mock macOS Window */}
-                                    <div className="flex-1 flex items-center justify-center py-10 relative">
-                                        {/* Mock Background (for vibrancy) */}
-                                        <div className="absolute inset-0 z-0 opacity-40 select-none pointer-events-none">
-                                            <div className="w-full h-full bg-gradient-to-br from-fuchsia-900/20 via-black to-blue-900/20 rounded-lg blur-xl" />
-                                        </div>
+                                <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#111]">
+                                    <button 
+                                        onClick={() => setShowProSettings(false)}
+                                        className="px-4 py-2 rounded-[8px] bg-black/40 border border-[#111] text-[#444] text-[11px] font-black hover:text-[#666] transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={handleSaveMacConfig}
+                                        disabled={isSavingConfig}
+                                        className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all disabled:opacity-50"
+                                    >
+                                        {isSavingConfig ? 'Saving...' : 'Apply & Save Config'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
-                                        <div className={clsx(
-                                            "relative w-full max-w-[240px] aspect-[1.4/1] bg-[#0A0A0A] border border-[#222] rounded-[10px] shadow-2xl transition-all duration-500 overflow-hidden",
-                                            macConfig.window?.transparent && "opacity-80",
-                                            macConfig.vibrancy?.enabled && "backdrop-blur-md bg-black/40"
-                                        )}>
-                                            {/* Toolbar Area */}
-                                            {macConfig.toolbar?.style !== 'Hidden' && (
-                                                <div className={clsx(
-                                                    "h-8 w-full border-b border-[#111] flex items-center px-3 gap-1.5",
-                                                    macConfig.toolbar?.style === 'Overlay' && "absolute top-0 left-0 bg-transparent border-none z-10"
-                                                )}>
-                                                    {/* Traffic Lights */}
-                                                    <div className="flex gap-1.5">
-                                                        <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57] shadow-sm" />
-                                                        <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-sm" />
-                                                        <div className="w-2.5 h-2.5 rounded-full bg-[#28C840] shadow-sm" />
-                                                    </div>
-                                                </div>
-                                            )}
+                    {/* 4.2 iOS Build Section */}
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between px-1">
+                            <span className="text-[#555] text-[10px] font-bold uppercase tracking-widest">iOS</span>
+                            {iosBuild?.status === 'completed' && (
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                                    <span className="text-[#333] text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
+                                        Version: {iosBuild.version} ({iosBuild.build_number})
+                                    </span>
+                                </div>
+                            )}
+                        </div>
 
-                                            {/* App Content Placeholder */}
-                                            <div className="p-4 flex flex-col gap-2">
-                                                <div className="w-full h-2 rounded-full bg-[#111]" />
-                                                <div className="w-2/3 h-2 rounded-full bg-[#111]" />
-                                                <div className="mt-4 grid grid-cols-2 gap-2">
-                                                    <div className="aspect-square rounded-[6px] bg-[#111] border border-[#222]/10" />
-                                                    <div className="aspect-square rounded-[6px] bg-[#111] border border-[#222]/10" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div 
+                            onClick={() => router.push(`/project/${projectId}/release`)}
+                            className={clsx(
+                                "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
+                                (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "border-white/20 bg-white/[0.02]"
+                            )}
+                        >
+                            {(iosBuild?.status === 'building' || iosBuild?.status === 'pending') && (
+                                <div className="absolute bottom-0 left-0 h-[1.5px] bg-white animate-[progress_5s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '60%' }} />
+                            )}
 
-                                    <div className="mt-auto pt-4 border-t border-[#111]/50 text-center">
-                                        <p className="text-[9px] font-medium text-[#333] leading-relaxed">
-                                            This preview simulates how your app architecture will behave in macOS.
-                                        </p>
+                            <div className="flex items-center gap-4">
+                                <div className={clsx(
+                                    "w-10 h-10 rounded-[10px] bg-[#111] border border-[#222] flex items-center justify-center transition-all",
+                                    (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "animate-pulse border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                )}>
+                                    <Smartphone className={clsx(
+                                        "w-5 h-5 transition-colors",
+                                        (iosBuild?.status === 'building' || iosBuild?.status === 'pending') ? "text-white/60" : "text-white"
+                                    )} />
+                                </div>
+                                <div className="flex flex-col gap-0.5">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[#CCC] font-bold tracking-tight text-sm">iOS Application</span>
+                                        {(iosBuild?.status === 'building' || iosBuild?.status === 'pending') && (
+                                            <span className="text-white/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
+                                        )}
                                     </div>
+                                    <span className="text-[#555] text-[11px] font-medium tracking-wide">Cloud-synced IPA build for Apple App Store release.</span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#111]">
+                            <div className="flex items-center gap-2">
                                 <button 
-                                    onClick={() => setShowProSettings(false)}
-                                    className="px-4 py-2 rounded-[8px] bg-black/40 border border-[#111] text-[#444] text-[11px] font-black hover:text-[#666] transition-all"
+                                    onClick={handleBuildIosApp}
+                                    disabled={actionLoading === 'build-ios' || iosBuild?.status === 'pending' || iosBuild?.status === 'building'}
+                                    className={clsx(
+                                        "px-4 py-2 rounded-[8px] text-[11px] font-black transition-all flex items-center gap-2 disabled:opacity-50",
+                                        iosBuild?.status === 'completed' 
+                                            ? "bg-black/40 border border-[#111] text-[#444] hover:text-[#666]" 
+                                            : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                                    )}
                                 >
-                                    Cancel
+                                    {actionLoading === 'build-ios' || iosBuild?.status === 'pending' || iosBuild?.status === 'building' ? (
+                                        <><Loader2 className="w-3 h-3 animate-spin" /> {iosBuild?.status === 'building' ? 'Building...' : 'Starting...'}</>
+                                    ) : (
+                                        <>{iosBuild?.status === 'completed' ? 'Rebuild App' : 'Start Build'}</>
+                                    )}
                                 </button>
-                                <button 
-                                    onClick={handleSaveMacConfig}
-                                    disabled={isSavingConfig}
-                                    className="px-4 py-2 rounded-[8px] bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-[11px] font-black hover:bg-fuchsia-500/20 transition-all shadow-[0_0_15px_rgba(217,70,239,0.05)] disabled:opacity-50"
-                                >
-                                    {isSavingConfig ? 'Saving...' : 'Apply & Save Config'}
-                                </button>
+                                
+                                {iosBuild?.status === 'completed' && iosBuild.ipa_url && (
+                                    <a 
+                                        href={iosBuild.ipa_url}
+                                        target="_blank"
+                                        className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all flex items-center gap-2"
+                                    >
+                                        <span>Download</span>
+                                        <Download className="w-2.5 h-2.5" />
+                                    </a>
+                                )}
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
-            )}
-        </div>
-    </div>
 
             {/* 4. Analytics Section */}
             <div className="flex flex-col gap-4">
@@ -1091,7 +1288,10 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         <h2 className="text-white font-bold text-base tracking-tight">Analytics</h2>
                         <span className="text-[#333] text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#222]" />
+                    <ChevronRight 
+                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        onClick={() => router.push(`/project/${projectId}/analytics`)}
+                    />
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4">
@@ -1100,22 +1300,25 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         value={formatNumber(analytics?.requests || 130)} 
                         percentage="+59200.00%" 
                         points={[10, 15, 12, 18, 14, 22, 19, 25, 23, 30, 28, 35, 32, 40]} 
-                        color="#D946EF" 
+                        color="#ffffff" 
+                        onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                     <AnalyticsCard 
                         title="Latency" 
                         value="1.25 ms" 
                         percentage="-12.50%" 
                         points={[40, 38, 42, 35, 37, 30, 33, 28, 30, 25, 27, 22, 24, 20]} 
-                        color="#22d3ee" 
+                        color="#ffffff" 
                         isInverse
+                        onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                     <AnalyticsCard 
                         title="Unique Visits" 
                         value={formatNumber(analytics?.visits || 0)} 
                         percentage="+8500.00%" 
                         points={[5, 8, 6, 10, 9, 15, 12, 18, 16, 22, 20, 25, 23, 30]} 
-                        color="#D946EF" 
+                        color="#ffffff" 
+                        onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                 </div>
             </div>
@@ -1127,7 +1330,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     <span className="text-[#222] text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4 opacity-30 grayscale pointer-events-none">
+                <div className="grid grid-cols-3 gap-4 opacity-30 grayscale cursor-pointer group hover:opacity-100 transition-opacity" onClick={() => router.push(`/project/${projectId}/store`)}>
                     <AnalyticsCard title="Store Requests" value="0" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />
                     <AnalyticsCard title="Sales" value="0%" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />
                     <AnalyticsCard title="Revenue" value="$0.00" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />

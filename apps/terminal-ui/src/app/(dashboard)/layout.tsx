@@ -7,20 +7,27 @@ import Sidebar from '@/components/Sidebar';
 import { useProjects, Project } from '@/lib/hooks/useProjects';
 import { UIProvider, useUI } from '@/lib/contexts/UIContext';
 import { supabase } from '@/lib/supabase';
-import { Globe, Settings, LogOut, ChevronDown, Plus, Package, Flame, Tent, User } from 'lucide-react';
+import { Globe, Gear, SignOut, CaretDown, Plus, Package, Flame, Tent, User, Check, SquaresFour } from "@phosphor-icons/react";
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import CreateProjectForm from '@/components/terminal/CreateProjectForm';
 import { AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { useUserProfile } from '@/lib/hooks/useUserProfile';
 import { ToastContainer } from '@/components/Toast';
+import OnboardingModal from '@/components/onboarding/OnboardingModal';
+import { useWorkspaces } from '@/lib/contexts/WorkspaceContext';
+import CreateWorkspaceModal from '@/components/terminal/CreateWorkspaceModal';
+import EditWorkspaceModal from '@/components/terminal/EditWorkspaceModal';
 
 function DashboardLayoutContent({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const { toggleSidebar, isCreateModalOpen, setCreateModalOpen, toasts, removeToast } = useUI();
+    const { toggleSidebar, isCreateModalOpen, setCreateModalOpen, toasts, removeToast, dashboardView, setDashboardView } = useUI();
+    const { activeWorkspace, workspaces, setActiveWorkspaceId } = useWorkspaces();
+    const [isWorkspaceModalOpen, setWorkspaceModalOpen] = useState(false);
+    const [isEditWorkspaceModalOpen, setEditWorkspaceModalOpen] = useState(false);
     const { profile } = useUserProfile();
     const router = useRouter();
     const pathname = usePathname();
@@ -91,7 +98,19 @@ function DashboardLayoutContent({
                                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
                                 <path d="M9 3v18" />
                             </svg>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer hover:text-white transition-colors"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+                            <button 
+                                onClick={() => {
+                                    setActiveTab('projects');
+                                    setDashboardView('grid');
+                                    router.push('/dashboard');
+                                }}
+                                className={clsx(
+                                    "transition-colors",
+                                    activeTab === 'projects' && dashboardView === 'grid' ? "text-white" : "hover:text-white"
+                                )}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+                            </button>
                         </div>
                     )}
 
@@ -101,9 +120,13 @@ function DashboardLayoutContent({
                             <button
                                 onClick={() => {
                                     setActiveTab('projects');
+                                    setDashboardView('terminal');
                                     router.push('/dashboard');
                                 }}
-                                className={clsx("transition-colors flex items-center gap-1.5", activeTab === 'projects' ? 'text-white' : 'hover:text-white')}
+                                className={clsx(
+                                    "transition-colors flex items-center gap-1.5", 
+                                    activeTab === 'projects' && dashboardView === 'terminal' ? 'text-white' : 'hover:text-white'
+                                )}
                             >
                                 <span className="text-lg leading-none">፨</span>
                             </button>
@@ -113,7 +136,7 @@ function DashboardLayoutContent({
                                 }}
                                 className={clsx("transition-colors flex items-center gap-1.5", activeTab === 'domains' ? 'text-white' : 'hover:text-white')}
                             >
-                                <Globe className="w-3.5 h-3.5" />
+                                <Globe size={14} />
                             </button>
                             <button
                                 onClick={() => {
@@ -123,64 +146,97 @@ function DashboardLayoutContent({
                                 className={clsx("transition-colors flex items-center justify-center p-1 rounded-md", activeTab === 'campfire' ? 'bg-[#1a1a1a] text-yellow-500' : 'text-[#444] hover:text-white')}
                                 title="Marketplace"
                             >
-                                <Tent className="w-4 h-4" />
+                                <Tent size={16} />
                             </button>
                         </div>
                     )}
                 </div>
 
-                {/* Organization Selector */}
+                {/* Workspace Selector */}
                 <div className="flex-1 flex justify-center">
                     <Dropdown
                         align="left"
                         trigger={
                             <div className="flex items-center gap-2 text-[#A0A0A0] hover:text-white transition-colors cursor-pointer group">
-                                {profile?.avatar_url ? (
-                                    <Image src={profile.avatar_url} alt="Avatar" width={20} height={20} className="rounded-md object-cover" />
+                                {activeWorkspace?.logo_url ? (
+                                    <div className="w-5 h-5 rounded-md border border-white/[0.08] overflow-hidden">
+                                        <Image src={activeWorkspace.logo_url} alt="Logo" width={20} height={20} className="object-cover w-full h-full" />
+                                    </div>
                                 ) : (
-                                    <div className="w-5 h-5 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white uppercase">
-                                        {(profile?.first_name || profile?.email || 'F').charAt(0)}
+                                    <div className="w-5 h-5 rounded-md bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[10px] font-bold text-white uppercase overflow-hidden">
+                                        {activeWorkspace?.name.charAt(0) || 'W'}
                                     </div>
                                 )}
                                 <span className="text-sm font-medium font-sans">
-                                    {(profile?.first_name && profile?.last_name) ? `${profile.first_name} ${profile.last_name}` : profile?.first_name || profile?.email?.split('@')[0] || 'User'}
+                                    {activeWorkspace?.name || 'Workspace'}
                                 </span>
-                                <ChevronDown className="w-3.5 h-3.5 text-[#444] group-hover:text-[#888] transition-colors" />
+                                <CaretDown size={14} className="text-[#444] group-hover:text-[#888] transition-colors" />
                             </div>
                         }
                     >
-                        <div className="px-3 py-2 border-b border-[#202020] mb-1">
-                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Organizations</p>
+                        <div className="px-3 py-2 border-b border-[#202020] mb-1 flex items-center justify-between group/title">
+                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Workspaces</p>
+                            {activeWorkspace?.owner_id === profile?.id && (
+                                <button 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setEditWorkspaceModalOpen(true);
+                                    }}
+                                    className="text-[#444] hover:text-white transition-colors p-1"
+                                    title="Workspace Settings"
+                                >
+                                    <Gear size={12} weight="bold" />
+                                </button>
+                            )}
                         </div>
-                        <DropdownItem className="bg-[#111] text-white">
-                            <div className="w-4 h-4 rounded bg-indigo-500 flex items-center justify-center text-xs font-bold uppercase">
-                                {(profile?.first_name || profile?.email || 'V').charAt(0)}
-                            </div>
-                            {(profile?.first_name && profile?.last_name) ? `${profile.first_name} ${profile.last_name}` : profile?.first_name || profile?.email?.split('@')[0] || 'Personal'}
+                        <div className="max-h-[300px] overflow-y-auto overflow-x-hidden py-1 px-1 flex flex-col gap-0.5">
+                            {workspaces.map((ws) => (
+                                <DropdownItem 
+                                    key={ws.id}
+                                    onClick={() => setActiveWorkspaceId(ws.id)}
+                                    className={clsx(
+                                        "w-full transition-all",
+                                        activeWorkspace?.id === ws.id ? "bg-[#1A1A1A] text-white" : "text-zinc-500 hover:text-zinc-300"
+                                    )}
+                                >
+                                    <div className={clsx(
+                                        "w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold uppercase overflow-hidden",
+                                        activeWorkspace?.id === ws.id ? "bg-white text-black" : "bg-white/5 text-zinc-600 border border-white/[0.05]"
+                                    )}>
+                                        {ws.logo_url ? (
+                                            <Image src={ws.logo_url} alt="Logo" width={20} height={20} className="object-cover w-full h-full" />
+                                        ) : (
+                                            ws.name.charAt(0)
+                                        )}
+                                    </div>
+                                    <span className="truncate">{ws.name}</span>
+                                    {activeWorkspace?.id === ws.id && (
+                                        <Check size={12} weight="bold" className="ml-auto text-white/50" />
+                                    )}
+                                </DropdownItem>
+                            ))}
+                        </div>
+                        <div className="h-px bg-[#202020] my-1" />
+                        <DropdownItem onClick={() => setWorkspaceModalOpen(true)} className="text-zinc-400 hover:text-white">
+                            <Plus size={16} weight="bold" />
+                            New Workspace
                         </DropdownItem>
                     </Dropdown>
                 </div>
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
-                    <div 
-                        className={clsx(
-                            "flex items-center gap-1.5 border rounded px-2 py-0.5 pr-1.5 transition-colors",
-                            isPro ? "bg-[#111] border-[#333] cursor-default" : "bg-[#111] border-[#333] cursor-pointer hover:border-[#555] group"
-                        )}
-                        onClick={() => !isPro && router.push('/account?tab=subscription')}
-                    >
-                        {isPro ? (
-                            <>
-                                <span className="text-xs font-bold text-white tracking-widest uppercase">PRO</span>
-                                <span className="text-xs font-sans text-[#A0A0A0]">Unlimited</span>
-                            </>
-                        ) : (
+                    {!isPro && (
+                        <div 
+                            className="flex items-center gap-1.5 border border-[#333] bg-[#111] rounded px-2 py-0.5 pr-1.5 transition-colors cursor-pointer hover:border-[#555] group"
+                            onClick={() => router.push('/account?tab=subscription')}
+                        >
                             <span className="text-xs font-sans font-medium text-[#A0A0A0] group-hover:text-white transition-colors">
-                                {projects.length}/3 Upgrade
+                                Free {projects.length}/3
                             </span>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
                     <Dropdown
                         align="right"
@@ -197,20 +253,20 @@ function DashboardLayoutContent({
                         }
                     >
                         <div className="px-3 py-2 border-b border-[#202020] mb-1">
-                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Account</p>
+                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Account Settings</p>
                         </div>
                         <DropdownItem href="/account">
-                            <Settings className="w-3.5 h-3.5" />
+                            <Gear size={14} />
                             Settings
                         </DropdownItem>
                         {profile?.username && (
                             <DropdownItem href={`/u/${profile.username}`}>
-                                <User className="w-3.5 h-3.5" />
-                                Workspace (Profile Dev)
+                                <User size={14} />
+                                Creator Profile
                             </DropdownItem>
                         )}
                         <DropdownItem onClick={handleLogout} className="text-red-400/80 hover:text-red-400">
-                            <LogOut className="w-3.5 h-3.5" />
+                            <SignOut size={14} />
                             Log out
                         </DropdownItem>
                     </Dropdown>
@@ -232,6 +288,29 @@ function DashboardLayoutContent({
                 )}
             </AnimatePresence>
 
+
+            <AnimatePresence>
+                {profile && !profile.onboarding_completed && (
+                    <OnboardingModal />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isWorkspaceModalOpen && (
+                    <CreateWorkspaceModal isOpen={isWorkspaceModalOpen} onClose={() => setWorkspaceModalOpen(false)} />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isEditWorkspaceModalOpen && activeWorkspace && (
+                    <EditWorkspaceModal 
+                        workspace={activeWorkspace} 
+                        isOpen={isEditWorkspaceModalOpen} 
+                        onClose={() => setEditWorkspaceModalOpen(false)} 
+                    />
+                )}
+            </AnimatePresence>
+
             <ToastContainer toasts={toasts} onClose={removeToast} />
         </div>
     );
@@ -243,8 +322,6 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     return (
-        <UIProvider>
-            <DashboardLayoutContent>{children}</DashboardLayoutContent>
-        </UIProvider>
+        <DashboardLayoutContent>{children}</DashboardLayoutContent>
     );
 }

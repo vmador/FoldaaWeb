@@ -61,7 +61,7 @@ export default function StoreEventsPage({ params }: { params: Promise<{ id: stri
             case 'install': return 'text-green-400';
             case 'error': return 'text-red-400';
             case 'api_call': return 'text-purple-400';
-            case 'view': return 'text-fuchsia-400';
+            case 'view': return 'text-brand-400';
             default: return 'text-white';
         }
     };

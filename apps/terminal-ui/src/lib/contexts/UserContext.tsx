@@ -24,33 +24,50 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [error, setError] = useState<any>(null);
 
     const fetchData = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            setLoading(false);
-            return;
-        }
-
-        const userId = session.user.id;
-        const userMetadata = session.user.user_metadata || {};
-
+        setLoading(true);
         try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                setLoading(false);
+                return;
+            }
+
+            const userId = session.user.id;
+            const userMetadata = session.user.user_metadata || {};
+
             // Fetch profile
             const { data: profileData, error: profileError } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', userId)
-                .single();
+                .maybeSingle();
 
-            if (profileError && profileError.code !== 'PGRST116') throw profileError;
+            if (profileError) {
+                console.error("[ANTIGRAVITY V2] Error fetching profile detail:", {
+                    message: profileError.message,
+                    details: profileError.details,
+                    hint: profileError.hint,
+                    code: profileError.code,
+                    fullError: JSON.stringify(profileError)
+                });
+            }
 
             // Fetch settings
             const { data: settingsData, error: settingsError } = await supabase
                 .from('user_settings')
                 .select('*')
                 .eq('user_id', userId)
-                .single();
+                .maybeSingle();
 
-            if (settingsError && settingsError.code !== 'PGRST116') throw settingsError;
+            if (settingsError) {
+                console.error("[ANTIGRAVITY V2] Error fetching settings detail:", {
+                    message: settingsError.message,
+                    details: settingsError.details,
+                    hint: settingsError.hint,
+                    code: settingsError.code,
+                    fullError: JSON.stringify(settingsError)
+                });
+            }
 
             // Fetch active subscription
             const { data: licenseData } = await supabase
@@ -80,12 +97,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 last_name: profileData?.last_name || userMetadata.full_name?.split(' ').slice(1).join(' ') || userMetadata.name?.split(' ').slice(1).join(' ') || null,
                 username: profileData?.username || userMetadata.user_name || userMetadata.preferred_username || null,
                 subscriptionPlan,
+                onboarding_completed: profileData?.onboarding_completed || false,
+                role: profileData?.role || null,
             };
 
             setProfile(mergedProfile as UserProfile);
             setSettings(settingsData || null);
-        } catch (err) {
-            console.error("Error fetching user data in Context:", err);
+        } catch (err: any) {
+            console.error("[ANTIGRAVITY V2] Error fetching user data detail (catch block):", {
+                message: err.message,
+                name: err.name,
+                stack: err.stack,
+                fullError: JSON.stringify(err)
+            });
             setError(err);
         } finally {
             setLoading(false);
@@ -95,6 +119,31 @@ export function UserProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const accent = settings?.accent_color || 'fuchsia';
+        
+        if (accent.startsWith('#')) {
+            document.documentElement.setAttribute('data-accent', 'custom');
+            document.documentElement.style.setProperty('--theme-brand-50', `color-mix(in srgb, ${accent} 6%, transparent)`);
+            document.documentElement.style.setProperty('--theme-brand-100', `color-mix(in srgb, ${accent} 12%, transparent)`);
+            document.documentElement.style.setProperty('--theme-brand-200', `color-mix(in srgb, ${accent} 25%, transparent)`);
+            document.documentElement.style.setProperty('--theme-brand-300', `color-mix(in srgb, ${accent} 50%, transparent)`);
+            document.documentElement.style.setProperty('--theme-brand-400', `color-mix(in srgb, ${accent} 75%, transparent)`);
+            document.documentElement.style.setProperty('--theme-brand-500', accent);
+            document.documentElement.style.setProperty('--theme-brand-600', `color-mix(in srgb, ${accent} 80%, black)`);
+            document.documentElement.style.setProperty('--theme-brand-700', `color-mix(in srgb, ${accent} 60%, black)`);
+            document.documentElement.style.setProperty('--theme-brand-800', `color-mix(in srgb, ${accent} 40%, black)`);
+            document.documentElement.style.setProperty('--theme-brand-900', `color-mix(in srgb, ${accent} 20%, black)`);
+            document.documentElement.style.setProperty('--theme-brand-950', `color-mix(in srgb, ${accent} 10%, black)`);
+        } else {
+            document.documentElement.setAttribute('data-accent', accent);
+            const root = document.documentElement;
+            const rootStyle = root.style;
+            const props = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950'];
+            props.forEach(p => rootStyle.removeProperty(`--theme-brand-${p}`));
+        }
+    }, [settings?.accent_color]);
 
     const updateProfile = async (updates: Partial<UserProfile>) => {
         setSaving(true);

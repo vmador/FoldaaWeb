@@ -242,7 +242,7 @@ export default function AuthTab({ projectId }: AuthTabProps) {
                             onClick={handleToggleAuth}
                             className={clsx(
                                 "font-mono text-xs px-2 py-0.5 rounded border transition-all",
-                                isEnabled ? "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
+                                isEnabled ? "bg-brand-500/10 text-brand-400 border-brand-500/30" : "bg-[#2A2A2E] text-[#444] border-[#333336]"
                             )}
                         >
                             {isEnabled ? 'ENABLED' : 'DISABLED'}
@@ -259,7 +259,7 @@ export default function AuthTab({ projectId }: AuthTabProps) {
                     {message.type && (
                         <div className={clsx(
                             "flex items-center gap-3 px-4 py-3 rounded-md border text-xs font-mono",
-                            message.type === "success" ? "bg-fuchsia-500/5 border-fuchsia-500/20 text-fuchsia-400" : 
+                            message.type === "success" ? "bg-brand-500/5 border-brand-500/20 text-brand-400" : 
                             message.type === "error" ? "bg-red-500/5 border-red-500/20 text-red-400" : 
                             "bg-[#2A2A2E] border-[#333336] text-[#888]"
                         )}>

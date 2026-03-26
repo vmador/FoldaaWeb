@@ -10,6 +10,8 @@ interface UIContextType {
     toasts: any[];
     addToast: (message: string, type?: 'success' | 'error' | 'info', persistent?: boolean) => void;
     removeToast: (id: string) => void;
+    dashboardView: 'terminal' | 'grid';
+    setDashboardView: (view: 'terminal' | 'grid') => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -18,12 +20,18 @@ export function UIProvider({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [toasts, setToasts] = useState<any[]>([]);
+    const [dashboardView, setDashboardView] = useState<'terminal' | 'grid'>('terminal');
 
     // Initialize from localStorage if available
     useEffect(() => {
         const saved = localStorage.getItem("sidebar_open");
         if (saved !== null) {
             setSidebarOpen(saved === "true");
+        }
+        
+        const savedView = localStorage.getItem("dashboard_view");
+        if (savedView === 'grid' || savedView === 'terminal') {
+            setDashboardView(savedView);
         }
     }, []);
 
@@ -33,6 +41,11 @@ export function UIProvider({ children }: { children: React.ReactNode }) {
             localStorage.setItem("sidebar_open", String(newState));
             return newState;
         });
+    };
+
+    const updateDashboardView = (view: 'terminal' | 'grid') => {
+        setDashboardView(view);
+        localStorage.setItem("dashboard_view", view);
     };
     
     const addToast = (message: string, type: 'success' | 'error' | 'info' = 'success', persistent = false) => {
@@ -53,7 +66,9 @@ export function UIProvider({ children }: { children: React.ReactNode }) {
             setCreateModalOpen,
             toasts,
             addToast,
-            removeToast
+            removeToast,
+            dashboardView,
+            setDashboardView: updateDashboardView
         }}>
             {children}
         </UIContext.Provider>

@@ -346,8 +346,8 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
                         values={configValues}
                         onChange={handleFieldChange}
                     />
-                    <div className="p-3 bg-fuchsia-500/5 border border-fuchsia-500/10 rounded flex gap-3">
-                        <Settings2 className="w-4 h-4 text-fuchsia-500/50 flex-shrink-0 mt-0.5" />
+                    <div className="p-3 bg-brand-500/5 border border-brand-500/10 rounded flex gap-3">
+                        <Settings2 className="w-4 h-4 text-brand-500/50 flex-shrink-0 mt-0.5" />
                         <span className="text-xs text-[#666] leading-relaxed">
                             Changes will take effect after a project <span className="text-[#A0A0A0] italic font-mono">redeploy</span>.
                         </span>

@@ -50,7 +50,7 @@ export default function OneSignalCard({
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             {isEnabled ? (
-                                <Check className="w-4 h-4 text-fuchsia-500 font-bold" />
+                                <Check className="w-4 h-4 text-brand-500 font-bold" />
                             ) : (
                                 <Square className="w-4 h-4 text-[#444]" />
                             )}

@@ -19,7 +19,7 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
         try {
             const { error } = await supabase
                 .from("domain_routes")
-                .update({ is_active: !route.is_active })
+                .update({ is_enabled: !route.is_enabled })
                 .eq("id", route.id)
             
             if (error) throw error
@@ -32,7 +32,7 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
     }
 
     const handleDelete = async () => {
-        if (!confirm(`Are you sure you want to delete the route for ${route.path}?`)) return
+        if (!confirm(`Are you sure you want to delete the route for ${route.pattern}?`)) return
         
         setIsUpdating(true)
         try {
@@ -53,27 +53,27 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
     return (
         <div 
             className={`p-3 bg-black border rounded-lg transition-all group ${
-                route.is_active ? "border-[#2A2A2E] hover:border-[#333336]" : "border-[#2A2A2E] opacity-60"
+                route.is_enabled ? "border-[#2A2A2E] hover:border-[#333336]" : "border-[#2A2A2E] opacity-60"
             }`}
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-md flex items-center justify-center border ${
-                        route.is_active ? "bg-fuchsia-500/5 border-fuchsia-500/20 text-fuchsia-400" : "bg-[#2A2A2E] border-[#333336] text-[#444]"
+                        route.is_enabled ? "bg-brand-500/5 border-brand-500/20 text-brand-400" : "bg-[#2A2A2E] border-[#333336] text-[#444]"
                     }`}>
                         <Globe className="w-4 h-4" />
                     </div>
                     
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                            <span className="text-sm font-mono text-white">{route.path || "/"}</span>
+                            <span className="text-sm font-mono text-white">{route.pattern || "/"}</span>
                             <ArrowRight className="w-3 h-3 text-[#333]" />
-                            <span className="text-sm font-mono text-[#888]">Port {route.target_port}</span>
+                            <span className="text-sm font-mono text-[#888]">Bound to Project Worker</span>
                         </div>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${route.is_active ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" : "bg-[#333]"}`} />
+                            <div className={`w-1.5 h-1.5 rounded-full ${route.is_enabled ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" : "bg-[#333]"}`} />
                             <span className="text-xs font-bold text-[#444] uppercase tracking-widest">
-                                {route.is_active ? "ACTIVE_ROUTING" : "DISABLED"}
+                                {route.is_enabled ? "ACTIVE_ROUTING" : "DISABLED"}
                             </span>
                         </div>
                     </div>
@@ -84,11 +84,11 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
                         onClick={handleToggle}
                         disabled={isUpdating}
                         className={`p-1.5 rounded transition-colors ${
-                            route.is_active 
+                            route.is_enabled 
                                 ? "text-[#444] hover:text-amber-400 hover:bg-amber-500/10" 
                                 : "text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20"
                         }`}
-                        title={route.is_active ? "Disable Route" : "Enable Route"}
+                        title={route.is_enabled ? "Disable Route" : "Enable Route"}
                     >
                         <Power className="w-3.5 h-3.5" />
                     </button>
