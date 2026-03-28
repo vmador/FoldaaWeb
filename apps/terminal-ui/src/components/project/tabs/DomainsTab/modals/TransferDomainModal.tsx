@@ -79,6 +79,18 @@ export default function TransferDomainModal({
 
             if (routesError) throw routesError
 
+            // 3. Trigger a redeploy of the target project to sync Cloudflare routes
+            console.log("Triggering Cloudflare sync for project:", selectedProjectId)
+            const { error: deployError } = await supabase.functions.invoke('deploy-project', {
+                body: { project_id: selectedProjectId }
+            })
+
+            if (deployError) {
+                console.warn("Domain transferred but Cloudflare sync failed:", deployError)
+                // We don't throw here so the user sees the success of the transfer, 
+                // but we could show a warning. For now, the user won't be blocked.
+            }
+
             onSuccess()
         } catch (err: any) {
             console.error("Transfer failed:", err)

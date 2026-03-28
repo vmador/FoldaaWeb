@@ -76,24 +76,45 @@ Deno.serve(async (req: Request) => {
       body: workerScript
     }, "Deploying Worker Script")
 
-    const domains = project_data.custom_domains || []
+    // 1. Fetch current workers routes for this zone
+    const listRoutesUrl = `https://api.cloudflare.com/client/v4/zones/${FOLDAA_CF_ZONE_ID}/workers/routes`
+    const routesResp = await cloudflareApiRequest(listRoutesUrl, {
+      headers: { 'Authorization': `Bearer ${FOLDAA_CF_TOKEN}` }
+    }, "Listing existing Cloudflare routes")
+    
+    const existingRoutes = routesResp.result || []
+    const routeMap = new Map(existingRoutes.map((r: any) => [r.pattern, r.id]))
+
+    // 2. Fetch custom domains from our domains table
+    const { data: dbDomains } = await supabaseClient
+      .from("domains")
+      .select("domain_name")
+      .eq("project_id", project_id)
+    
+    const domains = (dbDomains || []).map(d => d.domain_name)
     const baseSlug = project_data.subdomain || project_data.slug || project_id
     const foldaaSubdomain = `${baseSlug}.foldaa.com`
-    const routes = [foldaaSubdomain, ...domains]
+    const patterns = [foldaaSubdomain, ...domains].map(d => `${d}/*`)
 
-    for (const route of routes) {
-      const routeUrl = `https://api.cloudflare.com/client/v4/zones/${FOLDAA_CF_ZONE_ID}/workers/routes`
+    for (const pattern of patterns) {
+      const existingRouteId = routeMap.get(pattern)
+      const routeUrl = existingRouteId 
+        ? `https://api.cloudflare.com/client/v4/zones/${FOLDAA_CF_ZONE_ID}/workers/routes/${existingRouteId}`
+        : `https://api.cloudflare.com/client/v4/zones/${FOLDAA_CF_ZONE_ID}/workers/routes`
+      
       try {
         await cloudflareApiRequest(routeUrl, {
-          method: 'POST',
+          method: existingRouteId ? 'PUT' : 'POST',
           headers: {
             'Authorization': `Bearer ${FOLDAA_CF_TOKEN}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ pattern: `${route}/*`, script: scriptName })
-        }, `Setting up route ${route}`)
+          body: JSON.stringify({ pattern, script: scriptName })
+        }, `${existingRouteId ? 'Updating' : 'Creating'} route ${pattern}`)
       } catch (e) {
-        if (!e.message.includes("already exists")) console.error(e)
+        if (!e.message.includes("already exists")) {
+            console.error(`Failed to ${existingRouteId ? 'update' : 'create'} route ${pattern}:`, e)
+        }
       }
     }
 
