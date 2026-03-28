@@ -40,8 +40,17 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
         }
 
         setIsLoading(true)
+        setFetchError(null)
         console.log("[DomainDetail] Fetching details for domainId:", domainId)
+        
         try {
+            // Get current session to ensure user is logged in
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                setFetchError("Your session has expired. Please log in again.")
+                return
+            }
+
             const { data: domainData, error: domainError } = await supabase
                 .from("domains")
                 .select("*")
@@ -49,11 +58,18 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 .single()
 
             if (domainError) {
-                console.error("[DomainDetail] Supabase error (domain):", JSON.stringify(domainError, null, 2))
-                throw domainError
+                if (domainError.code === "PGRST116") {
+                    console.warn("[DomainDetail] Domain not found in database:", domainId)
+                    setFetchError("This domain could not be found. It may have been deleted or moved to another project.")
+                } else {
+                    console.error("[DomainDetail] Supabase error (domain):", JSON.stringify(domainError, null, 2))
+                    throw domainError
+                }
+                return
             }
+
             if (!domainData) {
-                setFetchError("The requested domain configuration could not be found.")
+                setFetchError("The requested domain configuration could be retrieved but is empty.")
                 return
             }
             setDomain(domainData)
@@ -69,11 +85,10 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 throw routesError
             }
             setRoutes(routesData || [])
-            setFetchError(null)
         } catch (error: any) {
-            console.error("[DomainDetail] Caught error:", error)
-            console.error("[DomainDetail] Error stringified:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
-            setFetchError(error.message || error.details || "Failed to load domain configuration")
+            console.error("[DomainDetail] Caught unexpected error:", error)
+            const errorMsg = error.message || error.details || "Failed to load domain configuration"
+            setFetchError(errorMsg)
         } finally {
             setIsLoading(false)
         }
