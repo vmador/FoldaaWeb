@@ -3,12 +3,13 @@ import React, { useState, useEffect } from "react"
 import { 
     Shield, Globe, Settings2, AlertCircle, CheckCircle2, 
     ArrowRight, Plus, Loader2, RefreshCw, Copy, ExternalLink,
-    Lock, Zap, Server
+    Lock, Zap, Server, Trash2, ArrowLeftRight, AlertTriangle
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import RouteCard from "./RouteCard"
 import DNSDetailsModal from "./modals/DNSDetailsModal"
 import AddRouteModal from "./modals/AddRouteModal"
+import TransferDomainModal from "./modals/TransferDomainModal"
 
 interface DomainDetailProps {
     domainId: string
@@ -22,6 +23,8 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
     const [isVerifying, setIsVerifying] = useState(false)
     const [showDNSModal, setShowDNSModal] = useState(false)
     const [showAddRouteModal, setShowAddRouteModal] = useState(false)
+    const [showTransferModal, setShowTransferModal] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
     const [fetchError, setFetchError] = useState<string | null>(null)
 
     useEffect(() => {
@@ -29,7 +32,15 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
     }, [domainId])
 
     const fetchDomainDetails = async () => {
+        if (!domainId || domainId === "null" || domainId === "undefined") {
+            console.warn("Invalid domainId provided to DomainDetail:", domainId)
+            setFetchError("Invalid domain identifier.")
+            setIsLoading(false)
+            return
+        }
+
         setIsLoading(true)
+        console.log("[DomainDetail] Fetching details for domainId:", domainId)
         try {
             const { data: domainData, error: domainError } = await supabase
                 .from("domains")
@@ -37,10 +48,12 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 .eq("id", domainId)
                 .single()
 
-            if (domainError) throw domainError
+            if (domainError) {
+                console.error("[DomainDetail] Supabase error (domain):", JSON.stringify(domainError, null, 2))
+                throw domainError
+            }
             if (!domainData) {
-                console.warn(`Domain with ID ${domainId} not found`)
-                setDomain(null)
+                setFetchError("The requested domain configuration could not be found.")
                 return
             }
             setDomain(domainData)
@@ -51,17 +64,16 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 .eq("domain_id", domainId)
                 .order("pattern", { ascending: true })
 
-            if (routesError) throw routesError
+            if (routesError) {
+                console.error("[DomainDetail] Supabase error (routes):", JSON.stringify(routesError, null, 2))
+                throw routesError
+            }
             setRoutes(routesData || [])
             setFetchError(null)
         } catch (error: any) {
-            console.error("Error fetching domain details:", {
-                message: error.message,
-                details: error.details,
-                hint: error.hint,
-                code: error.code
-            })
-            setFetchError(error.message || "Failed to load domain configuration")
+            console.error("[DomainDetail] Caught error:", error)
+            console.error("[DomainDetail] Error stringified:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
+            setFetchError(error.message || error.details || "Failed to load domain configuration")
         } finally {
             setIsLoading(false)
         }
@@ -81,6 +93,26 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
             alert("Verification failed. Please check your DNS records.")
         } finally {
             setIsVerifying(false)
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!confirm(`Are you sure you want to permanently remove ${domain.domain_name}? This action cannot be undone.`)) return
+        
+        setIsDeleting(true)
+        try {
+            const { error } = await supabase
+                .from("domains")
+                .delete()
+                .eq("id", domainId)
+            
+            if (error) throw error
+            onBack() // Go back to list after deletion
+        } catch (error: any) {
+            console.error("Error deleting domain:", error)
+            alert(error.message || "Failed to delete domain. Please try again.")
+        } finally {
+            setIsDeleting(false)
         }
     }
 
@@ -256,6 +288,49 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 </div>
             </div>
 
+            {/* Danger Zone */}
+            <div className="mt-8 pt-8 border-t border-[#2A2A2E]">
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-red-500" />
+                        <h3 className="text-red-500 text-sm font-bold uppercase tracking-widest">Danger Zone</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Transfer Option */}
+                        <div className="p-4 bg-black border border-[#2A2A2E] rounded-lg group hover:border-[#444] transition-colors">
+                            <div className="flex flex-col gap-1 mb-4">
+                                <span className="text-white font-bold text-sm uppercase tracking-wider">Transfer to Project</span>
+                                <p className="text-xs text-[#666]">Move this domain and all its rules to another project in your workspace.</p>
+                            </div>
+                            <button 
+                                onClick={() => setShowTransferModal(true)}
+                                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-[#1C1C1E] border border-[#2A2A2E] text-white rounded text-xs font-bold uppercase tracking-widest hover:border-brand-500/50 transition-all"
+                            >
+                                <ArrowLeftRight className="w-3.5 h-3.5 text-brand-400" />
+                                Initiate Transfer
+                            </button>
+                        </div>
+
+                        {/* Delete Option */}
+                        <div className="p-4 bg-black border border-[#2A2A2E] rounded-lg">
+                            <div className="flex flex-col gap-1 mb-4">
+                                <span className="text-red-500 font-bold text-sm uppercase tracking-wider">Remove Domain</span>
+                                <p className="text-xs text-[#666]">Disconnect this domain from your account. This will stop all active traffic.</p>
+                            </div>
+                            <button 
+                                onClick={handleDelete}
+                                disabled={isDeleting}
+                                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-500/5 border border-red-500/10 text-red-500 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-500/10 transition-all disabled:opacity-50"
+                            >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                {isDeleting ? "REMOVING..." : "REMOVE_DOMAIN"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Modals */}
             {showDNSModal && (
                 <DNSDetailsModal 
@@ -272,6 +347,19 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                     onSuccess={() => {
                         setShowAddRouteModal(false)
                         fetchDomainDetails()
+                    }}
+                />
+            )}
+
+            {showTransferModal && (
+                <TransferDomainModal 
+                    domainId={domainId}
+                    currentProjectId={domain.project_id}
+                    domainName={domain.domain_name}
+                    onClose={() => setShowTransferModal(false)}
+                    onSuccess={() => {
+                        setShowTransferModal(false)
+                        onBack() // Go back to list as it's no longer in this project
                     }}
                 />
             )}
