@@ -129,7 +129,7 @@ jobs:
               .tauri.windows[0].height = ($user_config.window.height // 800) |
               .tauri.windows[0].resizable = (if $user_config.behavior.resizable != null then $user_config.behavior.resizable else true end) |
               .tauri.windows[0].fullscreen = (if $user_config.window.fullscreen != null then $user_config.window.fullscreen else false end) |
-              .tauri.windows[0].decorations = (if $user_config.window.frameless == true or $user_config.toolbar.style == "Hidden" then false else true end) |
+              .tauri.windows[0].decorations = (if $user_config.toolbar.style == "Hidden" then false elif $user_config.toolbar.style == "Overlay" then true elif $user_config.window.frameless == true then false else true end) |
               .tauri.windows[0].transparent = (if $user_config.window.transparent != null then $user_config.window.transparent else true end) |
               .tauri.windows[0].alwaysOnTop = (if $user_config.behavior.always_on_top != null then $user_config.behavior.always_on_top else false end) |
               .tauri.windows[0].titleBarStyle = (if $user_config.toolbar.style == "Hidden" then "Transparent" else ($user_config.toolbar.style // "Overlay") end)' \

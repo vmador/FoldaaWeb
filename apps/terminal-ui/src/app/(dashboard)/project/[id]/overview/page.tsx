@@ -1169,15 +1169,15 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                             </div>
 
                                             <div className={clsx(
-                                                "relative w-full max-w-[200px] aspect-[1.4/1] bg-card border border-border rounded-[10px] shadow-xl transition-all duration-500 overflow-hidden",
+                                                "relative w-full max-w-[200px] aspect-[1.4/1] bg-card border border-border rounded-[10px] shadow-xl transition-all duration-500 overflow-hidden group/macwindow",
                                                 macConfig.window?.transparent && "opacity-80",
                                                 macConfig.vibrancy?.enabled && "backdrop-blur-md bg-card/40"
                                             )}>
                                                 {/* Toolbar Area */}
                                                 {macConfig.toolbar?.style !== 'Hidden' && (
                                                     <div className={clsx(
-                                                        "h-8 w-full border-b border-[#111] flex items-center px-3 gap-1.5",
-                                                        macConfig.toolbar?.style === 'Overlay' && "absolute top-0 left-0 bg-transparent border-none z-10"
+                                                        "h-8 w-full border-b border-[#111] flex items-center px-3 gap-1.5 transition-all duration-300",
+                                                        macConfig.toolbar?.style === 'Overlay' ? "absolute top-0 left-0 bg-transparent border-none z-10 opacity-0 group-hover/macwindow:opacity-100" : "opacity-100"
                                                     )}>
                                                         {/* Traffic Lights */}
                                                         <div className="flex gap-1.5">
