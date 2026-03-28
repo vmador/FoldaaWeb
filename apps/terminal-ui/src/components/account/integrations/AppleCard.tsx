@@ -106,8 +106,8 @@ export default function AppleCard() {
     }
 
     if (checking) return (
-        <div className="p-8 bg-[#1C1C1E] border border-[#2A2A2E] rounded-2xl flex items-center justify-center">
-            <Loader2 className="w-5 h-5 text-[#222] animate-spin" />
+        <div className="p-8 bg-card border border-border rounded-2xl flex items-center justify-center">
+            <Loader2 className="w-5 h-5 text-foreground/40 animate-spin" />
         </div>
     )
 
@@ -116,16 +116,16 @@ export default function AppleCard() {
             {/* Header */}
             <div className="flex items-start justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center shadow-inner">
-                        <Apple className="w-5 h-5 text-white" />
+                    <div className="w-12 h-12 rounded-xl bg-card border border-border flex items-center justify-center shadow-inner">
+                        <Apple className="w-5 h-5 text-foreground" />
                     </div>
                     <div>
-                        <h2 className="text-sm font-bold text-white uppercase tracking-widest">Apple Developer</h2>
-                        <p className="text-[#666] text-xs mt-0.5 font-sans">iOS & macOS distribution.</p>
+                        <h2 className="text-sm font-bold text-foreground uppercase tracking-widest">Apple Developer</h2>
+                        <p className="text-muted-foreground text-xs mt-0.5 font-sans">iOS & macOS distribution.</p>
                     </div>
                 </div>
                 {hasCredentials && !showEditForm && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white/[0.05] border border-white/[0.05] rounded-full">
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-foreground/[0.05] border border-white/[0.05] rounded-full">
                         <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-pulse" />
                         <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Live</span>
                     </div>
@@ -135,20 +135,20 @@ export default function AppleCard() {
             {/* Display Mode */}
             {hasCredentials && !showEditForm ? (
                 <div className="space-y-4">
-                    <div className="border border-[#2A2A2E] rounded-xl bg-black overflow-hidden">
-                        <div className="flex justify-between items-center px-4 py-3 border-b border-[#2A2A2E]">
-                            <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Team ID</span>
-                            <span className="text-xs text-[#888] font-mono">{accountInfo?.team_id}</span>
+                    <div className="border border-border rounded-xl bg-card overflow-hidden">
+                        <div className="flex justify-between items-center px-4 py-3 border-b border-border/50">
+                            <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Team ID</span>
+                            <span className="text-xs text-foreground font-mono">{accountInfo?.team_id}</span>
                         </div>
                         <div className="flex justify-between items-center px-4 py-3">
-                            <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Bundle ID</span>
-                            <span className="text-xs text-[#888] font-mono">{accountInfo?.bundle_id}</span>
+                            <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Bundle ID</span>
+                            <span className="text-xs text-foreground font-mono">{accountInfo?.bundle_id}</span>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setShowEditForm(true)}
-                            className="flex-1 px-4 py-2 bg-[#1C1C1E] border border-[#2A2A2E] text-white rounded-lg text-xs font-medium hover:bg-[#2A2A2E] transition-all"
+                            className="flex-1 px-4 py-2 bg-card border border-border text-foreground rounded-lg text-xs font-medium hover:bg-secondary transition-all"
                         >
                             Edit Credentials
                         </button>
@@ -166,45 +166,45 @@ export default function AppleCard() {
                     <div className="grid grid-cols-1 gap-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Team ID</label>
+                                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Team ID</label>
                                 <input
                                     type="text"
                                     value={teamId}
                                     onChange={(e) => setTeamId(e.target.value)}
                                     placeholder="ABC123DEF..."
-                                    className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                    className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Key ID</label>
+                                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Key ID</label>
                                 <input
                                     type="text"
                                     value={keyId}
                                     onChange={(e) => setKeyId(e.target.value)}
                                     placeholder="XYZ789..."
-                                    className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                    className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                                 />
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Bundle ID</label>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Bundle ID</label>
                             <input
                                 type="text"
                                 value={bundleId}
                                 onChange={(e) => setBundleId(e.target.value)}
                                 placeholder="com.example.app"
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                             />
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Private Key (.p8)</label>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Private Key (.p8)</label>
                             <textarea
                                 value={privateKey}
                                 onChange={(e) => setPrivateKey(e.target.value)}
                                 placeholder="-----BEGIN PRIVATE KEY-----..."
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all h-24 resize-none placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all h-24 resize-none placeholder:text-muted-foreground/30"
                             />
                         </div>
                     </div>
@@ -213,7 +213,7 @@ export default function AppleCard() {
                         <button
                             onClick={handleConnect}
                             disabled={loading || !teamId || !keyId || !privateKey || !bundleId}
-                            className="flex-1 px-4 py-2 bg-white hover:bg-zinc-200 text-black rounded-lg text-xs font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2 bg-foreground text-background hover:opacity-90 rounded-lg text-xs font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                             {hasCredentials ? 'Update Credentials' : 'Connect Apple'}
@@ -221,7 +221,7 @@ export default function AppleCard() {
                         {showEditForm && (
                             <button
                                 onClick={() => setShowEditForm(false)}
-                                className="px-4 py-2 bg-[#2A2A2E] border border-[#333336] text-[#AAA] rounded-md text-xs font-medium hover:text-white hover:border-[#333] transition-all"
+                                className="px-4 py-2 bg-secondary border border-border text-muted-foreground rounded-lg text-xs font-medium hover:text-foreground hover:border-border transition-all"
                             >
                                 Cancel
                             </button>
@@ -230,7 +230,7 @@ export default function AppleCard() {
                     
                     {(error || success) && (
                         <div className={`p-4 rounded-xl border text-xs flex items-center gap-3 animate-in fade-in slide-in-from-top-2 ${
-                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-white/[0.05] border-white/10 text-zinc-400"
+                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-foreground/[0.05] border-white/10 text-zinc-400"
                         }`}>
                             {error ? <AlertCircle className="w-4 h-4 shrink-0" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
                             {error || success}

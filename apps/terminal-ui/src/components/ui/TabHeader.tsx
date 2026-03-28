@@ -36,21 +36,21 @@ export function TabHeader({ title, description, action, secondaryAction, backAct
                 disabled={btn.disabled || btn.loading}
                 className={clsx(
                     "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all disabled:opacity-50 group border",
-                    isPrimary ? "bg-[#111] hover:bg-[#1A1A1A] border-transparent hover:border-[#1A1A1A] text-white" :
+                    isPrimary ? "bg-background hover:bg-secondary border-foreground/12 hover:border-foreground/20 text-foreground" :
                     isDanger ? "bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-500" :
-                    "bg-[#2A2A2E] hover:bg-[#1A1A1A] border-[#333336] text-[#666] hover:text-[#888]"
+                    "bg-secondary hover:bg-secondary/80 border-foreground/12 text-muted-foreground hover:text-foreground"
                 )}
             >
                 {btn.loading ? (
-                    <Loader2 className="w-4 h-4 animate-spin border border-[#333] rounded-sm p-0.5" />
+                    <Loader2 className="w-4 h-4 animate-spin border border-foreground/12 rounded-sm p-0.5" />
                 ) : btn.icon ? (
                     <btn.icon className={clsx("w-4 h-4 border rounded-sm p-0.5 transition-colors", 
-                        isPrimary ? "border-[#333] group-hover:border-[#666]" : "border-transparent" 
+                        isPrimary ? "border-foreground/12 group-hover:border-muted-foreground/40" : "border-transparent" 
                     )} />
                 ) : null}
                 <span className="text-sm font-medium whitespace-nowrap">{btn.label}</span>
                 {btn.shortcut && (
-                    <span className="ml-1 px-1 py-0.5 bg-black/20 rounded text-xs font-mono opacity-40 lowercase">
+                    <span className="ml-1 px-1 py-0.5 bg-background/20 rounded text-xs font-mono opacity-40 lowercase">
                         {btn.shortcut}
                     </span>
                 )}
@@ -59,21 +59,21 @@ export function TabHeader({ title, description, action, secondaryAction, backAct
     };
 
     return (
-        <div className="flex items-center justify-between h-[44.5px] px-3 -mx-3 border-b border-[#2A2A2E] bg-black/40 backdrop-blur-sm sticky top-0 z-30 mb-6">
+        <div className="flex items-center justify-between h-[44.5px] px-3 -mx-3 border-b border-neutral-200 backdrop-blur-sm sticky top-0 z-30 mb-6">
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                     {backAction && (
                         <button 
                             onClick={backAction.onClick}
-                            className="p-1 hover:bg-[#2A2A2E] rounded text-[#666] transition-colors"
+                            className="p-1 hover:bg-secondary rounded text-muted-foreground transition-colors"
                         >
                             <ChevronLeft className="w-4 h-4" />
                         </button>
                     )}
-                    <h2 className="text-white font-bold text-sm tracking-tight">{title}</h2>
+                    <h2 className="text-foreground font-bold text-sm tracking-tight">{title}</h2>
                 </div>
                 {description && (
-                    <span className="text-xs text-[#666] font-medium border-l border-[#333336] pl-3 h-4 flex items-center">
+                    <span className="text-xs text-muted-foreground font-medium border-l border-foreground/12 pl-3 h-4 flex items-center">
                         {description}
                     </span>
                 )}

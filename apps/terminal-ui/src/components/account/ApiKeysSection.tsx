@@ -25,27 +25,27 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-lg bg-[#1C1C1E] border border-[#2A2A2E] rounded-2xl overflow-hidden shadow-2xl"
+                className="w-full max-w-lg bg-card border border-border rounded-2xl overflow-hidden shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-[#2A2A2E] flex items-center gap-4 bg-black">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
+                <div className="p-6 border-b border-border flex items-center gap-4 bg-background">
+                    <div className="w-10 h-10 rounded-xl bg-foreground/5 border border-white/10 flex items-center justify-center text-foreground shrink-0">
                         <CheckCircle className="w-5 h-5" />
                     </div>
                     <div>
-                        <h3 className="text-sm font-bold text-white uppercase tracking-widest">API Key Created!</h3>
-                        <p className="text-xs text-[#666] font-mono mt-1">{keyData.name}</p>
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-widest">API Key Created!</h3>
+                        <p className="text-xs text-muted-foreground font-mono mt-1">{keyData.name}</p>
                     </div>
                 </div>
 
                 {/* Warning */}
-                <div className="px-6 py-4 bg-yellow-500/5 border-b border-[#2A2A2E] flex gap-3 items-start">
+                <div className="px-6 py-4 bg-yellow-500/5 border-b border-border flex gap-3 items-start">
                     <AlertCircle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
                     <div>
                         <p className="text-xs text-yellow-500 font-bold uppercase tracking-widest mb-1">Save this key now!</p>
@@ -54,19 +54,19 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
                 </div>
 
                 {/* API Key */}
-                <div className="p-6 space-y-6 bg-black">
+                <div className="p-6 space-y-6 bg-background">
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Your API Key</label>
-                        <div className="relative bg-black border border-[#2A2A2E] rounded-lg p-3 pr-14 flex items-center">
-                            <code className="text-sm text-white/90 font-mono break-all leading-relaxed">
+                        <div className="relative bg-background border border-border rounded-lg p-3 pr-14 flex items-center">
+                            <code className="text-sm text-foreground/90 font-mono break-all leading-relaxed">
                                 {apiKey}
                             </code>
                             <button
                                 onClick={copyToClipboard}
                                 className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-md border flex items-center justify-center transition-all ${
                                     copied 
-                                    ? "bg-white/10 border-white/20 text-white" 
-                                    : "bg-[#2A2A2E] border-[#333336] text-[#888] hover:text-white hover:border-[#333]"
+                                    ? "bg-foreground/10 border-white/20 text-foreground" 
+                                    : "bg-secondary border-border text-muted-foreground hover:text-foreground hover:border-border"
                                 }`}
                             >
                                 {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -75,12 +75,12 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
                     </div>
 
                     {/* Info */}
-                    <div className="grid grid-cols-2 gap-4 p-4 bg-black border border-[#2A2A2E] rounded-xl">
+                    <div className="grid grid-cols-2 gap-4 p-4 bg-background border border-border rounded-xl">
                         <div>
                             <p className="text-xs uppercase font-mono tracking-widest text-[#555] mb-2">Scopes</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {keyData.scopes.map((scope: string) => (
-                                    <span key={scope} className="px-2 py-0.5 bg-[#2A2A2E] border border-[#333336] text-[#888] rounded text-xs font-mono uppercase tracking-widest">
+                                    <span key={scope} className="px-2 py-0.5 bg-secondary border border-border text-muted-foreground rounded text-xs font-mono uppercase tracking-widest">
                                         {scope}
                                     </span>
                                 ))}
@@ -88,7 +88,7 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
                         </div>
                         <div>
                             <p className="text-xs uppercase font-mono tracking-widest text-[#555] mb-2">Expires</p>
-                            <p className="text-xs text-white font-mono">
+                            <p className="text-xs text-foreground font-mono">
                                 {keyData.expires_at ? new Date(keyData.expires_at).toLocaleDateString() : "Never"}
                             </p>
                         </div>
@@ -96,10 +96,10 @@ const NewKeyModal = ({ apiKey, keyData, onClose }: { apiKey: string, keyData: an
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-[#2A2A2E] bg-black flex justify-end gap-3">
+                <div className="p-4 border-t border-border bg-background flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-5 py-2 bg-white text-black hover:bg-[#E5E5E5] rounded-md text-xs font-bold transition-colors"
+                        className="px-5 py-2 bg-foreground text-foreground hover:bg-[#E5E5E5] rounded-md text-xs font-bold transition-colors"
                     >
                         I've Saved It
                     </button>
@@ -158,21 +158,21 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md bg-black border border-[#2A2A2E] rounded-2xl overflow-hidden shadow-2xl"
+                className="w-full max-w-md bg-background border border-border rounded-2xl overflow-hidden shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="px-6 py-5 border-b border-[#2A2A2E] flex items-start justify-between bg-black">
+                <div className="px-6 py-5 border-b border-border flex items-start justify-between bg-background">
                     <div>
-                        <h3 className="text-sm font-bold text-white uppercase tracking-widest">Create API Key</h3>
-                        <p className="text-xs text-[#666] font-mono mt-1">Generate a new key for API access</p>
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-widest">Create API Key</h3>
+                        <p className="text-xs text-muted-foreground font-mono mt-1">Generate a new key for API access</p>
                     </div>
-                    <button onClick={onClose} className="p-1.5 text-[#555] hover:text-white transition-colors bg-[#2A2A2E] border border-[#333336] rounded-md">
+                    <button onClick={onClose} className="p-1.5 text-[#555] hover:text-foreground transition-colors bg-secondary border border-border rounded-md">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -186,7 +186,7 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             placeholder="e.g., Production Key, Development"
-                            className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                            className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-xs font-mono focus:border-border outline-none transition-all placeholder-[#333]"
                         />
                     </div>
 
@@ -194,7 +194,7 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                         <label className="text-xs uppercase font-mono tracking-widest text-[#555] px-1">Permissions</label>
                         <div className="grid gap-2">
                             {["read", "write", "execute"].map((scope) => (
-                                <label key={scope} className="flex items-center gap-3 px-3 py-2 bg-black border border-[#2A2A2E] rounded-md cursor-pointer hover:border-[#333336] transition-colors group">
+                                <label key={scope} className="flex items-center gap-3 px-3 py-2 bg-background border border-border rounded-md cursor-pointer hover:border-border transition-colors group">
                                     <div className="relative flex items-center justify-center">
                                         <input
                                             type="checkbox"
@@ -205,11 +205,11 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                                             })}
                                             className="peer sr-only"
                                         />
-                                        <div className="w-4 h-4 rounded-[4px] border border-[#333] bg-black peer-checked:bg-white peer-checked:border-white flex items-center justify-center transition-colors">
-                                           {formData.scopes[scope] && <CheckCircle className="w-3 h-3 text-black stroke-[3]" />}
+                                        <div className="w-4 h-4 rounded-[4px] border border-border bg-background peer-checked:bg-foreground peer-checked:border-white flex items-center justify-center transition-colors">
+                                           {formData.scopes[scope] && <CheckCircle className="w-3 h-3 text-foreground stroke-[3]" />}
                                         </div>
                                     </div>
-                                    <span className="text-xs text-[#AAA] font-mono group-hover:text-white transition-colors uppercase tracking-wider">{scope}</span>
+                                    <span className="text-xs text-muted-foreground font-mono group-hover:text-foreground transition-colors uppercase tracking-wider">{scope}</span>
                                 </label>
                             ))}
                         </div>
@@ -222,7 +222,7 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                             value={formData.expires_in_days}
                             onChange={(e) => setFormData({ ...formData, expires_in_days: e.target.value })}
                             placeholder="Leave empty for no expiration"
-                            className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                            className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-xs font-mono focus:border-border outline-none transition-all placeholder-[#333]"
                         />
                     </div>
 
@@ -235,18 +235,18 @@ const CreateKeyModal = ({ onClose, onSuccess }: { onClose: () => void, onSuccess
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 border-t border-[#2A2A2E] bg-black flex justify-end gap-3">
+                <div className="px-6 py-4 border-t border-border bg-background flex justify-end gap-3">
                     <button
                         onClick={onClose}
                         disabled={isCreating}
-                        className="px-4 py-2 bg-[#2A2A2E] border border-[#333336] text-[#888] hover:text-white hover:border-[#333] rounded-md text-xs font-medium transition-colors disabled:opacity-50"
+                        className="px-4 py-2 bg-secondary border border-border text-muted-foreground hover:text-foreground hover:border-border rounded-md text-xs font-medium transition-colors disabled:opacity-50"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleCreate}
                         disabled={isCreating || !formData.name}
-                        className="px-5 py-2 bg-white text-black hover:bg-[#E5E5E5] rounded-md text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className="px-5 py-2 bg-foreground text-foreground hover:bg-[#E5E5E5] rounded-md text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
                     >
                         {isCreating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Key className="w-3.5 h-3.5" />}
                         {isCreating ? 'Creating...' : 'Create Key'}
@@ -263,22 +263,22 @@ const ApiKeyCard = ({ apiKey, onDelete }: { apiKey: any, onDelete: (key: any) =>
     const [showActions, setShowActions] = useState(false)
 
     return (
-        <div className="bg-black border border-[#2A2A2E] rounded-xl p-5 hover:border-[#333336] transition-colors relative group">
+        <div className="bg-background border border-border rounded-xl p-5 hover:border-border transition-colors relative group">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-foreground/5 border border-white/10 flex items-center justify-center text-foreground/50 shrink-0">
                         <Key className="w-4 h-4" />
                     </div>
                     <div>
-                        <h3 className="text-sm font-bold text-white tracking-wide break-all mb-0.5">{apiKey.name}</h3>
-                        <p className="text-xs text-[#666] font-mono">{apiKey.key_prefix}</p>
+                        <h3 className="text-sm font-bold text-foreground tracking-wide break-all mb-0.5">{apiKey.name}</h3>
+                        <p className="text-xs text-muted-foreground font-mono">{apiKey.key_prefix}</p>
                     </div>
                 </div>
                 
                 <div className="relative">
                     <button
                         onClick={() => setShowActions(!showActions)}
-                        className="w-8 h-8 flex flex-col gap-1 items-center justify-center bg-[#2A2A2E] border border-[#2A2A2E] rounded-md text-[#555] hover:text-white hover:border-[#333] transition-colors"
+                        className="w-8 h-8 flex flex-col gap-1 items-center justify-center bg-secondary border border-border rounded-md text-[#555] hover:text-foreground hover:border-border transition-colors"
                     >
                         <div className="w-1 h-1 bg-current rounded-full" />
                         <div className="w-1 h-1 bg-current rounded-full" />
@@ -294,11 +294,11 @@ const ApiKeyCard = ({ apiKey, onDelete }: { apiKey: any, onDelete: (key: any) =>
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ duration: 0.1 }}
-                                    className="absolute right-0 top-10 w-48 bg-[#1C1C1E] border border-[#2A2A2E] rounded-xl shadow-xl z-50 overflow-hidden"
+                                    className="absolute right-0 top-10 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
                                 >
                                     <button
                                         onClick={() => { setShowActions(false); onDelete(apiKey); }}
-                                        className="w-full px-4 py-3 text-left flex items-center gap-3 text-xs font-bold font-mono uppercase tracking-widest text-[#666] hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                                        className="w-full px-4 py-3 text-left flex items-center gap-3 text-xs font-bold font-mono uppercase tracking-widest text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4" /> Revoke Key
                                     </button>
@@ -309,15 +309,15 @@ const ApiKeyCard = ({ apiKey, onDelete }: { apiKey: any, onDelete: (key: any) =>
                 </div>
             </div>
 
-            <div className="mt-5 pt-4 border-t border-[#2A2A2E] flex items-center gap-6">
+            <div className="mt-5 pt-4 border-t border-border flex items-center gap-6">
                 <div>
-                    <span className="text-xs text-[#444] font-mono uppercase tracking-widest block mb-1">Created</span>
-                    <span className="text-xs text-[#888] font-mono">{new Date(apiKey.created_at).toLocaleDateString()}</span>
+                    <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest block mb-1">Created</span>
+                    <span className="text-xs text-muted-foreground font-mono">{new Date(apiKey.created_at).toLocaleDateString()}</span>
                 </div>
                 {apiKey.last_used_at && (
                     <div>
-                        <span className="text-xs text-[#444] font-mono uppercase tracking-widest block mb-1">Last Used</span>
-                        <span className="text-xs text-white/80 font-mono">{new Date(apiKey.last_used_at).toLocaleDateString()}</span>
+                        <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest block mb-1">Last Used</span>
+                        <span className="text-xs text-foreground/80 font-mono">{new Date(apiKey.last_used_at).toLocaleDateString()}</span>
                     </div>
                 )}
             </div>
@@ -390,15 +390,15 @@ export default function ApiKeysSection() {
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 pt-2">
             {/* List */}
             {apiKeys.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-12 bg-black border border-[#2A2A2E] border-dashed rounded-xl">
-                    <div className="w-16 h-16 rounded-2xl bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center mb-4">
+                <div className="flex flex-col items-center justify-center p-12 bg-background border border-border border-dashed rounded-xl">
+                    <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center mb-4">
                         <Key className="w-6 h-6 text-[#333]" />
                     </div>
-                    <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-1">No API keys yet</h3>
-                    <p className="text-xs text-[#666] font-mono text-center max-w-sm mb-6">Create your first API key to start using the Foldaa API from your applications.</p>
+                    <h3 className="text-sm font-bold text-foreground tracking-widest uppercase mb-1">No API keys yet</h3>
+                    <p className="text-xs text-muted-foreground font-mono text-center max-w-sm mb-6">Create your first API key to start using the Foldaa API from your applications.</p>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="px-4 py-2 bg-[#2A2A2E] hover:bg-[#1A1A1A] border border-[#333336] text-[#AAA] hover:text-white rounded-md text-xs font-bold transition-all flex items-center gap-2"
+                        className="px-4 py-2 bg-secondary hover:bg-[#1A1A1A] border border-border text-muted-foreground hover:text-foreground rounded-md text-xs font-bold transition-all flex items-center gap-2"
                     >
                         <Plus className="w-3.5 h-3.5" />
                         CREATE KEY

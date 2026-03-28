@@ -12,7 +12,7 @@ import {
     Activity,
     Settings
 } from "lucide-react";
-import { clsx } from "clsx";
+import clsx from "clsx";
 
 interface OneSignalCardProps {
     integration: {
@@ -44,21 +44,21 @@ export default function OneSignalCard({
 
     return (
         <div className="flex flex-col gap-2 group">
-            <div className="flex flex-col border border-[#2A2A2E] bg-[#1C1C1E] rounded overflow-hidden hover:border-[#333] transition-colors shadow-sm">
+            <div className="flex flex-col border border-border bg-card rounded overflow-hidden hover:border-border transition-colors shadow-sm">
                 {/* Main Header */}
-                <div className="flex items-center justify-between p-3 border-b border-[#2A2A2E]">
+                <div className="flex items-center justify-between p-3 border-b border-border">
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             {isEnabled ? (
                                 <Check className="w-4 h-4 text-brand-500 font-bold" />
                             ) : (
-                                <Square className="w-4 h-4 text-[#444]" />
+                                <Square className="w-4 h-4 text-muted-foreground" />
                             )}
                         </div>
                         <div className="flex flex-col min-w-0">
                             <div className="flex items-center gap-2">
-                                <span className="text-white font-bold truncate uppercase tracking-tight">{type.display_name}</span>
-                                <span className="text-xs text-[#444] font-mono whitespace-nowrap border border-[#2A2A2E] px-1 rounded uppercase tracking-tighter">Push</span>
+                                <span className="text-foreground font-bold truncate uppercase tracking-tight">{type.display_name}</span>
+                                <span className="text-xs text-muted-foreground font-mono whitespace-nowrap border border-border px-1 rounded uppercase tracking-tighter">Push</span>
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ export default function OneSignalCard({
                             className={clsx(
                                 "text-xs font-bold px-3 py-1.5 rounded-md transition-colors border uppercase tracking-wider",
                                 isEnabled 
-                                ? "bg-[#1C1C1E] hover:bg-[#2A2A2E] text-[#D8D8D8] border-[#2A2A2E]" 
+                                ? "bg-card hover:bg-secondary text-foreground border-border" 
                                 : "bg-[#244544] hover:bg-[#2C5251] text-[#A6D1D1] border-[#2C5251]"
                             )}
                         >
@@ -77,13 +77,13 @@ export default function OneSignalCard({
                         </button>
                         <button 
                             onClick={() => onConfigure(integration)}
-                            className="text-xs font-bold px-3 py-1.5 rounded-md bg-[#1C1C1E] hover:bg-[#2A2A2E] text-[#D8D8D8] transition-colors border border-[#2A2A2E] uppercase tracking-wider"
+                            className="text-xs font-bold px-3 py-1.5 rounded-md bg-card hover:bg-secondary text-foreground transition-colors border border-border uppercase tracking-wider"
                         >
                             Configure
                         </button>
                         <button 
                             onClick={() => onDelete(integration.id)}
-                            className="text-[#444] hover:text-red-400 transition-colors p-1"
+                            className="text-muted-foreground hover:text-red-400 transition-colors p-1"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -91,22 +91,22 @@ export default function OneSignalCard({
                 </div>
 
                 {/* Body / Details */}
-                <div className="p-3 bg-black/20 flex flex-col gap-3">
-                    <p className="text-xs text-[#666] leading-relaxed">
+                <div className="p-3 bg-background/20 flex flex-col gap-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                         {type.description}
                     </p>
 
                     {isEnabled && hasAppId && (
-                        <div className="flex flex-col gap-1.5 pt-2 border-t border-[#2A2A2E]">
+                        <div className="flex flex-col gap-1.5 pt-2 border-t border-border">
                             <div className="flex items-center justify-between text-xs font-mono">
-                                <span className="text-[#444] uppercase tracking-widest flex items-center gap-1">
+                                <span className="text-muted-foreground uppercase tracking-widest flex items-center gap-1">
                                     <Activity className="w-3 h-3" /> App ID
                                 </span>
-                                <span className="text-[#888]">{config.app_id}</span>
+                                <span className="text-muted-foreground">{config.app_id}</span>
                             </div>
                             <div className="flex items-center gap-2 mt-1">
                                 <button 
-                                    className="text-xs text-[#D8D8D8] hover:bg-[#2A2A2E] transition-colors flex items-center gap-1 bg-[#1C1C1E] px-2 py-1 rounded border border-[#2A2A2E]"
+                                    className="text-xs text-foreground hover:bg-secondary transition-colors flex items-center gap-1 bg-card px-2 py-1 rounded border border-border"
                                     onClick={() => window.open(`https://dashboard.onesignal.com/apps/${config.app_id}`, '_blank')}
                                 >
                                     <ExternalLink className="w-3 h-3" /> DASHBOARD

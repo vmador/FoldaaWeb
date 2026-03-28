@@ -1,20 +1,23 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Geist_Mono } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
-// Map font-mono to Inter as well to globalize the non-terminal look requested by user
-const jetbrains = Inter({ subsets: ['latin'], variable: '--font-mono' })
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {
-  title: 'Foldaa | Warp Dashboard',
+  title: 'Foldaa',
   description: 'Control your Foldaa apps like a pro.',
+  icons: {
+    icon: '/icon.svg',
+  },
 }
 
 import { UserProvider } from '@/lib/contexts/UserContext'
 import { UIProvider } from '@/lib/contexts/UIContext'
 import { WorkspaceProvider } from '@/lib/contexts/WorkspaceContext'
 import { ProjectProvider } from '@/lib/contexts/ProjectContext'
+import { ThemeProvider } from '@/components/theme-provider'
 
 export default function RootLayout({
   children,
@@ -22,17 +25,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} ${jetbrains.variable} font-sans min-h-screen bg-black text-[#D8D8D8] antialiased selection:bg-[#343A46]`}>
-        <UserProvider>
-          <UIProvider>
-            <WorkspaceProvider>
-              <ProjectProvider>
-                {children}
-              </ProjectProvider>
-            </WorkspaceProvider>
-          </UIProvider>
-        </UserProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${geistMono.variable} font-sans min-h-screen bg-background text-foreground antialiased selection:bg-[#343A46]`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <UserProvider>
+            <UIProvider>
+              <WorkspaceProvider>
+                <ProjectProvider>
+                  {children}
+                </ProjectProvider>
+              </WorkspaceProvider>
+            </UIProvider>
+          </UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

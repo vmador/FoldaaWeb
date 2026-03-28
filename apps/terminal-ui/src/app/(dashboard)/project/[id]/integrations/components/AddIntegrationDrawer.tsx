@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { X, Plus, Search, MessageSquare, Mail, Webhook, ArrowRight } from "lucide-react";
-import { clsx } from "clsx";
+import clsx from "clsx";
 
 interface IntegrationType {
     id: string;
@@ -29,16 +29,16 @@ export default function AddIntegrationDrawer({
     const [searchQuery, setSearchQuery] = useState("");
 
     const filteredTypes = availableTypes.filter(type => 
-        type.display_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        type.name.toLowerCase().includes(searchQuery.toLowerCase())
+        (type?.display_name || '').toLowerCase().includes((searchQuery || '').toLowerCase()) ||
+        (type?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase())
     );
 
     const getIcon = (name: string) => {
-        switch (name.toLowerCase()) {
+        switch ((name || '').toLowerCase()) {
             case 'onesignal': return <MessageSquare className="w-4 h-4 text-orange-500" />;
             case 'resend': return <Mail className="w-4 h-4 text-sky-500" />;
             case 'webhook': return <Webhook className="w-4 h-4 text-emerald-500" />;
-            default: return <Plus className="w-4 h-4 text-[#666]" />;
+            default: return <Plus className="w-4 h-4 text-muted-foreground" />;
         }
     };
 
@@ -47,35 +47,35 @@ export default function AddIntegrationDrawer({
     return (
         <div className="fixed inset-0 z-50 flex justify-end">
             <div 
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-background/60 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             />
             
-            <div className="relative w-full max-w-sm bg-[#1C1C1E] border-l border-[#2A2A2E] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+            <div className="relative w-full max-w-sm bg-card border-l border-border h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-[#2A2A2E] bg-black/40">
+                <div className="flex items-center justify-between p-4 border-b border-border bg-background/40">
                     <div className="flex items-center gap-2">
                         <Plus className="w-4 h-4 text-brand-500/60" />
-                        <span className="text-xs font-bold text-[#D8D8D8] tracking-widest uppercase font-mono">
+                        <span className="text-xs font-bold text-foreground tracking-widest uppercase font-mono">
                             INSTALL_PLUGIN
                         </span>
                     </div>
                     <button 
                         onClick={onClose}
-                        className="text-[#444] hover:text-white transition-colors p-1"
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
                     >
                         <X className="w-4 h-4" />
                     </button>
                 </div>
 
                 {/* Search */}
-                <div className="p-4 border-b border-[#2A2A2E] bg-black/20">
+                <div className="p-4 border-b border-border bg-background/20">
                     <div className="relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#444] group-focus-within:text-brand-500/50 transition-colors" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground group-focus-within:text-brand-500/50 transition-colors" />
                         <input 
                             type="text"
                             placeholder="SEARCH_REGISTRY"
-                            className="w-full bg-black border border-[#2A2A2E] rounded-md py-2 pl-9 pr-4 text-xs text-[#A0A0A0] font-mono focus:outline-none focus:border-brand-500/30 transition-colors uppercase placeholder:text-[#333]"
+                            className="w-full bg-background border border-border rounded-md py-2 pl-9 pr-4 text-xs text-[#A0A0A0] font-mono focus:outline-none focus:border-brand-500/30 transition-colors uppercase placeholder:text-[#333]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -86,24 +86,24 @@ export default function AddIntegrationDrawer({
                 <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 custom-scrollbar">
                     {filteredTypes.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-[#444] text-xs font-mono italic">- NO_MATCHES -</p>
+                            <p className="text-muted-foreground text-xs font-mono italic">- NO_MATCHES -</p>
                         </div>
                     ) : (
                         filteredTypes.map((type) => (
                             <div 
                                 key={type.id}
-                                className="group flex items-center justify-between border border-[#2A2A2E] bg-[#1C1C1E]/40 p-4 rounded-md hover:border-[#2C5251] hover:bg-[#244544]/5 transition-all cursor-pointer active:scale-[0.98]"
+                                className="group flex items-center justify-between border border-border bg-card/40 p-4 rounded-md hover:border-[#2C5251] hover:bg-[#244544]/5 transition-all cursor-pointer active:scale-[0.98]"
                                 onClick={() => onInstall(type.id)}
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-md bg-black border border-[#2A2A2E] flex items-center justify-center group-hover:border-[#2C5251] transition-colors shadow-inner">
+                                    <div className="w-10 h-10 rounded-md bg-background border border-border flex items-center justify-center group-hover:border-[#2C5251] transition-colors shadow-inner">
                                         {getIcon(type.name)}
                                     </div>
                                     <div className="flex flex-col min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[#D8D8D8] font-bold text-xs group-hover:text-[#A6D1D1] transition-colors uppercase tracking-tight">{type.display_name}</span>
+                                            <span className="text-foreground font-bold text-xs group-hover:text-[#A6D1D1] transition-colors uppercase tracking-tight">{type.display_name}</span>
                                         </div>
-                                        <p className="text-[#666] text-xs leading-tight mt-0.5">
+                                        <p className="text-muted-foreground text-xs leading-tight mt-0.5">
                                             {type.description}
                                         </p>
                                     </div>
@@ -115,18 +115,18 @@ export default function AddIntegrationDrawer({
                 </div>
 
                 {/* Footer Metadata */}
-                <div className="p-4 border-t border-[#2A2A2E] bg-black/20">
+                <div className="p-4 border-t border-border bg-background/20">
                     <div className="flex flex-col gap-2">
-                        <div className="text-xs text-[#444] uppercase tracking-[0.2em] font-bold">Registry Status</div>
+                        <div className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-bold">Registry Status</div>
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-[#666] font-mono">CONNECTION_STATUS</span>
+                            <span className="text-xs text-muted-foreground font-mono">CONNECTION_STATUS</span>
                             <span className="text-xs text-green-500 font-mono flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> ONLINE
                             </span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-[#666] font-mono">ENTRIES_COUNT</span>
-                            <span className="text-xs text-white font-mono">{availableTypes.length}</span>
+                            <span className="text-xs text-muted-foreground font-mono">ENTRIES_COUNT</span>
+                            <span className="text-xs text-foreground font-mono">{availableTypes.length}</span>
                         </div>
                     </div>
                 </div>

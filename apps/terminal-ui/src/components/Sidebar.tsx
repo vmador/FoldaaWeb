@@ -16,6 +16,7 @@ import { useUI } from "@/lib/contexts/UIContext";
 import { supabase } from "@/lib/supabase";
 import CreateFolderModal from "./terminal/CreateFolderModal";
 import { ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuSubmenu } from "./ui/ContextMenu";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SidebarProps {
     activeTab: 'projects' | 'domains' | 'campfire';
@@ -124,8 +125,8 @@ export default function Sidebar({ activeTab }: SidebarProps) {
     return (
         <aside
             className={clsx(
-                "h-full bg-[#000000] border-[#202020] flex flex-col font-sans select-none shrink-0 transition-all duration-300 ease-in-out overflow-hidden",
-                isSidebarOpen ? "w-72 border-r" : "w-0 border-r-0"
+                "h-full bg-neutral-50 flex flex-col font-sans select-none shrink-0 transition-all duration-300 ease-in-out overflow-hidden",
+                isSidebarOpen ? "w-72 border-r border-neutral-200" : "w-0 border-r-0"
             )}
         >
             <div className={clsx(
@@ -133,9 +134,9 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                 isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             )}>
                 {/* Search Input */}
-                <div className="px-3 pt-4 pb-3">
+                 <div className="px-3 pt-4 pb-3">
                     <div className="relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#444] group-focus-within:text-[#888] transition-colors" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground group-focus-within:text-foreground transition-colors" />
                         <input
                             ref={searchInputRef}
                             type="text"
@@ -147,8 +148,8 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                     window.dispatchEvent(new CustomEvent('marketplace-search', { detail: val }));
                                 }
                             }}
-                            placeholder={activeTab === 'projects' ? "⌘+F Search" : activeTab === 'domains' ? "Search domains..." : "Search marketplace..."}
-                            className="w-full bg-[#0A0A0A] border border-[#1A1A1A] rounded-lg pl-9 pr-3 py-1.5 text-sm text-[#A0A0A0] outline-none focus:border-[#333] transition-all placeholder-[#333]"
+                            placeholder={activeTab === 'projects' ? "Search" : activeTab === 'domains' ? "Search domains..." : "Search marketplace..."}
+                            className="w-full bg-neutral-100 border border-neutral-200 rounded-lg pl-9 pr-3 py-1.5 text-sm text-foreground outline-none focus:border-neutral-300 transition-all placeholder-muted-foreground/50"
                         />
                     </div>
                 </div>
@@ -177,14 +178,14 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                 window.dispatchEvent(new CustomEvent('open-publish-listing'));
                             }
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-[#111111] text-[#D8D8D8] hover:text-white transition-all group border border-transparent hover:border-[#1A1A1A]"
+                        className="w-full btn-outline group"
                     >
-                        <Plus className="w-4 h-4 border border-[#333] rounded-sm p-0.5 group-hover:border-[#666]" />
+                        <Plus className="w-4 h-4 border border-neutral-200 rounded-sm p-0.5 group-hover:border-muted-foreground transition-colors" />
                         <span className="text-sm font-medium flex-1">
-                            {activeTab === 'projects' ? (
+                             {activeTab === 'projects' ? (
                                 <div className="flex items-center justify-between gap-1.5">
                                     <span>New Site</span>
-                                    <span className="text-[#444] font-mono text-[10px] ml-auto">⌘+N</span>
+                                    <span className="text-muted-foreground/40 font-mono-hud text-[10px] ml-auto">⌘+N</span>
                                 </div>
                             ) : activeTab === 'domains' ? (
                                 <div className="flex items-center justify-between gap-1.5">
@@ -206,21 +207,21 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                             {/* Folders Section Header */}
                             <div className="flex items-center justify-between px-2 pt-1 mb-2">
                                 <div className="flex items-center gap-2 flex-1">
-                                    <span className="text-[10px] font-bold text-[#333] tracking-widest uppercase">Folders</span>
-                                    <div className="h-[1px] flex-1 bg-[#111]/50"></div>
+                                    <span className="text-[10px] font-bold text-muted-foreground/60 tracking-widest uppercase">Folders</span>
+                                    <div className="h-[1px] flex-1 bg-neutral-200"></div>
                                 </div>
                                 <button 
                                     onClick={() => setIsCreateFolderModalOpen(true)}
-                                    className="p-1 hover:bg-[#111] rounded text-[#444] hover:text-white transition-all ml-2"
+                                    className="btn-ghost p-1"
                                     title="New Folder"
                                 >
                                     <Plus size={14} />
                                 </button>
                             </div>
 
-                            {projectsLoading ? (
+                             {projectsLoading ? (
                                 [...Array(5)].map((_, i) => (
-                                    <div key={i} className="h-12 w-full bg-[#0A0A0A] rounded-lg animate-pulse mb-2" />
+                                    <div key={i} className="h-12 w-full bg-secondary/50 rounded-lg animate-pulse mb-2" />
                                 ))
                             ) : (
                                 <>
@@ -236,7 +237,7 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                                 key={folder.id} 
                                                 className={clsx(
                                                     "space-y-0.5 rounded-lg transition-colors duration-200",
-                                                    isDropTarget && "bg-[#111] ring-1 ring-[#333]"
+                                                    isDropTarget && "bg-secondary ring-1 ring-border"
                                                 )}
                                                 onDragOver={(e) => {
                                                     e.preventDefault();
@@ -264,13 +265,18 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                                         setEditingFolderId(folder.id);
                                                         setEditFolderName(folder.name);
                                                     }}
-                                                    className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#111] text-[#D8D8D8] transition-all group/f"
+                                                    className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-secondary text-foreground transition-all group/f"
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0 flex-1">
-                                                        {isOpen ? <ChevronDown className="w-3 h-3 text-[#444]" /> : <ChevronRight className="w-3 h-3 text-[#444]" />}
+                                                        <motion.div
+                                                            animate={{ rotate: isOpen ? 90 : 0 }}
+                                                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                                                        >
+                                                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                                                        </motion.div>
                                                         <PhosphorFolder size={14} weight={isOpen ? "fill" : "regular"} className={clsx(
-                                                            "transition-colors",
-                                                            isDropTarget ? "text-white" : "text-zinc-500"
+                                                             "transition-colors",
+                                                            isDropTarget ? "text-foreground" : "text-muted-foreground"
                                                         )} />
                                                         
                                                         {isEditing ? (
@@ -284,53 +290,63 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                                                     if (e.key === "Escape") setEditingFolderId(null);
                                                                 }}
                                                                 onClick={(e) => e.stopPropagation()}
-                                                                className="bg-[#0A0A0A] border border-[#333] rounded px-1 py-0.5 text-xs text-white outline-none w-full"
+                                                                className="bg-background border border-border rounded px-1 py-0.5 text-xs text-foreground outline-none w-full"
                                                             />
                                                         ) : (
                                                             <span className="text-sm font-medium truncate">{folder.name}</span>
                                                         )}
                                                     </div>
-                                                    {!isEditing && (
-                                                        <span className="text-[10px] text-[#444] group-hover/f:text-[#666] font-mono">
+                                                     {!isEditing && (
+                                                        <span className="text-[10px] text-muted-foreground/40 group-hover/f:text-muted-foreground/60 font-mono-hud font-bold">
                                                             {folderProjects.length}
                                                         </span>
                                                     )}
                                                 </button>
                                                 
-                                                {isOpen && (
-                                                    <div className="ml-5 border-l border-[#111] pl-2 space-y-0.5 mt-0.5">
-                                                        {folderProjects.length === 0 ? (
-                                                            <div className="px-2 py-1 text-[10px] text-[#333] italic">Empty folder</div>
-                                                        ) : (
-                                                            folderProjects.map(project => (
-                                                                <ProjectLink 
-                                                                    key={project.id} 
-                                                                    project={project} 
-                                                                    onContextMenu={(e) => {
-                                                                        e.preventDefault();
-                                                                        setContextMenu({ x: e.clientX, y: e.clientY, projectId: project.id });
-                                                                    }}
-                                                                    onDragStart={() => setIsDragging(true)}
-                                                                    onDragEnd={() => {
-                                                                        setIsDragging(false);
-                                                                        setDropTargetId(null);
-                                                                    }}
-                                                                    isDragging={isDragging}
-                                                                />
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                )}
+                                                <AnimatePresence initial={false}>
+                                                    {isOpen && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: "auto", opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="ml-5 border-l border-neutral-200 pl-2 space-y-0.5 mt-0.5 pb-2">
+                                                                {folderProjects.length === 0 ? (
+                                                                    <div className="px-2 py-1 text-[10px] text-muted-foreground italic">Empty folder</div>
+                                                                ) : (
+                                                                    folderProjects.map(project => (
+                                                                        <ProjectLink 
+                                                                            key={project.id} 
+                                                                            project={project} 
+                                                                            onContextMenu={(e) => {
+                                                                                e.preventDefault();
+                                                                                setContextMenu({ x: e.clientX, y: e.clientY, projectId: project.id });
+                                                                            }}
+                                                                            onDragStart={() => setIsDragging(true)}
+                                                                            onDragEnd={() => {
+                                                                                setIsDragging(false);
+                                                                                setDropTargetId(null);
+                                                                            }}
+                                                                            isDragging={isDragging}
+                                                                        />
+                                                                    ))
+                                                                )}
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
                                         );
                                     })}
 
                                     {/* Unorganized Projects */}
-                                    {filteredProjects.some(p => !p.folder_id) && (
+                                     {filteredProjects.some(p => !p.folder_id) && (
                                         <div 
                                             className={clsx(
                                                 "mt-4 rounded-lg transition-colors duration-200 p-0.5",
-                                                dropTargetId === 'root' && "bg-[#111] ring-1 ring-[#333]"
+                                                dropTargetId === 'root' && "bg-secondary ring-1 ring-border"
                                             )}
                                             onDragOver={(e) => {
                                                 e.preventDefault();
@@ -350,8 +366,8 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                             }}
                                         >
                                             <div className="flex items-center gap-2 mb-2 px-2 pt-1">
-                                                <span className="text-[10px] font-bold text-[#333] tracking-widest uppercase">Projects</span>
-                                                <div className="h-[1px] flex-1 bg-[#111]/50"></div>
+                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Projects</span>
+                                                <div className="h-[1px] flex-1 bg-neutral-200"></div>
                                             </div>
                                             {filteredProjects.filter(p => !p.folder_id).map(project => (
                                                 <ProjectLink 
@@ -372,36 +388,36 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                         </div>
                                     )}
 
-                                    {filteredProjects.length === 0 && folders.length === 0 && (
-                                        <div className="text-center py-8 text-xs text-[#444]">No projects found</div>
+                                     {filteredProjects.length === 0 && folders.length === 0 && (
+                                        <div className="text-center py-8 text-xs text-muted-foreground">No projects found</div>
                                     )}
                                 </>
                             )}
                         </div>
                     ) : activeTab === 'domains' ? (
                         <>
-                            <div className="flex items-center gap-2 mb-4 px-2">
-                                <span className="text-xs font-bold text-[#444] tracking-widest uppercase">Domains</span>
-                                <div className="h-[1px] flex-1 bg-[#111]"></div>
+                             <div className="flex items-center gap-2 mb-4 px-2">
+                                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Domains</span>
+                                <div className="h-[1px] flex-1 bg-border"></div>
                             </div>
                             <div className="space-y-1">
-                                {domainsLoading ? (
+                                 {domainsLoading ? (
                                     [...Array(3)].map((_, i) => (
-                                        <div key={i} className="h-12 w-full bg-[#0A0A0A] rounded-lg animate-pulse mb-2" />
+                                        <div key={i} className="h-12 w-full bg-secondary/50 rounded-lg animate-pulse mb-2" />
                                     ))
                                 ) : domains.length === 0 ? (
-                                    <div className="text-center py-8 text-xs text-[#444]">No domains found</div>
+                                    <div className="text-center py-8 text-xs text-muted-foreground">No domains found</div>
                                 ) : (
                                     domains
                                         .filter(d => d.domain_name.toLowerCase().includes(searchQuery.toLowerCase()))
                                         .map((domain) => (
-                                            <Link 
+                                             <Link 
                                                 key={domain.id} 
                                                 href={`/project/${domain.project_id}/domains?domainId=${domain.id}`}
-                                                className="flex flex-col gap-0.5 p-2 rounded-lg hover:bg-[#111111] cursor-pointer transition-all border border-transparent hover:border-[#1A1A1A] block"
+                                                className="flex flex-col gap-0.5 p-2 rounded-lg hover:bg-secondary cursor-pointer transition-all border border-transparent hover:border-border block"
                                             >
-                                                <div className="flex items-center gap-2 text-sm font-medium text-[#D8D8D8]">
-                                                    <Globe className="w-3.5 h-3.5 text-[#666]" />
+                                                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                                    <Globe className="w-3.5 h-3.5 text-muted-foreground" />
                                                     <span className="truncate">{domain.domain_name}</span>
                                                 </div>
                                             </Link>
@@ -410,10 +426,10 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                             </div>
                         </>
                     ) : (
-                        <>
+                         <>
                             <div className="flex items-center gap-2 mb-4 px-2">
-                                <span className="text-xs font-bold text-[#444] tracking-widest uppercase">Categories</span>
-                                <div className="h-[1px] flex-1 bg-[#111]"></div>
+                                <span className="text-xs font-bold text-muted-foreground tracking-widest uppercase">Categories</span>
+                                <div className="h-[1px] flex-1 bg-border"></div>
                             </div>
                             <div className="space-y-1">
                                 {[
@@ -435,13 +451,13 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                         <button
                                             key={cat.value}
                                             onClick={() => window.dispatchEvent(new CustomEvent('marketplace-category-select', { detail: cat.value }))}
-                                            className="w-full flex items-center justify-between p-1.5 rounded-lg hover:bg-[#111111] cursor-pointer transition-all border border-transparent hover:border-[#1A1A1A] group"
+                                            className="w-full flex items-center justify-between p-1.5 rounded-lg hover:bg-secondary cursor-pointer transition-all border border-transparent hover:border-border group"
                                         >
                                             <div className="flex items-center gap-2">
-                                                <Icon className="w-3.5 h-3.5 text-[#666] group-hover:text-[#A0A0A0]" />
-                                                <span className="text-sm font-medium text-[#D8D8D8] group-hover:text-white">{cat.label}</span>
+                                                <Icon className="w-3.5 h-3.5 text-muted-foreground/60 group-hover:text-muted-foreground" />
+                                                <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">{cat.label}</span>
                                             </div>
-                                            <span className="text-xs text-[#444] font-mono">
+                                            <span className="text-[10px] text-muted-foreground/40 font-mono-hud font-bold">
                                                 {categoryCounts[cat.value] || 0}
                                             </span>
                                         </button>
@@ -452,10 +468,10 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                     )}
                 </div>
 
-                <div className="p-3 border-t border-[#111]">
+                <div className="p-3 border-t border-neutral-200">
                     <button 
                         onClick={toggleAllFolders}
-                        className="w-full text-xs font-bold text-[#666] hover:text-[#A0A0A0] transition-colors px-2 py-1.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] uppercase tracking-wider"
+                        className="w-full btn-outline justify-center text-[10px] font-bold uppercase tracking-wider h-8"
                     >
                         {folders.length > 0 && folders.every(f => openFolders[f.id]) ? "Collapse all" : "View all"}
                     </button>
@@ -474,7 +490,7 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                     y={contextMenu.y} 
                     onClose={() => setContextMenu(null)}
                 >
-                    <div className="px-3 py-1.5 text-[10px] font-bold text-[#444] uppercase tracking-wider">
+                     <div className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider">
                         Move to Folder
                     </div>
                     <ContextMenuSeparator />
@@ -492,7 +508,7 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                     
                     <ContextMenuSeparator />
                     
-                    {folders.map(folder => (
+                         {folders.map(folder => (
                         <ContextMenuItem 
                             key={folder.id}
                             onClick={() => {
@@ -500,13 +516,13 @@ export default function Sidebar({ activeTab }: SidebarProps) {
                                 setContextMenu(null);
                             }}
                         >
-                            <PhosphorFolder size={14} className="text-[#666]" />
+                            <PhosphorFolder size={14} className="text-muted-foreground/60" />
                             <span>{folder.name}</span>
                         </ContextMenuItem>
                     ))}
                     
                     {folders.length === 0 && (
-                        <div className="px-3 py-2 text-xs text-[#444] italic">No folders created</div>
+                        <div className="px-3 py-2 text-xs text-muted-foreground/40 italic">No folders created</div>
                     )}
                 </ContextMenu>
             )}
@@ -543,13 +559,13 @@ function ProjectLink({ project, onContextMenu, onDragStart, onDragEnd, isDraggin
             <Link
                 href={`/project/${project.id}`}
                 className={clsx(
-                    "flex flex-col gap-0.5 p-1.5 rounded-lg hover:bg-[#0A0A0A] cursor-pointer transition-all border border-transparent hover:border-[#1A1A1A] block",
-                    isDragging && "border-[#333] border-dashed"
+                    "flex flex-col gap-0.5 p-1.5 rounded-lg hover:bg-secondary cursor-pointer transition-all border border-transparent hover:border-border block",
+                    isDragging && "border-border border-dashed"
                 )}
             >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-4 h-4 rounded-sm flex-shrink-0 flex items-center justify-center overflow-hidden bg-[#0A0A0A] border border-[#1A1A1A]">
+                        <div className="w-4 h-4 rounded-sm flex-shrink-0 flex items-center justify-center overflow-hidden bg-background border border-neutral-200">
                             {projectIcon ? (
                                 <img src={projectIcon} alt="" className="w-full h-full object-cover" />
                             ) : (
@@ -558,11 +574,11 @@ function ProjectLink({ project, onContextMenu, onDragStart, onDragEnd, isDraggin
                                 </span>
                             )}
                         </div>
-                        <span className="text-[13px] font-medium text-[#D8D8D8] truncate group-hover:text-white transition-colors">
+                        <span className="text-[13px] font-medium text-foreground/80 truncate group-hover:text-foreground transition-colors">
                             {project.name}
                         </span>
                     </div>
-                    <span className="text-[9px] text-[#333] group-hover:text-[#555] font-mono tabular-nums">
+                    <span className="text-[9px] text-muted-foreground/60 group-hover:text-muted-foreground font-mono-hud font-bold uppercase tracking-wider">
                         {formatDistanceToNow(new Date(project.updated_at || project.created_at), { addSuffix: false }).replace('about ', '').replace(' minutes', 'm').replace(' hours', 'h').replace(' days', 'd').replace(' months', 'mo')}
                     </span>
                 </div>

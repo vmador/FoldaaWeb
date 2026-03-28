@@ -26,8 +26,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
+            let { data: { session } } = await supabase.auth.getSession();
+            
+            // Defensive parsing: if session is a string, try to parse it
+            if (typeof session === 'string') {
+                try {
+                    session = JSON.parse(session);
+                } catch (e) {
+                    console.error("[ANTIGRAVITY V2] Failed to parse session string:", e);
+                    session = null;
+                }
+            }
+
+            if (!session || !session.user) {
                 setLoading(false);
                 return;
             }
@@ -87,21 +98,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
             }
 
             // Merge profile with auth metadata for fallbacks
+            const avatarUrl = profileData?.avatar_url || userMetadata.avatar_url || userMetadata.picture || userMetadata.avatar || null;
+            const firstName = profileData?.first_name || userMetadata.full_name?.split(' ')[0] || userMetadata.name?.split(' ')[0] || null;
+            const lastName = profileData?.last_name || userMetadata.full_name?.split(' ').slice(1).join(' ') || userMetadata.name?.split(' ').slice(1).join(' ') || null;
+            const userName = profileData?.username || userMetadata.user_name || userMetadata.preferred_username || null;
+
             const mergedProfile = {
                 id: userId,
                 email: session.user.email || null,
                 ...profileData,
-                // Fallbacks from auth metadata
-                avatar_url: profileData?.avatar_url || userMetadata.avatar_url || userMetadata.picture || null,
-                first_name: profileData?.first_name || userMetadata.full_name?.split(' ')[0] || userMetadata.name?.split(' ')[0] || null,
-                last_name: profileData?.last_name || userMetadata.full_name?.split(' ').slice(1).join(' ') || userMetadata.name?.split(' ').slice(1).join(' ') || null,
-                username: profileData?.username || userMetadata.user_name || userMetadata.preferred_username || null,
+                avatar_url: avatarUrl,
+                first_name: firstName,
+                last_name: lastName,
+                username: userName,
                 subscriptionPlan,
                 onboarding_completed: profileData?.onboarding_completed || false,
                 role: profileData?.role || null,
             };
 
-            setProfile(mergedProfile as UserProfile);
+            setProfile({ ...mergedProfile } as UserProfile);
             setSettings(settingsData || null);
         } catch (err: any) {
             console.error("[ANTIGRAVITY V2] Error fetching user data detail (catch block):", {
@@ -110,6 +125,37 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 stack: err.stack,
                 fullError: JSON.stringify(err)
             });
+            
+            // Self-healing: if the session string in local storage was corrupted and throws a TypeError 
+            // inside Supabase Auth JS, clear the storage and reload to force a fresh login state
+            if (
+                err instanceof TypeError || 
+                (err && err.message && typeof err.message === 'string' && err.message.includes('Cannot create property'))
+            ) {
+                console.warn("[ANTIGRAVITY V2] Detected corrupted Auth session string. Clearing local storage to recover...");
+                if (typeof window !== 'undefined') {
+                    const projectId = process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0];
+                    if (projectId) {
+                        localStorage.removeItem(`sb-${projectId}-auth-token`);
+                    }
+                    // Fallback to clearing all local storage if specific key isn't enough
+                    const keys = Object.keys(localStorage);
+                    keys.forEach(key => {
+                        if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    
+                    // Also clear cookies
+                    document.cookie.split(";").forEach((c) => { 
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                    });
+                    
+                    window.location.href = '/login';
+                    return;
+                }
+            }
+
             setError(err);
         } finally {
             setLoading(false);
@@ -118,6 +164,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         fetchData();
+
+        // Listen for auth state changes (login, logout, session refresh)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+                fetchData();
+            } else if (event === 'SIGNED_OUT') {
+                setProfile(null);
+                setSettings(null);
+            }
+        });
+
+        return () => {
+            subscription.unsubscribe();
+        };
     }, []);
 
     useEffect(() => {

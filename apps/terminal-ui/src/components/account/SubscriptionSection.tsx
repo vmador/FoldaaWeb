@@ -142,10 +142,10 @@ export default function SubscriptionSection() {
 
     if (!user) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[300px] gap-3 bg-black border border-[#2A2A2E] rounded-2xl">
+            <div className="flex flex-col items-center justify-center min-h-[300px] gap-3 bg-background border border-border rounded-2xl">
                 <ShieldCheck className="w-8 h-8 text-[#333]" />
-                <h3 className="text-sm font-bold text-white uppercase tracking-widest">Sign In Required</h3>
-                <p className="text-xs text-[#666] font-mono">Please sign in to view your subscription details</p>
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-widest">Sign In Required</h3>
+                <p className="text-xs text-muted-foreground font-mono">Please sign in to view your subscription details</p>
             </div>
         )
     }
@@ -159,10 +159,10 @@ export default function SubscriptionSection() {
                     "p-5 rounded-xl border transition-all duration-300",
                     plan === 'free' 
                         ? 'bg-[#030303] border-brand-500/20 shadow-[0_0_20px_rgba(6,182,212,0.02)]' 
-                        : 'bg-transparent border-[#2A2A2E] opacity-60 grayscale'
+                        : 'bg-transparent border-border opacity-60 grayscale'
                 )}>
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-mono text-[#444] uppercase tracking-widest px-1.5 py-0.5 bg-[#1C1C1E] border border-[#2A2A2E] rounded">Free</span>
+                        <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest px-1.5 py-0.5 bg-card border border-border rounded">Free</span>
                         {plan === 'free' && (
                             <div className="flex items-center gap-1.5 text-zinc-500">
                                 <span className="w-1 h-1 rounded-full bg-zinc-600 animate-pulse" />
@@ -171,7 +171,7 @@ export default function SubscriptionSection() {
                         )}
                     </div>
 
-                    <h3 className="text-lg font-bold text-white mb-6 font-sans tracking-tight">Standard</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-6 font-sans tracking-tight">Standard</h3>
 
                     <div className="space-y-3 mb-8">
                         {[
@@ -184,7 +184,7 @@ export default function SubscriptionSection() {
                         ].map((feature, i) => (
                             <div key={i} className="flex items-center gap-2.5">
                                 <Check className="w-3 h-3 text-[#333] stroke-[3]" />
-                                <span className="text-xs text-[#888] font-mono tracking-tight">{feature}</span>
+                                <span className="text-xs text-muted-foreground font-mono tracking-tight">{feature}</span>
                             </div>
                         ))}
                     </div>
@@ -193,8 +193,8 @@ export default function SubscriptionSection() {
                         className={clsx(
                             "w-full py-2 rounded text-xs font-bold uppercase tracking-widest transition-all",
                             plan === 'free'
-                                ? 'bg-white/[0.05] text-zinc-500 border border-white/[0.08] cursor-default'
-                                : 'bg-[#1C1C1E] border border-[#2A2A2E] text-[#666] hover:text-white hover:border-[#333]'
+                                ? 'bg-foreground/[0.05] text-zinc-500 border border-white/[0.08] cursor-default'
+                                : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-border'
                         )}
                     >
                         {plan === "free" ? "Active Plan" : "Downgrade"}
@@ -206,7 +206,7 @@ export default function SubscriptionSection() {
                     "p-5 rounded-xl border transition-all duration-300 relative overflow-hidden",
                     plan === 'pro' 
                         ? 'bg-[#030303] border-brand-500/40 shadow-[0_0_30px_rgba(6,182,212,0.05)]' 
-                        : 'bg-[#030303] border-[#2A2A2E] hover:border-[#333]'
+                        : 'bg-[#030303] border-border hover:border-border'
                 )}>
                     {/* Subtle Gradient Glow */}
                     {plan === 'pro' && (
@@ -214,7 +214,7 @@ export default function SubscriptionSection() {
                     )}
 
                     <div className="flex items-center justify-between mb-4 relative z-10">
-                        <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest px-1.5 py-0.5 bg-white/[0.05] border border-white/[0.1] rounded">Pro</span>
+                        <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest px-1.5 py-0.5 bg-foreground/[0.05] border border-white/[0.1] rounded">Pro</span>
                         {plan === 'pro' && (
                             <div className="flex items-center gap-1.5 text-zinc-400">
                                 <span className="w-1 h-1 rounded-full bg-zinc-500 animate-pulse" />
@@ -224,8 +224,8 @@ export default function SubscriptionSection() {
                     </div>
 
                     <div className="mb-6 relative z-10">
-                        <span className="text-lg font-bold text-white font-sans tracking-tight">$13.99</span>
-                        <span className="text-xs text-[#444] font-mono ml-1">/ mo</span>
+                        <span className="text-lg font-bold text-foreground font-sans tracking-tight">$13.99</span>
+                        <span className="text-xs text-muted-foreground font-mono ml-1">/ mo</span>
                     </div>
 
                     <div className="space-y-3 mb-8 relative z-10">
@@ -238,7 +238,7 @@ export default function SubscriptionSection() {
                         ].map((feature, i) => (i < 5 && (
                             <div key={i} className="flex items-center gap-2.5">
                                 <Check className="w-3 h-3 text-zinc-600 stroke-[3]" />
-                                <span className="text-xs text-[#AAA] font-mono tracking-tight">{feature}</span>
+                                <span className="text-xs text-muted-foreground font-mono tracking-tight">{feature}</span>
                             </div>
                         )))}
                     </div>
@@ -246,29 +246,29 @@ export default function SubscriptionSection() {
                     {/* Action Area */}
                     <div className="relative z-10">
                         {plan === "pro" ? (
-                            <button className="w-full py-2 rounded text-xs font-bold uppercase tracking-widest bg-white/[0.05] text-zinc-400 border border-white/[0.1] cursor-default">
+                            <button className="w-full py-2 rounded text-xs font-bold uppercase tracking-widest bg-foreground/[0.05] text-zinc-400 border border-white/[0.1] cursor-default">
                                 Active Plan
                             </button>
                         ) : !showLicenseInput ? (
                             <div className="flex flex-col gap-2">
                                 <button
                                     onClick={() => window.open("https://amador.lemonsqueezy.com/buy/e8cae0a4-2d2b-4f33-ab59-86ed6bc3ba80", "_blank")}
-                                    className="w-full py-2 bg-white text-black hover:bg-[#E5E5E5] rounded text-xs font-bold transition-all uppercase tracking-widest"
+                                    className="w-full py-2 bg-foreground text-foreground hover:bg-[#E5E5E5] rounded text-xs font-bold transition-all uppercase tracking-widest"
                                 >
                                     Get Pro License
                                 </button>
                                 <button
                                     onClick={() => setShowLicenseInput(true)}
-                                    className="w-full py-2 bg-transparent text-[#666] hover:text-[#AAA] rounded text-xs font-bold transition-all uppercase tracking-widest"
+                                    className="w-full py-2 bg-transparent text-muted-foreground hover:text-muted-foreground rounded text-xs font-bold transition-all uppercase tracking-widest"
                                 >
                                     Activate license key
                                 </button>
                             </div>
                         ) : (
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 pt-2">
-                                <div className="flex items-center justify-between px-3 py-2 bg-[#030303] border border-[#2A2A2E] rounded-lg">
-                                    <span className="text-xs font-mono uppercase tracking-widest text-[#444]">Activation</span>
-                                    <button onClick={() => setShowLicenseInput(false)} className="text-[#444] hover:text-white transition-colors">
+                                <div className="flex items-center justify-between px-3 py-2 bg-[#030303] border border-border rounded-lg">
+                                    <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">Activation</span>
+                                    <button onClick={() => setShowLicenseInput(false)} className="text-muted-foreground hover:text-foreground transition-colors">
                                         <X className="w-3 h-3" />
                                     </button>
                                 </div>
@@ -278,13 +278,13 @@ export default function SubscriptionSection() {
                                     onChange={(e) => setLicenseKey(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="LMSQ-XXXX..."
-                                    className="w-full bg-black border border-[#2A2A2E] rounded px-2.5 py-1.5 text-white text-xs font-mono focus:border-brand-500/30 outline-none transition-all placeholder-[#222]"
+                                    className="w-full bg-background border border-border rounded px-2.5 py-1.5 text-foreground text-xs font-mono focus:border-brand-500/30 outline-none transition-all placeholder-[#222]"
                                 />
                                 {error && <p className="text-red-500 text-xs font-mono">{error}</p>}
                                 <button
                                     onClick={handleActivateLicense}
                                     disabled={!licenseKey.trim() || activating}
-                                    className="w-full py-1.5 bg-white/[0.05] text-zinc-400 hover:bg-white/[0.1] border border-white/[0.1] rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                                    className="w-full py-1.5 bg-foreground/[0.05] text-zinc-400 hover:bg-foreground/[0.1] border border-white/[0.1] rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
                                 >
                                     {activating ? "Processing..." : "Activate"}
                                 </button>
@@ -295,12 +295,12 @@ export default function SubscriptionSection() {
             </div>
 
             {/* Help / Footer */}
-            <div className="flex items-center justify-between px-5 py-3 bg-[#030303] border border-[#2A2A2E] rounded-xl">
+            <div className="flex items-center justify-between px-5 py-3 bg-[#030303] border border-border rounded-xl">
                 <div className="flex items-center gap-3">
                     <ShieldCheck className="w-4 h-4 text-[#333]" />
-                    <span className="text-xs text-[#666] font-mono tracking-tight leading-none pt-0.5">Secure billing via <strong>LemonSqueezy</strong></span>
+                    <span className="text-xs text-muted-foreground font-mono tracking-tight leading-none pt-0.5">Secure billing via <strong>LemonSqueezy</strong></span>
                 </div>
-                <button className="text-xs font-bold text-[#444] hover:text-[#666] uppercase tracking-widest transition-colors">
+                <button className="text-xs font-bold text-muted-foreground hover:text-muted-foreground uppercase tracking-widest transition-colors">
                     Support
                 </button>
             </div>

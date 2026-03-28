@@ -37,42 +37,42 @@ export default function AccountSection() {
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div>
-                <h2 className="text-lg font-semibold text-white tracking-tight">Account & Security</h2>
-                <p className="text-[#666] text-sm mt-1">Manage your account credentials and security preferences.</p>
+                <h2 className="text-lg font-semibold text-foreground tracking-tight">Account & Security</h2>
+                <p className="text-muted-foreground text-sm mt-1">Manage your account credentials and security preferences.</p>
             </div>
 
             <div className="space-y-5">
                 {/* Email Section */}
-                <div className="p-5 bg-[#1C1C1E] border border-[#2A2A2E] rounded-xl space-y-4">
+                <div className="p-5 bg-card border border-border rounded-xl space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                             <Mail className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Email Address</h3>
+                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">Email Address</h3>
                     </div>
-                    <p className="text-xs text-[#444] pl-1">Your primary email address for notifications and account recovery.</p>
+                    <p className="text-xs text-muted-foreground pl-1">Your primary email address for notifications and account recovery.</p>
                     <div className="flex gap-3">
                         <input
                             type="email"
                             disabled
-                            className="flex-1 bg-black border border-[#2A2A2E] rounded-lg px-4 py-2 text-[#444] text-sm outline-none cursor-not-allowed"
+                            className="flex-1 bg-background border border-border rounded-lg px-4 py-2 text-muted-foreground text-sm outline-none cursor-not-allowed"
                             placeholder="user@example.com"
                         />
-                        <button disabled className="px-4 py-1.5 bg-[#2A2A2E] border border-[#333336] rounded-lg text-xs font-bold text-[#444] cursor-not-allowed">
+                        <button disabled className="px-4 py-1.5 bg-secondary border border-border rounded-lg text-xs font-bold text-muted-foreground cursor-not-allowed">
                             Change Email
                         </button>
                     </div>
                 </div>
 
                 {/* Password Section */}
-                <div className="p-5 bg-[#1C1C1E] border border-[#2A2A2E] rounded-xl space-y-4">
+                <div className="p-5 bg-card border border-border rounded-xl space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
                             <Shield className="w-4 h-4 text-amber-400" />
                         </div>
-                        <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Password</h3>
+                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">Password</h3>
                     </div>
-                    <p className="text-xs text-[#444] pl-1">Security is key. We recommend using a unique password for your account.</p>
+                    <p className="text-xs text-muted-foreground pl-1">Security is key. We recommend using a unique password for your account.</p>
                     
                     {message && (
                         <div className={`p-4 rounded-lg flex items-center gap-3 text-xs font-medium ${
@@ -86,7 +86,7 @@ export default function AccountSection() {
                     <button 
                         onClick={resetPassword}
                         disabled={isUpdating}
-                        className="flex items-center gap-2 px-5 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-[#D8D8D8] transition-all disabled:opacity-50"
+                        className="flex items-center gap-2 px-5 py-2 bg-foreground text-foreground rounded-lg text-sm font-bold hover:bg-[#D8D8D8] transition-all disabled:opacity-50"
                     >
                         {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                         Send Reset Link
@@ -99,9 +99,9 @@ export default function AccountSection() {
                         <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center border border-red-500/20">
                             <LogOut className="w-4 h-4 text-red-400" />
                         </div>
-                        <h3 className="text-xs font-bold text-[#444] uppercase tracking-widest pl-1">Sign Out</h3>
+                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">Sign Out</h3>
                     </div>
-                    <p className="text-xs text-[#444] pl-1">Logout from this device. You will need to sign in again to access your projects.</p>
+                    <p className="text-xs text-muted-foreground pl-1">Logout from this device. You will need to sign in again to access your projects.</p>
                     <button 
                         onClick={handleLogout}
                         className="px-5 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm font-bold hover:bg-red-500/20 transition-all font-sans"

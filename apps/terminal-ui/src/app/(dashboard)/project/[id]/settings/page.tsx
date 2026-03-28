@@ -8,8 +8,19 @@ import clsx from 'clsx';
 import { TerminalModal } from '@/components/ui/TerminalModal';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/ToastContext';
+import { Toggle } from '@/components/ui/Toggle';
 
 import { TabHeader } from '@/components/ui/TabHeader';
+
+const SwitchRow = ({ label, checked, onChange }: { label: string, checked: boolean, onChange: () => void }) => (
+    <div className="flex items-center gap-3 py-1.5 group">
+        <Toggle 
+            checked={checked} 
+            onChange={onChange}
+        />
+        <span className="text-foreground text-xs font-medium group-hover:text-foreground transition-colors">{label}</span>
+    </div>
+);
 
 export default function SettingsPage({ params }: { params: Promise<{ id: string }> }) {
     const { projects, loading: projectsLoading } = useProjects();
@@ -46,7 +57,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
         }
     }, [project]);
 
-    if (projectsLoading) return <div className="text-[#666] font-mono text-sm">Loading settings...</div>;
+    if (projectsLoading) return <div className="text-muted-foreground font-mono text-sm">Loading settings...</div>;
     if (!project || !formData) return null;
 
     const handleSave = async () => {
@@ -87,11 +98,12 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
     };
 
     const SwitchRow = ({ label, checked, onChange }: any) => (
-        <div className="flex items-center gap-3 py-1.5 cursor-pointer group" onClick={onChange}>
-            <div className={clsx("w-8 h-4 rounded-full flex items-center p-0.5 transition-colors", checked ? "bg-brand-500" : "bg-[#2A2A2E] group-hover:bg-[#333336]")}>
-                <div className={clsx("w-3 h-3 bg-white rounded-full transition-transform shadow-sm", checked ? "translate-x-4" : "translate-x-0")} />
-            </div>
-            <span className="text-[#D8D8D8] text-xs font-medium group-hover:text-white transition-colors">{label}</span>
+        <div className="flex items-center gap-3 py-1.5 group">
+            <Toggle 
+                checked={checked} 
+                onChange={onChange}
+            />
+            <span className="text-foreground text-xs font-medium group-hover:text-foreground transition-colors">{label}</span>
         </div>
     );
 
@@ -104,8 +116,8 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     className={clsx(
                         "px-3 py-1 text-[10px] font-mono uppercase rounded-full border transition-all",
                         value === opt.value 
-                            ? "bg-transparent border-[#D8D8D8] text-[#D8D8D8]" 
-                            : "bg-transparent border-[#333336] text-[#666] hover:text-[#D8D8D8] hover:border-[#666]"
+                            ? "bg-transparent border-[#D8D8D8] text-foreground" 
+                            : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:border-[#666]"
                     )}
                 >
                     {opt.label}
@@ -117,7 +129,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
     const ConfigColorRow = ({ label, value, onChange }: any) => (
         <div className="flex items-center gap-3 py-1.5">
             <div 
-                className="w-4 h-4 rounded-full border border-[#333336] cursor-pointer overflow-hidden relative shadow-inner"
+                className="w-4 h-4 rounded-full border border-border cursor-pointer overflow-hidden relative shadow-inner"
                 style={{ backgroundColor: value }}
             >
                 <input 
@@ -127,7 +139,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     className="absolute inset-0 opacity-0 cursor-pointer"
                 />
             </div>
-            <span className="text-[#D8D8D8] text-xs font-medium">{label}</span>
+            <span className="text-foreground text-xs font-medium">{label}</span>
         </div>
     );
 
@@ -152,25 +164,25 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     
                     <div className="flex flex-col gap-5">
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-[#666] text-[10px] tracking-widest uppercase">PROJECT NAME</label>
+                            <label className="text-muted-foreground text-[10px] tracking-widest uppercase">PROJECT NAME</label>
                             <input 
-                                value={formData.name}
+                                value={formData.name || ''}
                                 onChange={e => setFormData({...formData, name: e.target.value})}
-                                className="bg-[#0C0C0E] border border-[#1C1C1E] focus:border-[#333336] rounded px-3 py-2 text-[#D8D8D8] outline-none text-xs transition-colors"
+                                className="bg-card border border-border focus:border-foreground/20 rounded px-3 py-2 text-foreground outline-none text-xs transition-colors shadow-sm"
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-[#666] text-[10px] tracking-widest uppercase">SUBDOMAIN</label>
+                            <label className="text-muted-foreground text-[10px] tracking-widest uppercase">SUBDOMAIN</label>
                             <input 
-                                value={project.subdomain}
+                                value={project.subdomain || ''}
                                 readOnly
-                                className="bg-[#08080A] border border-[#141416] rounded px-3 py-2 text-[#666] outline-none text-xs cursor-not-allowed"
+                                className="bg-secondary border border-border/50 rounded px-3 py-2 text-muted-foreground outline-none text-xs cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-[#666] text-[10px] tracking-widest uppercase mb-1">PWA Capabilities</label>
+                        <label className="text-muted-foreground text-[10px] tracking-widest uppercase mb-1">PWA Capabilities</label>
                         <SwitchRow label="Allow Fullscreen" checked={formData.allow_fullscreen} onChange={() => toggleBool('allow_fullscreen')} />
                         <SwitchRow label="Allow Camera" checked={formData.allow_camera} onChange={() => toggleBool('allow_camera')} />
                         <SwitchRow label="Allow Microphone" checked={formData.allow_microphone} onChange={() => toggleBool('allow_microphone')} />
@@ -178,7 +190,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-[#666] text-[10px] tracking-widest uppercase mb-1">Viewport Mode</label>
+                        <label className="text-muted-foreground text-[10px] tracking-widest uppercase mb-1">Viewport Mode</label>
                         <PillGroup 
                             value={formData.viewport_mode} 
                             onChange={(val: string) => setFormData({...formData, viewport_mode: val})}
@@ -191,12 +203,12 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-[#666] text-[10px] tracking-widest uppercase mb-1">PWA Experience</label>
+                        <label className="text-muted-foreground text-[10px] tracking-widest uppercase mb-1">PWA Experience</label>
                         <SwitchRow label="Ignore Safe Area" checked={formData.ignore_safe_area} onChange={() => toggleBool('ignore_safe_area')} />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-[#666] text-[10px] tracking-widest uppercase mb-1">Display</label>
+                        <label className="text-muted-foreground text-[10px] tracking-widest uppercase mb-1">Display</label>
                         <ConfigColorRow label="Theme Color" value={formData.theme_color} onChange={(val: string) => setFormData({...formData, theme_color: val})} />
                         <ConfigColorRow label="Background Color" value={formData.background_color} onChange={(val: string) => setFormData({...formData, background_color: val})} />
                     </div>
@@ -223,14 +235,14 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
             </div>
 
             {/* Danger Zone */}
-            <section className="mt-8 pt-8 border-t border-red-900/20 flex flex-col gap-4">
-                <div className="text-xs font-bold text-red-500/50 tracking-widest uppercase flex items-center gap-2">
+            <section className="mt-8 pt-8 border-t border-red-500/10 flex flex-col gap-4">
+                <div className="text-xs font-bold text-red-500/40 tracking-widest uppercase flex items-center gap-2">
                     <AlertTriangle className="w-3 h-3" /> Danger Zone
                 </div>
-                <div className="flex items-center justify-between p-4 bg-red-500/5 border border-red-500/10 rounded">
+                <div className="flex items-center justify-between p-4 bg-red-500/[0.03] border border-red-500/10 rounded-xl">
                     <div className="flex flex-col">
-                        <span className="text-white font-bold">Delete Project</span>
-                        <span className="text-[#666] text-xs">Permanently remove this project and all associated data.</span>
+                        <span className="text-foreground font-bold">Delete Project</span>
+                        <span className="text-muted-foreground text-xs">Permanently remove this project and all associated data.</span>
                     </div>
                     <button 
                         onClick={() => setIsDeleteModalOpen(true)}
@@ -250,7 +262,7 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                     <div className="flex gap-3">
                         <button 
                             onClick={() => setIsDeleteModalOpen(false)}
-                            className="px-4 py-2 text-xs font-bold text-[#666] hover:text-white transition-colors"
+                            className="px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
                         >
                             ABORT
                         </button>
@@ -292,14 +304,14 @@ export default function SettingsPage({ params }: { params: Promise<{ id: string 
                         <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
                         <div className="flex flex-col">
                             <span className="text-red-400 font-bold text-xs">WARNING: IRREVERSIBLE ACTION</span>
-                            <span className="text-[#666] text-xs">This will immediately terminate all workers and wipe project metadata.</span>
+                            <span className="text-muted-foreground text-xs">This will immediately terminate all workers and wipe project metadata.</span>
                         </div>
                     </div>
                     
                     <div className="flex flex-col gap-2">
-                        <label className="text-[#D8D8D8] text-xs">Type <span className="text-white font-mono font-bold">DELETE</span> to confirm:</label>
-                        <div className="flex items-center gap-2 bg-black border border-[#2A2A2E] px-3 py-2 rounded focus-within:border-red-500/30 transition-colors">
-                            <Terminal className="w-3.5 h-3.5 text-[#444]" />
+                        <label className="text-foreground text-xs">Type <span className="text-foreground font-mono font-bold">DELETE</span> to confirm:</label>
+                        <div className="flex items-center gap-2 bg-background border border-border px-3 py-2 rounded focus-within:border-red-500/30 transition-colors">
+                            <Terminal className="w-3.5 h-3.5 text-muted-foreground" />
                             <input 
                                 value={deleteConfirmText}
                                 onChange={(e) => setDeleteConfirmText(e.target.value)}

@@ -124,8 +124,8 @@ export default function MarketplaceCard() {
     }
 
     if (checking) return (
-        <div className="p-8 bg-[#1C1C1E] border border-[#2A2A2E] rounded-2xl flex items-center justify-center">
-            <Loader2 className="w-5 h-5 text-[#222] animate-spin" />
+        <div className="p-8 bg-card border border-border rounded-2xl flex items-center justify-center">
+            <Loader2 className="w-5 h-5 text-foreground/40 animate-spin" />
         </div>
     )
 
@@ -134,12 +134,12 @@ export default function MarketplaceCard() {
             {/* Header */}
             <div className="flex items-start justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center shadow-inner">
+                    <div className="w-12 h-12 rounded-xl bg-card border border-border flex items-center justify-center shadow-inner">
                         <ShoppingBag className="w-5 h-5 text-yellow-500" />
                     </div>
                     <div>
-                        <h2 className="text-sm font-bold text-white uppercase tracking-widest">Marketplace</h2>
-                        <p className="text-[#666] text-xs mt-0.5 font-sans">LemonSqueezy integration.</p>
+                        <h2 className="text-sm font-bold text-foreground uppercase tracking-widest">Marketplace</h2>
+                        <p className="text-muted-foreground text-xs mt-0.5 font-sans">LemonSqueezy integration.</p>
                     </div>
                 </div>
                 {hasCredentials && !showEditForm && (
@@ -153,20 +153,20 @@ export default function MarketplaceCard() {
             {/* Display Mode */}
             {hasCredentials && !showEditForm ? (
                 <div className="space-y-4">
-                    <div className="border border-[#2A2A2E] rounded-xl bg-black overflow-hidden">
-                        <div className="flex justify-between items-center px-4 py-3 border-b border-[#2A2A2E]">
-                            <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Provider</span>
-                            <span className="text-xs text-[#888] font-mono">LemonSqueezy</span>
+                    <div className="border border-border rounded-xl bg-card overflow-hidden">
+                        <div className="flex justify-between items-center px-4 py-3 border-b border-border/50">
+                            <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Provider</span>
+                            <span className="text-xs text-foreground font-mono">LemonSqueezy</span>
                         </div>
                         <div className="flex justify-between items-center px-4 py-3">
-                            <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Store ID</span>
-                            <span className="text-xs text-[#888] font-mono">{accountInfo?.store_id || 'Not selected'}</span>
+                            <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Store ID</span>
+                            <span className="text-xs text-foreground font-mono">{accountInfo?.store_id || 'Not selected'}</span>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setShowEditForm(true)}
-                            className="flex-1 px-4 py-2 bg-[#1C1C1E] border border-[#2A2A2E] text-white rounded-lg text-xs font-medium hover:bg-[#2A2A2E] transition-all"
+                            className="flex-1 px-4 py-2 bg-card border border-border text-foreground rounded-lg text-xs font-medium hover:bg-secondary transition-all"
                         >
                             Edit Credentials
                         </button>
@@ -184,7 +184,7 @@ export default function MarketplaceCard() {
                     <div className="grid grid-cols-1 gap-4">
                         <div className="flex flex-col gap-1.5">
                             <div className="flex justify-between items-center pr-1">
-                                <label className="text-xs uppercase font-mono tracking-widest text-[#555]">API Key</label>
+                                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">API Key</label>
                                 <a href="https://app.lemonsqueezy.com/settings/api" target="_blank" className="text-xs text-yellow-500/50 hover:text-yellow-500 transition-colors uppercase tracking-widest font-bold">Get Key</a>
                             </div>
                             <input
@@ -195,17 +195,17 @@ export default function MarketplaceCard() {
                                     if (e.target.value.length > 20) fetchStores(e.target.value)
                                 }}
                                 placeholder="ls_..."
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                             />
                         </div>
 
                         {stores.length > 0 && (
                             <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2">
-                                <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Select Store</label>
+                                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Select Store</label>
                                 <select
                                     value={selectedStoreId}
                                     onChange={(e) => setSelectedStoreId(e.target.value)}
-                                    className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all appearance-none cursor-pointer"
+                                    className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="">Choose a store...</option>
                                     {stores.map((store: any) => (
@@ -220,7 +220,7 @@ export default function MarketplaceCard() {
                         <button
                             onClick={handleConnect}
                             disabled={loading || !apiKey}
-                            className="flex-1 px-4 py-2 bg-[#2B4E54] hover:bg-[#325A62] text-white/90 rounded-md text-xs font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2 bg-foreground text-background hover:opacity-90 rounded-lg text-xs font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                             {hasCredentials ? 'Update Credentials' : 'Connect Store'}
@@ -228,7 +228,7 @@ export default function MarketplaceCard() {
                         {showEditForm && (
                             <button
                                 onClick={() => setShowEditForm(false)}
-                                className="px-4 py-2 bg-[#2A2A2E] border border-[#333336] text-[#AAA] rounded-md text-xs font-medium hover:text-white hover:border-[#333] transition-all"
+                                className="px-4 py-2 bg-secondary border border-border text-muted-foreground rounded-lg text-xs font-medium hover:text-foreground hover:border-border transition-all"
                             >
                                 Cancel
                             </button>

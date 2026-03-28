@@ -46,7 +46,7 @@ export const TerminalModal: React.FC<TerminalModalProps> = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        className="absolute inset-0 bg-background/80 backdrop-blur-sm"
                     />
 
                     {/* Modal Content */}
@@ -55,21 +55,21 @@ export const TerminalModal: React.FC<TerminalModalProps> = ({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
                         className={clsx(
-                            "relative w-full bg-[#1C1C1E] border border-[#2A2A2E] rounded-lg shadow-2xl flex flex-col overflow-hidden",
+                            "relative w-full bg-card border border-border rounded-lg shadow-2xl flex flex-col overflow-hidden",
                             maxWidth
                         )}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2A2A2E] bg-black/40">
+                         <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
                             <div className="flex items-center gap-2">
-                                <Terminal className="w-4 h-4 text-brand-500/60" />
-                                <span className="text-xs font-bold text-[#D8D8D8] tracking-widest uppercase font-mono">
+                                <Terminal className="w-4 h-4 text-brand-500/80" />
+                                <span className="text-xs font-bold text-foreground tracking-widest uppercase font-mono">
                                     {title}
                                 </span>
                             </div>
                             <button 
                                 onClick={onClose}
-                                className="text-[#444] hover:text-white transition-colors p-1"
+                                className="text-muted-foreground hover:text-foreground transition-colors p-1"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -82,7 +82,7 @@ export const TerminalModal: React.FC<TerminalModalProps> = ({
 
                         {/* Footer */}
                         {footer && (
-                            <div className="px-6 py-4 border-t border-[#2A2A2E] bg-black/20 flex justify-end gap-3">
+                            <div className="px-6 py-4 border-t border-border bg-background/20 flex justify-end gap-3">
                                 {footer}
                             </div>
                         )}

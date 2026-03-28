@@ -74,6 +74,7 @@ class FoldaaClient {
             name: params.name,
             original_url: params.source,
             user_id: user.id,
+            workspace_id: params.workspaceId,
             status: 'deploying'
         })
             .select().single();

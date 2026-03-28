@@ -110,8 +110,8 @@ export default function CloudflareCard() {
     }
 
     if (checking) return (
-        <div className="p-8 bg-[#1C1C1E] border border-[#2A2A2E] rounded-2xl flex items-center justify-center">
-            <Loader2 className="w-5 h-5 text-[#222] animate-spin" />
+        <div className="p-8 bg-card border border-border rounded-2xl flex items-center justify-center">
+            <Loader2 className="w-5 h-5 text-foreground/40 animate-spin" />
         </div>
     )
 
@@ -120,18 +120,18 @@ export default function CloudflareCard() {
             {/* Header */}
             <div className="flex items-start justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center shadow-inner">
-                        <Globe className="w-5 h-5 text-[#555]" />
+                    <div className="w-12 h-12 rounded-xl bg-card border border-border flex items-center justify-center shadow-inner">
+                        <Globe className="w-5 h-5 text-muted-foreground/60" />
                     </div>
                     <div>
-                        <h2 className="text-sm font-bold text-white uppercase tracking-widest">Cloudflare</h2>
-                        <p className="text-[#666] text-xs mt-0.5 font-sans">Secure DNS & CDN management.</p>
+                        <h2 className="text-sm font-bold text-foreground uppercase tracking-widest">Cloudflare</h2>
+                        <p className="text-muted-foreground text-xs mt-0.5 font-sans">Secure DNS & CDN management.</p>
                     </div>
                 </div>
                 {hasCredentials && !showEditForm && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white/40 animate-pulse" />
-                        <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Live</span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-foreground/5 border border-white/10 rounded-full">
+                        <div className="w-1.5 h-1.5 rounded-full bg-foreground/40 animate-pulse" />
+                        <span className="text-xs font-bold text-foreground/60 uppercase tracking-widest">Live</span>
                     </div>
                 )}
             </div>
@@ -139,22 +139,22 @@ export default function CloudflareCard() {
             {/* Display Mode */}
             {hasCredentials && !showEditForm ? (
                 <div className="space-y-4">
-                    <div className="border border-[#2A2A2E] rounded-xl bg-black overflow-hidden">
-                        <div className="flex justify-between items-center px-4 py-3 border-b border-[#2A2A2E]">
-                            <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Account ID</span>
-                            <span className="text-xs text-[#888] font-mono">{accountInfo?.account_id}</span>
+                    <div className="border border-border rounded-xl bg-card overflow-hidden">
+                        <div className="flex justify-between items-center px-4 py-3 border-b border-border/50">
+                            <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Account ID</span>
+                            <span className="text-xs text-foreground font-mono">{accountInfo?.account_id}</span>
                         </div>
                         {accountInfo?.zone_id && (
                             <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-xs text-[#555] uppercase font-mono tracking-widest">Zone ID</span>
-                                <span className="text-xs text-[#888] font-mono">{accountInfo?.zone_id}</span>
+                                <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">Zone ID</span>
+                                <span className="text-xs text-foreground font-mono">{accountInfo?.zone_id}</span>
                             </div>
                         )}
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setShowEditForm(true)}
-                            className="flex-1 px-4 py-2 bg-[#1C1C1E] border border-[#2A2A2E] text-white rounded-lg text-xs font-medium hover:bg-[#2A2A2E] transition-all"
+                            className="flex-1 px-4 py-2 bg-card border border-border text-foreground rounded-lg text-xs font-medium hover:bg-secondary transition-all"
                         >
                             Edit Credentials
                         </button>
@@ -171,33 +171,33 @@ export default function CloudflareCard() {
                 <div className="space-y-4">
                     <div className="grid grid-cols-1 gap-4">
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Account ID</label>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Account ID</label>
                             <input
                                 type="text"
                                 value={accountId}
                                 onChange={(e) => setAccountId(e.target.value)}
                                 placeholder="cf_acc_id..."
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-xs uppercase font-mono tracking-widest text-[#555]">API Token</label>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">API Token</label>
                             <input
                                 type="password"
                                 value={apiToken}
                                 onChange={(e) => setApiToken(e.target.value)}
                                 placeholder="cf_token..."
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-xs uppercase font-mono tracking-widest text-[#555]">Zone ID (Optional)</label>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Zone ID (Optional)</label>
                             <input
                                 type="text"
                                 value={zoneId}
                                 onChange={(e) => setZoneId(e.target.value)}
                                 placeholder="cf_zone_id..."
-                                className="w-full bg-black border border-[#2A2A2E] rounded-md px-3 py-2 text-white text-xs font-mono focus:border-[#333] outline-none transition-all placeholder-[#333]"
+                                className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground text-xs font-mono focus:border-foreground/20 outline-none transition-all placeholder:text-muted-foreground/30"
                             />
                         </div>
                     </div>
@@ -206,7 +206,7 @@ export default function CloudflareCard() {
                         <button
                             onClick={handleConnect}
                             disabled={loading || !accountId || !apiToken}
-                            className="flex-1 px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-md text-xs font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2 bg-foreground text-background hover:opacity-90 rounded-lg text-xs font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                             {hasCredentials ? 'Update Credentials' : 'Connect Cloudflare'}
@@ -214,7 +214,7 @@ export default function CloudflareCard() {
                         {showEditForm && (
                             <button
                                 onClick={() => setShowEditForm(false)}
-                                className="px-4 py-2 bg-[#2A2A2E] border border-[#333336] text-[#AAA] rounded-md text-xs font-medium hover:text-white hover:border-[#333] transition-all"
+                                className="px-4 py-2 bg-secondary border border-border text-muted-foreground rounded-lg text-xs font-medium hover:text-foreground hover:border-border transition-all"
                             >
                                 Cancel
                             </button>
@@ -223,7 +223,7 @@ export default function CloudflareCard() {
                     
                     {(error || success) && (
                         <div className={`p-4 rounded-xl border text-xs flex items-center gap-3 animate-in fade-in slide-in-from-top-2 ${
-                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-white/5 border-white/10 text-white/80"
+                            error ? "bg-red-500/5 border-red-500/20 text-red-400" : "bg-foreground/5 border-white/10 text-foreground/80"
                         }`}>
                             {error ? <AlertCircle className="w-4 h-4 shrink-0" /> : <CheckCircle className="w-4 h-4 shrink-0" />}
                             {error || success}

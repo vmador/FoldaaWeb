@@ -95,7 +95,7 @@ export function Dropdown({
                         visibility: coords ? "visible" : "hidden",
                     }}
                     className={clsx(
-                        "min-w-[192px] bg-[#080808] border border-[#333336] rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-1 animate-in fade-in zoom-in-95 duration-100",
+                        "min-w-[192px] bg-neutral-50 border border-neutral-200 rounded-lg shadow-xl py-1 animate-in fade-in zoom-in-95 duration-100",
                         className
                     )}
                 >
@@ -122,7 +122,7 @@ export function DropdownItem({
         <div
             onClick={onClick}
             className={clsx(
-                "flex items-center gap-2 px-3 py-1.5 text-sm text-[#A0A0A0] hover:bg-[#111111] hover:text-white transition-colors cursor-pointer",
+                "flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:bg-neutral-100 hover:text-foreground transition-colors cursor-pointer",
                 className
             )}
         >

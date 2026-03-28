@@ -45,7 +45,7 @@ export default function StoreEventsPage({ params }: { params: Promise<{ id: stri
         fetchEvents();
     }, [projectId, filter]);
 
-    if (projectsLoading) return <div className="text-[#666] font-mono text-sm">Loading events...</div>;
+    if (projectsLoading) return <div className="text-muted-foreground font-mono text-sm">Loading events...</div>;
     if (!project) return null;
 
     const eventTypes = [
@@ -62,7 +62,7 @@ export default function StoreEventsPage({ params }: { params: Promise<{ id: stri
             case 'error': return 'text-red-400';
             case 'api_call': return 'text-purple-400';
             case 'view': return 'text-brand-400';
-            default: return 'text-white';
+            default: return 'text-foreground';
         }
     };
 
@@ -82,19 +82,21 @@ export default function StoreEventsPage({ params }: { params: Promise<{ id: stri
     };
 
     return (
-        <div className="flex flex-col gap-8 text-sm animate-in fade-in duration-500">
+        <div className="flex flex-col text-sm animate-in fade-in duration-500 h-full">
             <TabHeader 
                 title="System Events"
                 description="Real-time log of project and worker events"
                 customActionContent={
-                    <div className="flex items-center gap-1 bg-[#2A2A2E] border border-[#333336] p-1 rounded">
+                    <div className="flex items-center gap-1 bg-neutral-100 border border-neutral-200 p-0.5 rounded-md shadow-inner">
                         {eventTypes.map(t => (
                             <button
                                 key={t.id}
                                 onClick={() => setFilter(t.id)}
                                 className={clsx(
-                                    "px-3 py-1 text-xs font-medium rounded transition-colors",
-                                    filter === t.id ? "bg-[#222] text-white" : "text-[#666] hover:text-[#A0A0A0]"
+                                    "px-3 py-1 text-[10px] font-bold rounded transition-all duration-200",
+                                    filter === t.id 
+                                        ? "bg-neutral-800 text-background shadow-sm" 
+                                        : "text-muted-foreground hover:text-foreground hover:bg-neutral-200"
                                 )}
                             >
                                 {t.label}
@@ -105,35 +107,35 @@ export default function StoreEventsPage({ params }: { params: Promise<{ id: stri
             />
 
             {loading ? (
-                <div className="flex items-center gap-2 text-[#444] font-mono">
+                <div className="flex items-center gap-2 text-muted-foreground font-mono">
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     <span>querying_events...</span>
                 </div>
             ) : events.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 border border-dashed border-[#333336] rounded text-[#444] font-mono">
+                <div className="flex flex-col items-center justify-center py-20 border border-dashed border-foreground/12 rounded text-muted-foreground font-mono">
                     <span>- NO_EVENTS_FOUND -</span>
                 </div>
             ) : (
-                <div className="flex flex-col border border-[#2A2A2E] rounded overflow-hidden">
-                    <div className="grid grid-cols-[160px_120px_1fr_120px] bg-[#1C1C1E] border-b border-[#2A2A2E] px-4 py-2 text-xs font-bold text-[#444] tracking-widest uppercase">
+                <div className="flex flex-col overflow-hidden">
+                    <div className="grid grid-cols-[160px_120px_1fr_120px] px-4 py-3 text-[10px] font-bold text-muted-foreground tracking-widest uppercase border-b border-neutral-200">
                         <span>Timestamp</span>
                         <span>Event</span>
                         <span>Metadata</span>
                         <span className="text-right">Origin</span>
                     </div>
-                    <div className="flex flex-col divide-y divide-[#111]">
+                    <div className="flex flex-col divide-y divide-neutral-200 border-t border-neutral-200">
                         {events.map((event) => (
-                            <div key={event.id} className="grid grid-cols-[160px_120px_1fr_120px] px-4 py-2.5 items-center hover:bg-black transition-colors group">
-                                <span className="text-[#666] font-mono text-xs">
+                            <div key={event.id} className="grid grid-cols-[160px_120px_1fr_120px] px-4 py-3 items-center hover:bg-foreground/[0.02] transition-all duration-300 group">
+                                <span className="text-muted-foreground font-mono text-[11px]">
                                     {format(new Date(event.created_at), 'MMM dd HH:mm:ss')}
                                 </span>
-                                <span className={clsx("font-bold text-xs uppercase tracking-tighter", getEventColor(event.event_type))}>
+                                <span className={clsx("font-bold text-[11px] uppercase tracking-tighter", getEventColor(event.event_type))}>
                                     {event.event_type}
                                 </span>
-                                <div className="text-[#A0A0A0] truncate pr-4 font-mono text-xs">
+                                <div className="text-muted-foreground pr-4 font-mono text-[11px] truncate">
                                     {event.page_url ? `path: ${getEventPath(event.page_url)}` : event.metadata?.action || 'system_event'}
                                 </div>
-                                <span className="text-[#666] text-right text-xs font-mono">
+                                <span className="text-muted-foreground/40 text-right text-[11px] font-mono">
                                     {event.country_code || '??'}  {event.device_type === 'mobile' ? '📱' : '💻'}
                                 </span>
                             </div>

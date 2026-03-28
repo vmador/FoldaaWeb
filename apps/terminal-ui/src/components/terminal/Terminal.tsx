@@ -29,6 +29,7 @@ import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 interface TerminalProps {
   supabaseUrl: string;
   supabaseAnonKey: string;
+  previewMode?: boolean;
 }
 
 interface CommandStep {
@@ -48,70 +49,13 @@ interface CommandBlock {
   };
 }
 
-const useFramerTheme = () => {
-    const [theme, setTheme] = React.useState<"light" | "dark">("dark")
+import { useTheme } from 'next-themes';
 
-    React.useEffect(() => {
-        const getTheme = (): "light" | "dark" => {
-            const framerTheme = document.body.dataset.framerTheme
-            if (framerTheme === "dark" || framerTheme === "light") {
-                return (framerTheme as "light" | "dark")
-            }
-
-            if (
-                window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-            ) {
-                return "dark"
-            }
-
-            return "light"
-        }
-
-        setTheme(getTheme())
-
-        const observer = new MutationObserver(() => {
-            setTheme(getTheme())
-        })
-
-        observer.observe(document.body, {
-            attributes: true,
-            attributeFilter: ["data-framer-theme"],
-        })
-
-        const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)")
-        const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-            if (!document.body.dataset.framerTheme) {
-                setTheme(e.matches ? "dark" : "light")
-            }
-        }
-
-        if (darkModeQuery.addEventListener) {
-            darkModeQuery.addEventListener("change", handleSystemThemeChange)
-        } else {
-            (darkModeQuery as any).addListener(handleSystemThemeChange)
-        }
-
-        return () => {
-            observer.disconnect()
-            if (darkModeQuery.removeEventListener) {
-                darkModeQuery.removeEventListener(
-                    "change",
-                    handleSystemThemeChange
-                )
-            } else {
-                (darkModeQuery as any).removeListener(handleSystemThemeChange)
-            }
-        }
-    }, [])
-
-    return theme
-}
-
-const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) => {
-  const theme = useFramerTheme();
+const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey, previewMode = false }) => {
+  const { resolvedTheme } = useTheme();
   const { addToast } = useUI();
-  const { folders } = useProjectData();
+  const { folders: rawFolders } = useProjectData();
+  const folders = previewMode ? [] : rawFolders;
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 
   const selectedFolder = useMemo(() => {
@@ -119,7 +63,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
   }, [folders, selectedFolderId]);
   
   const colors = useMemo(() => {
-    const isDark = theme === "dark"
+    const isDark = resolvedTheme === "dark" || !resolvedTheme; // Fallback to dark
     return {
         overlay: isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0.4)",
         bg: isDark ? "#000000" : "#FFFFFF",
@@ -145,7 +89,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
         kbdBorder: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
         kbdText: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)",
     }
-  }, [theme]);
+  }, [resolvedTheme]);
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<XTerm | null>(null);
@@ -665,7 +609,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
                 {/* Result Card */}
                 {block.result?.previewUrl && (
                   <div 
-                    className="mt-4 p-4 rounded-xl border flex flex-col gap-4 max-w-sm"
+                    className="mt-4 p-4 rounded-[3px] border flex flex-col gap-4 max-w-sm"
                     style={{ backgroundColor: colors.cardBg, borderColor: colors.border }}
                   >
                     <div className="flex items-start justify-between">
@@ -687,11 +631,11 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
                     </div>
 
                     {block.result.qrData && (
-                      <div className="flex justify-center p-2 rounded-lg bg-white/5 border border-white/10 group/qr relative">
+                      <div className="flex justify-center p-2 rounded-[3px] bg-white/5 border border-white/10 group/qr relative">
                         <img 
                           src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(block.result.qrData)}&bgcolor=ffffff&color=000000&margin=10`}
                           alt="Deployment QR Code"
-                          className="w-32 h-32 rounded-md transition-transform group-hover/qr:scale-105"
+                          className="w-32 h-32 rounded-[3px] transition-transform group-hover/qr:scale-105"
                         />
                         <div className="absolute top-2 right-2 opacity-0 group-hover/qr:opacity-100 transition-opacity">
                             <span className="text-xs px-1.5 py-0.5 rounded-full bg-black/80 text-white font-bold backdrop-blur-sm">SCAN ME</span>
@@ -701,7 +645,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
 
                     <button 
                       onClick={() => window.open(block.result?.previewUrl, '_blank')}
-                      className="w-full py-1.5 rounded-lg font-bold flex items-center justify-center gap-2 border border-white/[0.05] hover:bg-white/[0.08] transition-all"
+                      className="w-full py-1.5 rounded-[3px] font-bold flex items-center justify-center gap-2 border border-white/[0.05] hover:bg-white/[0.08] transition-all"
                       style={{ backgroundColor: colors.buttonPrimaryBg, color: colors.buttonPrimaryText }}
                     >
                       <Eye size={16} weight="bold" />
@@ -745,13 +689,13 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
               </div>
             }
           >
-            <div className="px-3 py-2 border-b border-[#202020] mb-1">
-              <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Select Folder</p>
+            <div className="px-3 py-2 border-b border-border mb-1">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Select Folder</p>
             </div>
             <div className="max-h-[200px] overflow-y-auto py-1 px-1 flex flex-col gap-0.5">
               <DropdownItem 
                 onClick={() => setSelectedFolderId(null)}
-                className={clsx(selectedFolderId === null && "bg-white/5 text-white")}
+                className={clsx(selectedFolderId === null && "bg-black/5 dark:bg-white/10 text-foreground")}
               >
                 <Folder size={14} />
                 <span className="truncate">/Foldaa (Root)</span>
@@ -760,7 +704,7 @@ const TerminalUI: React.FC<TerminalProps> = ({ supabaseUrl, supabaseAnonKey }) =
                 <DropdownItem 
                   key={folder.id} 
                   onClick={() => setSelectedFolderId(folder.id)}
-                  className={clsx(selectedFolderId === folder.id && "bg-white/5 text-white")}
+                  className={clsx(selectedFolderId === folder.id && "bg-black/5 dark:bg-white/10 text-foreground")}
                 >
                   <Folder size={14} />
                   <span className="truncate">/{folder.name}</span>

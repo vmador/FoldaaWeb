@@ -20,7 +20,8 @@ export async function wrapCommand(url, options = {}) {
         const { projectId } = await client.createDraftProject({
             name: projectName,
             type: 'url',
-            source: url
+            source: url,
+            workspaceId: options.workspace
         });
         spinner.succeed(chalk.green(`Preview project created: ${projectId}`));
         // 3. Deploy Project (Preview flow)

@@ -29,9 +29,9 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
     }, [id, persistent, onClose]);
 
     const icons = {
-        success: <CheckCircle2 size={14} className="text-white/40" />,
-        error: <AlertCircle size={14} className="text-red-500/40" />,
-        info: <Info size={14} className="text-white/40" />
+        success: <CheckCircle2 size={14} className="text-foreground/40" />,
+        error: <AlertCircle size={14} className="text-red-500/60" />,
+        info: <Info size={14} className="text-foreground/40" />
     };
 
     return (
@@ -40,12 +40,12 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             className={clsx(
-                "flex items-center gap-3 px-4 py-3 bg-[#080808] border border-white/[0.08] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[320px] max-w-md animate-in fade-in slide-in-from-bottom-2 duration-300",
-                type === 'error' && "border-red-500/10"
+                "flex items-center gap-3 px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-lg shadow-xl min-w-[320px] max-w-md animate-in fade-in slide-in-from-bottom-2 duration-300",
+                type === 'error' && "border-red-500/30"
             )}
         >
             <div className="flex-shrink-0">{icons[type]}</div>
-            <div className="flex-1 text-xs font-mono text-[#D8D8D8] uppercase tracking-wider flex items-center justify-between gap-4">
+            <div className="flex-1 text-xs font-mono text-foreground uppercase tracking-wider flex items-center justify-between gap-4">
                 <span>{message}</span>
                 {action && (
                     <button 
@@ -53,7 +53,7 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
                             e.stopPropagation();
                             action.onClick();
                         }}
-                        className="flex-shrink-0 px-3 py-1 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.05] text-white/70 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-shrink-0 px-3 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-foreground/80 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all"
                     >
                         {action.label}
                     </button>
@@ -61,7 +61,7 @@ const Toast = ({ id, message, type = 'success', persistent = false, action, onCl
             </div>
             <button 
                 onClick={() => onClose(id)}
-                className="text-[#333] hover:text-[#D8D8D8] transition-colors ml-1"
+                className="text-muted-foreground hover:text-foreground transition-colors ml-1"
             >
                 <X size={14} />
             </button>

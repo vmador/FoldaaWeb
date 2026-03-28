@@ -55,15 +55,15 @@ const BuildHistory = ({ projectId }: { projectId: string }) => {
     if (isLoading) return <Loader2 className="w-5 h-5 animate-spin mx-auto py-10" />
 
     if (builds.length === 0) return (
-        <div className="py-10 text-center border border-dashed border-[#1C1C1E] rounded-[10px]">
-            <p className="text-xs text-[#444]">No build history found</p>
+        <div className="py-10 text-center border border-dashed border-border rounded-xl">
+            <p className="text-xs text-muted-foreground/40 font-mono tracking-tight uppercase">No build history found</p>
         </div>
     )
 
     return (
         <div className="space-y-3">
             {builds.map(build => (
-                <div key={build.id} className="bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] p-4 flex items-center justify-between">
+                <div key={build.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className={clsx(
                             "w-2 h-2 rounded-full",
@@ -71,24 +71,24 @@ const BuildHistory = ({ projectId }: { projectId: string }) => {
                             build.status === 'failed' ? "bg-red-500" : "bg-yellow-500 animate-pulse"
                         )} />
                         <div>
-                            <div className="text-xs font-bold text-white uppercase tracking-wider">
+                            <div className="text-xs font-bold text-foreground uppercase tracking-wider">
                                 {build.version} ({build.build_number})
                             </div>
-                            <div className="text-[10px] text-[#444] font-mono">
+                            <div className="text-[10px] text-muted-foreground font-mono">
                                 {new Date(build.created_at).toLocaleString()}
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-[10px] font-bold text-[#666] uppercase">{build.status}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{build.status}</span>
                         {build.ipa_url && (
-                            <a href={build.ipa_url} target="_blank" className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+                            <a href={build.ipa_url} target="_blank" className="p-2 text-foreground hover:bg-secondary rounded-lg transition-colors">
                                 <ExternalLink className="w-3.5 h-3.5" />
                             </a>
                         ) || build.error_message && (
                             <div className="group relative">
-                                <AlertCircle className="w-3.5 h-3.5 text-red-400 cursor-help" />
-                                <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-[#1C1C1E] text-[10px] text-red-300 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-red-900/50">
+                                <AlertCircle className="w-3.5 h-3.5 text-red-500 cursor-help" />
+                                <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-card text-[10px] text-red-500 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-red-500/20 shadow-xl">
                                     {build.error_message}
                                 </div>
                             </div>
@@ -172,15 +172,15 @@ const BuildConfigurator = ({ projectId, onBuildStarted }: { projectId: string; o
 
             <div className="space-y-4">
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Signing Certificate</label>
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Signing Certificate</label>
                     <select
                         value={selectedCert}
                         onChange={(e) => setSelectedCert(e.target.value)}
-                        className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                        className="w-full h-10 bg-transparent border border-border rounded-xl px-3 text-xs text-foreground outline-none focus:border-foreground/20"
                     >
                         {certificates.length === 0 && <option value="">No valid certificates found</option>}
                         {certificates.map(cert => (
-                            <option key={cert.id} value={cert.id} className="bg-[#0A0A0B]">
+                            <option key={cert.id} value={cert.id} className="bg-background">
                                 {cert.cert_name} ({cert.profile_bundle_id})
                             </option>
                         ))}
@@ -189,23 +189,23 @@ const BuildConfigurator = ({ projectId, onBuildStarted }: { projectId: string; o
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Version</label>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Version</label>
                         <input
                             type="text"
                             value={version}
                             onChange={(e) => setVersion(e.target.value)}
                             placeholder="1.0.0"
-                            className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                            className="w-full h-10 bg-transparent border border-border rounded-xl px-3 text-xs text-foreground outline-none focus:border-foreground/20"
                         />
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#444] uppercase tracking-wide">Build Number</label>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Build Number</label>
                         <input
                             type="text"
                             value={buildNumber}
                             onChange={(e) => setBuildNumber(e.target.value)}
                             placeholder="1"
-                            className="w-full h-10 bg-transparent border border-[#1C1C1E] rounded-[10px] px-3 text-xs text-white outline-none focus:border-[#2A2A2E]"
+                            className="w-full h-10 bg-transparent border border-border rounded-xl px-3 text-xs text-foreground outline-none focus:border-foreground/20"
                         />
                     </div>
                 </div>
@@ -215,8 +215,8 @@ const BuildConfigurator = ({ projectId, onBuildStarted }: { projectId: string; o
                 onClick={handleStartBuild}
                 disabled={isBuilding || certificates.length === 0}
                 className={clsx(
-                    "w-full h-12 rounded-[10px] text-sm font-bold transition-all flex items-center justify-center gap-2",
-                    isBuilding || certificates.length === 0 ? "bg-[#1C1C1E] text-[#444]" : "bg-white text-black hover:bg-[#E0E0E0]"
+                    "w-full h-12 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm",
+                    isBuilding || certificates.length === 0 ? "bg-secondary text-muted-foreground/40" : "bg-foreground text-background hover:bg-foreground/90"
                 )}
             >
                 {isBuilding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
@@ -317,7 +317,7 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <Loader2 className="w-8 h-8 text-[#444] animate-spin" />
+                <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
             </div>
         )
     }
@@ -326,54 +326,56 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
         <div className="max-w-[800px] mx-auto py-10 space-y-12 pb-32">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h2 className="text-2xl font-bold text-white tracking-tight">Post to Stores</h2>
-                <p className="text-sm text-[#666] max-w-md mx-auto leading-relaxed">
+                <h2 className="text-2xl font-bold text-foreground tracking-tight">Post to Stores</h2>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
                     Convert your web project into a native app and release it to the iOS App Store and Google Play Store.
                 </p>
             </div>
 
-            {/* App Preview Card */}
-            <div className="relative aspect-[16/10] bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] overflow-hidden group">
-                <iframe
-                    src={liveUrl}
-                    className="w-full h-full border-none pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity"
-                    title="App Preview"
-                />
+            <div className="relative aspect-[16/10] bg-zinc-950 border border-white/10 rounded-xl overflow-hidden group">
+                <div className="absolute inset-0 opacity-20">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05),transparent)] animate-pulse" />
+                    <div className="grid grid-cols-6 gap-4 p-8">
+                        {[...Array(12)].map((_, i) => (
+                            <div key={i} className="h-2 bg-white/10 rounded-full" />
+                        ))}
+                    </div>
+                </div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4">
-                    <div className="w-16 h-16 rounded-2xl bg-[#1C1C1E] border border-[#2A2A2E] flex items-center justify-center p-3">
+                    <div className="w-16 h-16 rounded-2xl bg-background border border-border flex items-center justify-center p-3 shadow-xl">
                         {project.icon_512_url ? (
                             <img src={project.icon_512_url} className="w-full h-full object-contain" />
                         ) : (
-                            <Smartphone className="w-8 h-8 text-[#444]" />
+                            <Smartphone className="w-8 h-8 text-muted-foreground" />
                         )}
                     </div>
                     <div className="text-center">
-                        <div className="text-sm font-bold text-white mb-1">{project.name}</div>
-                        <div className="text-xs text-[#666] font-mono">{project.subdomain}.foldaa.com</div>
+                        <div className="text-sm font-bold text-foreground mb-1">{project.name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">{project.subdomain}.foldaa.com</div>
                     </div>
                     <button 
                         onClick={() => window.open(liveUrl, '_blank')}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#1C1C1E] border border-[#2A2A2E] rounded-[10px] text-xs font-bold text-white hover:bg-[#2A2A2E] transition-all"
+                        className="flex items-center gap-2 px-4 py-2 bg-foreground text-background border border-transparent rounded-xl text-xs font-bold hover:bg-foreground/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all duration-300"
                     >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        Live Preview
+                        Open Preview
                     </button>
                 </div>
             </div>
 
             {/* Setup & Configuration (Collapsible) */}
-            <div className="bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] overflow-hidden transition-all">
+            <div className="bg-card border border-border rounded-xl overflow-hidden transition-all">
                 <button
                     onClick={() => setShowSetup(!showSetup)}
-                    className="w-full px-6 py-5 flex items-center justify-between hover:bg-[#0D0D0E] transition-colors"
+                    className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
                 >
                     <div className="flex items-center gap-4 text-left">
-                        <div className="w-10 h-10 rounded-[10px] bg-[#1C1C1E] flex items-center justify-center text-[#888]">
+                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground/40">
                             <Settings className="w-5 h-5" />
                         </div>
                         <div>
-                            <div className="text-sm font-bold text-white/90">Setup Requirements</div>
-                            <div className="text-[11px] text-[#666] font-medium tracking-wide">
+                            <div className="text-sm font-bold text-foreground">Setup Requirements</div>
+                            <div className="text-[11px] text-muted-foreground font-medium tracking-wide">
                                 {appStoreStatus.isReady ? "CONFIGURATION COMPLETE" : "COMPLETE STEPS BELOW TO RELEASE"}
                             </div>
                         </div>
@@ -384,22 +386,22 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                         ) : (
                             <div className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-bold rounded-full">INCOMPLETE</div>
                         )}
-                        {showSetup ? <ChevronUp className="w-4 h-4 text-[#444]" /> : <ChevronDown className="w-4 h-4 text-[#444]" />}
+                        {showSetup ? <ChevronUp className="w-4 h-4 text-muted-foreground/40" /> : <ChevronDown className="w-4 h-4 text-muted-foreground/40" />}
                     </div>
                 </button>
 
                 {showSetup && (
-                    <div className="p-8 border-t border-[#1C1C1E] space-y-12">
+                    <div className="p-8 border-t border-border space-y-12">
                         {/* Step 1: Apple Developer Account */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-3">
                                 <span className={clsx(
                                     "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-                                    appStoreStatus.hasAppleAccount ? "bg-green-500 text-black" : "bg-[#1C1C1E] text-[#666]"
+                                    appStoreStatus.hasAppleAccount ? "bg-green-500 text-black" : "bg-secondary text-muted-foreground/40"
                                 )}>
                                     {appStoreStatus.hasAppleAccount ? "✓" : "1"}
                                 </span>
-                                <h4 className="text-xs font-bold text-white/80 uppercase tracking-widest">Apple Developer Account</h4>
+                                <h4 className="text-xs font-bold text-foreground/80 uppercase tracking-widest">Apple Developer Account</h4>
                             </div>
                             <AppleConnect onConnected={loadStatus} />
                         </div>
@@ -409,11 +411,11 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                             <div className="flex items-center gap-3">
                                 <span className={clsx(
                                     "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-                                    appStoreStatus.hasCertificates ? "bg-green-500 text-black" : "bg-[#1C1C1E] text-[#666]"
+                                    appStoreStatus.hasCertificates ? "bg-green-500 text-black" : "bg-secondary text-muted-foreground/40"
                                 )}>
                                     {appStoreStatus.hasCertificates ? "✓" : "2"}
                                 </span>
-                                <h4 className="text-xs font-bold text-white/80 uppercase tracking-widest">Distribution Certificates</h4>
+                                <h4 className="text-xs font-bold text-foreground/80 uppercase tracking-widest">Distribution Certificates</h4>
                             </div>
                             <CertificateUploader projectId={projectId} onCertificateUploaded={loadStatus} />
                         </div>
@@ -423,11 +425,11 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                             <div className="flex items-center gap-3">
                                 <span className={clsx(
                                     "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-                                    appStoreStatus.hasMetadata ? "bg-green-500 text-black" : "bg-[#1C1C1E] text-[#666]"
+                                    appStoreStatus.hasMetadata ? "bg-green-500 text-black" : "bg-secondary text-muted-foreground/40"
                                 )}>
                                     {appStoreStatus.hasMetadata ? "✓" : "3"}
                                 </span>
-                                <h4 className="text-xs font-bold text-white/80 uppercase tracking-widest">Store Metadata</h4>
+                                <h4 className="text-xs font-bold text-foreground/80 uppercase tracking-widest">Store Metadata</h4>
                             </div>
                             <AppStoreMetadataForm projectId={projectId} onSaved={loadStatus} />
                         </div>
@@ -439,15 +441,15 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
             <div className="grid gap-4">
                 {/* iOS App Store */}
                 <div className={clsx(
-                    "bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] p-6 flex items-center gap-6",
+                    "bg-card border border-border rounded-xl p-6 flex items-center gap-6",
                     !appStoreStatus.isReady && "opacity-60"
                 )}>
-                    <div className="w-14 h-14 rounded-[12px] bg-[#1C1C1E] flex items-center justify-center border border-[#2A2A2E]">
-                        <AppleIcon size={32} color="white" />
+                    <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center border border-border">
+                        <AppleIcon size={32} className="text-foreground" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="text-base font-bold text-white tracking-wide">iOS App Store</h3>
-                        <p className="text-xs text-[#666]">
+                        <h3 className="text-base font-bold text-foreground tracking-wide">iOS App Store</h3>
+                        <p className="text-xs text-muted-foreground">
                             {!appStoreStatus.isReady ? "Complete requirements to build" : "Ready to generate build"}
                         </p>
                     </div>
@@ -455,23 +457,23 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                         <button
                             onClick={() => setShowAppStoreDrawer(true)}
                             disabled={!appStoreStatus.isReady}
-                            className="p-2 border border-[#2A2A2E] rounded-[10px] text-[#666] hover:text-white transition-colors disabled:opacity-30"
+                            className="p-2 border border-border rounded-xl text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30"
                         >
                             <Edit2 className="w-4 h-4" />
                         </button>
-                        <div className="flex items-center gap-3 pl-4 border-l border-[#1C1C1E]">
-                            <span className="text-[10px] font-bold tracking-widest text-[#444] uppercase">Publish</span>
+                        <div className="flex items-center gap-3 pl-4 border-l border-border">
+                            <span className="text-[10px] font-bold tracking-widest text-muted-foreground/40 uppercase">Publish</span>
                             <button
                                 onClick={handleToggleAppStore}
                                 disabled={isUpdating || !appStoreStatus.isReady}
                                 className={clsx(
-                                    "relative w-10 h-5 rounded-full transition-all",
-                                    appStoreEnabled ? "bg-[#E91E63]" : "bg-[#1C1C1E]"
+                                    "relative w-10 h-5.5 rounded-full transition-all duration-300",
+                                    appStoreEnabled ? "bg-brand-500/20" : "bg-black/50"
                                 )}
                             >
                                 <div className={clsx(
-                                    "absolute top-1 w-3 h-3 rounded-full transition-all bg-white",
-                                    appStoreEnabled ? "left-6" : "left-1"
+                                    "absolute top-1 w-3.5 h-3.5 rounded-full transition-all duration-300 shadow-sm",
+                                    appStoreEnabled ? "left-5.5 bg-black dark:bg-white" : "left-1 bg-black dark:bg-white"
                                 )} />
                             </button>
                         </div>
@@ -479,15 +481,15 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                 </div>
 
                 {/* Android Play Store (Coming Soon) */}
-                <div className="bg-[#0A0A0B] border border-[#1C1C1E] rounded-[10px] p-6 flex items-center gap-6 opacity-40">
-                    <div className="w-14 h-14 rounded-[12px] bg-[#1C1C1E] flex items-center justify-center border border-[#2A2A2E]">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                            <path d="M3 20.5V3.5C3 2.91 3.34 2.39 3.84 2.15L13.69 12L3.84 21.85C3.34 21.6 3 21.09 3 20.5M16.81 15.12L6.05 21.34L14.54 12.85L16.81 15.12M20.16 10.81C20.5 11.08 20.75 11.5 20.75 12C20.75 12.5 20.5 12.92 20.16 13.19L17.89 14.5L15.39 12L17.89 9.5L20.16 10.81M6.05 2.66L16.81 8.88L14.54 11.15L6.05 2.66Z" fill="#666" />
+                <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-6 opacity-40">
+                    <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center border border-border">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-muted-foreground/40">
+                            <path d="M3 20.5V3.5C3 2.91 3.34 2.39 3.84 2.15L13.69 12L3.84 21.85C3.34 21.6 3 21.09 3 20.5M16.81 15.12L6.05 21.34L14.54 12.85L16.81 15.12M20.16 10.81C20.5 11.08 20.75 11.5 20.75 12C20.75 12.5 20.5 12.92 20.16 13.19L17.89 14.5L15.39 12L17.89 9.5L20.16 10.81M6.05 2.66L16.81 8.88L14.54 11.15L6.05 2.66Z" fill="currentColor" />
                         </svg>
                     </div>
                     <div className="flex-1">
-                        <h3 className="text-base font-bold text-[#444] tracking-wide">Google Play Store</h3>
-                        <p className="text-xs text-[#444]">Coming soon</p>
+                        <h3 className="text-base font-bold text-muted-foreground/40 tracking-wide">Google Play Store</h3>
+                        <p className="text-xs text-muted-foreground/40">Coming soon</p>
                     </div>
                 </div>
             </div>
@@ -495,19 +497,19 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
             {/* Build Config Drawer */}
             {showAppStoreDrawer && (
                 <div 
-                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-end"
+                    className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex justify-end"
                     onClick={() => setShowAppStoreDrawer(false)}
                 >
                     <div 
-                        className="w-full max-w-[600px] bg-black border-l border-[#1C1C1E] h-full flex flex-col p-8 space-y-8 animate-in slide-in-from-right duration-300"
+                        className="w-full max-w-[600px] bg-background border-l border-border h-full flex flex-col p-8 space-y-8 animate-in slide-in-from-right duration-300 shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between">
                             <div>
-                                <h2 className="text-xl font-bold text-white tracking-tight">Generate iOS Build</h2>
-                                <p className="text-xs text-[#666]">Configure and start your automated release process.</p>
+                                <h2 className="text-xl font-bold text-foreground tracking-tight">Generate iOS Build</h2>
+                                <p className="text-xs text-muted-foreground">Configure and start your automated release process.</p>
                             </div>
-                            <button onClick={() => setShowAppStoreDrawer(false)} className="p-2 text-[#444] hover:text-white">
+                            <button onClick={() => setShowAppStoreDrawer(false)} className="p-2 text-muted-foreground/40 hover:text-foreground">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
@@ -518,8 +520,8 @@ export default function ReleaseContent({ project, projectId }: ReleaseContentPro
                                     projectId={projectId} 
                                     onBuildStarted={() => setShowAppStoreDrawer(false)} 
                                 />
-                                <div className="pt-8 border-t border-[#1C1C1E]">
-                                    <h3 className="text-sm font-bold text-white mb-4">Build History</h3>
+                                <div className="pt-8 border-t border-border">
+                                    <h3 className="text-sm font-bold text-foreground mb-4">Build History</h3>
                                     <BuildHistory projectId={projectId} />
                                 </div>
                             </div>

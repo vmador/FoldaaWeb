@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { spawn } from 'child_process'
-import path from 'path'
 import { parseArgsStringToArgv } from 'string-argv'
+import { program } from '@foldaa/cli'
 
 export async function POST(req: Request) {
   try {
@@ -20,53 +19,65 @@ export async function POST(req: Request) {
     const { readable, writable } = new TransformStream()
     const writer = writable.getWriter()
 
-    const env = {
-      ...process.env,
-      FOLDAA_API_KEY: apiKey
-    }
+    // Pass API key to environment for the CLI client
+    process.env.FOLDAA_API_KEY = apiKey
 
-    // Determine path to CLI assuming the standard monorepo setup
-    const projectRoot = process.cwd()
-    const cliPath = path.resolve(projectRoot, '../../packages/cli/dist/index.js')
-    
-    console.log(`[API] Running command: ${command}`);
-    console.log(`[API] CLI path: ${cliPath}`);
+    console.log(`[API] Running in-process command: ${command}`);
 
-    // Use built CLI and proper argument parsing
-    const args = parseArgsStringToArgv(command.replace(/^foldaa /, ''))
-    const cliProcess = spawn('node', [cliPath, ...args], {
-      env,
-      shell: false
-    })
+    // Capture stdout/stderr and stream to the response
+    const originalStdoutWrite = process.stdout.write.bind(process.stdout);
+    const originalStderrWrite = process.stderr.write.bind(process.stderr);
+    const originalConsoleLog = console.log.bind(console);
+    const originalConsoleError = console.error.bind(console);
 
-    cliProcess.stdout.on('data', (data) => {
-      // Stream raw output back without buffering (or let CLI emit JSON)
-      writer.write(new TextEncoder().encode(data.toString()))
-    })
+    const streamWrite = (data: any) => {
+      const msg = data.toString();
+      writer.write(new TextEncoder().encode(msg));
+      return true;
+    };
 
-    cliProcess.stderr.on('data', (data) => {
-      // Send stringified error logs
-      const msg = JSON.stringify({ event: 'progress', data: { step: data.toString().trim() } }) + '\n'
-      writer.write(new TextEncoder().encode(msg))
-    })
+    // Temporarily override for this request
+    // Note: In serverless, this is generally safe per instance, but we must restore it.
+    process.stdout.write = streamWrite as any;
+    process.stderr.write = streamWrite as any;
+    console.log = (...args) => streamWrite(args.join(' ') + '\n');
+    console.error = (...args) => streamWrite(args.join(' ') + '\n');
 
-    cliProcess.on('error', (err) => {
-      console.error(`[API] Spawn error: ${err.message}`);
-      const msg = JSON.stringify({ event: 'error', data: `Failed to start CLI: ${err.message}` }) + '\n'
-      writer.write(new TextEncoder().encode(msg))
-      writer.close()
-    })
+    const runCommand = async () => {
+      try {
+        const args = parseArgsStringToArgv(command.replace(/^foldaa /, ''))
+        
+        // Setup commander for this specific run
+        program.exitOverride(); // Prevent process.exit()
+        program.configureOutput({
+          writeOut: (str) => streamWrite(str),
+          writeErr: (str) => streamWrite(str)
+        });
 
-    cliProcess.on('close', (code) => {
-      if (code !== 0) {
-        const msg = JSON.stringify({ event: 'error', data: `Process exited with code ${code}` }) + '\n'
-        writer.write(new TextEncoder().encode(msg))
-      } else {
+        // We need to simulate process.argv for commander
+        // args[0] is usually 'node', args[1] is the script path
+        await program.parseAsync(['node', 'foldaa', ...args]);
+        
         const msg = JSON.stringify({ event: 'done', result: { success: true } }) + '\n'
         writer.write(new TextEncoder().encode(msg))
+      } catch (err: any) {
+        if (err.code !== 'commander.helpDisplayed' && err.code !== 'commander.version') {
+          console.error(`[API] Execution error: ${err.message}`);
+          const msg = JSON.stringify({ event: 'error', data: err.message }) + '\n'
+          writer.write(new TextEncoder().encode(msg))
+        }
+      } finally {
+        // Restore originals
+        process.stdout.write = originalStdoutWrite;
+        process.stderr.write = originalStderrWrite;
+        console.log = originalConsoleLog;
+        console.error = originalConsoleError;
+        writer.close()
       }
-      writer.close()
-    })
+    };
+
+    // Run in background but return the stream
+    runCommand();
 
     return new Response(readable, {
       headers: {

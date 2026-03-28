@@ -11,6 +11,7 @@ const TABS = [
     { id: 'overview', label: 'Overview' },
     { id: 'analytics', label: 'Analytics' },
     { id: 'integrations', label: 'Integrations' },
+    { id: 'notifications', label: 'Notifications' },
     { id: 'banner', label: 'Banner' },
     { id: 'store', label: 'Store' },
     { id: 'release', label: 'Release' },
@@ -38,7 +39,7 @@ export default function ProjectLayout({
 
     if (loading) {
         return (
-            <div className="flex-1 flex flex-col min-w-0 bg-black p-6 text-[#666] text-sm font-mono">
+            <div className="flex-1 flex flex-col min-w-0 bg-background p-6 text-muted-foreground text-sm font-mono">
                 Loading project details...
             </div>
         );
@@ -46,7 +47,7 @@ export default function ProjectLayout({
 
     if (!project) {
         return (
-            <div className="flex-1 flex flex-col min-w-0 bg-black p-6 text-red-500 text-sm font-mono">
+            <div className="flex-1 flex flex-col min-w-0 bg-background p-6 text-red-500 text-sm font-mono">
                 Project not found.
             </div>
         );
@@ -54,36 +55,35 @@ export default function ProjectLayout({
 
     return (
         <ToastProvider>
-            <div className="flex-1 flex flex-col min-w-0 bg-black relative h-full">
+            <div className="flex-1 flex flex-col min-w-0 bg-background relative h-full">
                 {/* Project Header / Top Bar */}
-                <div className="h-10 flex-shrink-0 flex items-center px-4 border-b border-[#2A2A2E]">
+                <div className="h-10 flex-shrink-0 flex items-center px-4 border-b border-neutral-200">
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => router.push('/dashboard')}>
-                        <span className="text-lg font-bold leading-none select-none text-[#666] group-hover:text-[#A0A0A0]">~</span>
+                        <span className="text-lg font-bold leading-none select-none text-muted-foreground group-hover:text-foreground">~</span>
                         <div className="flex items-center gap-2">
                             {(() => {
                                 const projectIcon = project.icon_512_url || project.icon_192_url || project.apple_touch_icon_url || project.favicon_url;
                                 return (
                                     <div
-                                        className="w-5 h-5 rounded flex-shrink-0 flex items-center justify-center overflow-hidden bg-[#1C1C1E] border border-[#2A2A2E]"
+                                        className="w-5 h-5 rounded flex-shrink-0 flex items-center justify-center overflow-hidden bg-background border border-foreground/12"
                                         style={{
-                                            backgroundColor: projectIcon ? '#0A0A0A' : (project.theme_color || '#111')
+                                            backgroundColor: projectIcon ? 'transparent' : (project.theme_color || 'var(--secondary)')
                                         }}
                                     >
                                         {projectIcon ? (
                                             <img src={projectIcon} alt="" className="w-full h-full object-cover" />
                                         ) : (
-                                            <span className="text-xs font-bold text-white/20 select-none">
+                                            <span className="text-xs font-bold text-foreground/20 select-none">
                                                 {project.name.charAt(0).toUpperCase()}
                                             </span>
                                         )}
                                     </div>
                                 );
                             })()}
-                            <span className="text-sm font-bold text-white max-w-[150px] truncate select-none leading-none pt-[1px]">{project.name}</span>
-                            <ChevronRight className="w-3.5 h-3.5 text-[#333] shrink-0" />
+                            <span className="text-sm font-bold text-foreground max-w-[150px] truncate select-none leading-none pt-[1px]">{project.name}</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/40 shrink-0" />
                         </div>
                     </div>
-
                     {/* Tabs */}
                     <div className="flex items-center gap-6 ml-4 select-none">
                         {TABS.map((tab) => (
@@ -93,11 +93,11 @@ export default function ProjectLayout({
                                 className={clsx(
                                     "text-sm font-medium transition-colors flex items-center gap-1.5",
                                     activeTab === tab.id
-                                        ? "text-white"
-                                        : "text-[#666] hover:text-[#A0A0A0]"
+                                        ? "text-foreground"
+                                        : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
-                                <span className={clsx("text-xs", activeTab === tab.id ? "text-white" : "text-[#444]")}>∷</span>
+                                <span className={clsx("text-xs", activeTab === tab.id ? "text-foreground" : "text-muted-foreground")}>∷</span>
                                 {tab.label}
                             </Link>
                         ))}

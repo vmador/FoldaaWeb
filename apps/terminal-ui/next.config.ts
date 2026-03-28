@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@foldaa/cli", "@foldaa/api-client"],
   images: {
     remotePatterns: [
       {

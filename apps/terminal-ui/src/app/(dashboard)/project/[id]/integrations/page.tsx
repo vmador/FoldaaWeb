@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useProjects } from '@/lib/hooks/useProjects';
 import { supabase } from '@/lib/supabase';
 import { Loader2, Plus, Play, Settings2, LayoutGrid, Terminal } from "lucide-react";
-import { clsx } from "clsx";
+import clsx from "clsx";
 import { TerminalModal } from "@/components/ui/TerminalModal";
 import { getIntegrationComponent, ConfigForm } from "./components";
 import AddIntegrationDrawer from "./components/AddIntegrationDrawer";
@@ -23,30 +23,44 @@ const IntegrationRow = ({
     onConfigure?: (int: any) => void; 
     isInstalled: boolean;
 }) => {
+    const isEnabled = integration?.is_enabled;
+    const isOneSignal = type.name === 'onesignal';
+    
     return (
         <div 
-            onClick={() => isInstalled ? onConfigure?.(integration) : onInstall?.(type.id)}
-            className="group flex items-center justify-between py-3 px-1 hover:bg-black transition-all cursor-pointer border-b border-transparent hover:border-[#2A2A2E] rounded-sm"
+            onClick={() => {
+                if (!isOneSignal) return;
+                isInstalled ? onConfigure?.(integration) : onInstall?.(type.id);
+            }}
+            className={clsx(
+                "group flex items-center justify-between py-3 px-1 transition-all border-b border-transparent rounded-sm",
+                isOneSignal ? "hover:bg-background cursor-pointer hover:border-border" : "opacity-40 grayscale-[0.5] cursor-not-allowed"
+            )}
         >
             <div className="flex items-center gap-4">
-                <div className={clsx(
+                 <div className={clsx(
                     "w-1 h-1 rounded-full",
-                    isInstalled ? "bg-[#D946EF] shadow-[0_0_8px_rgba(58,201,192,0.4)]" : "bg-[#222]"
+                    isInstalled && isEnabled ? "bg-brand-500 shadow-[0_0_8px_hsl(var(--brand-500)/0.4)]" : "bg-muted"
                 )} />
                 <div className="flex flex-col">
                     <div className="flex items-center gap-3">
-                        <span className={clsx(
+                         <span className={clsx(
                             "font-bold font-sans tracking-tight",
-                            isInstalled ? "text-[#D946EF]" : "text-[#D8D8D8]"
+                            isInstalled && isEnabled ? "text-brand-500" : (isOneSignal ? "text-foreground" : "text-muted-foreground")
                         )}>
                             {type.display_name}
                         </span>
-                        <span className="text-[#666] text-xs font-normal italic">
+                        <span className="text-muted-foreground text-xs font-normal italic">
                             {type.description}
                         </span>
-                        {isInstalled && (
-                            <span className="px-1.5 py-0.5 bg-[#244544]/30 text-[#D946EF] text-xs font-bold rounded border border-[#244544]/50 uppercase tracking-widest">
-                                Installed
+                         {isInstalled && (
+                            <span className={clsx(
+                                "px-1.5 py-0.5 text-xs font-bold rounded border uppercase tracking-widest",
+                                isEnabled 
+                                    ? "bg-brand-500/10 text-brand-500 border-brand-500/20" 
+                                    : "bg-muted text-muted-foreground border-transparent"
+                            )}>
+                                {isEnabled ? "Active" : "Disabled"}
                             </span>
                         )}
                     </div>
@@ -54,9 +68,10 @@ const IntegrationRow = ({
             </div>
             
             <button 
+                disabled={!isOneSignal}
                 className={clsx(
                     "text-xs font-bold uppercase tracking-widest transition-colors",
-                    isInstalled ? "text-[#D946EF] hover:text-white" : "text-[#444] group-hover:text-[#D8D8D8]"
+                    isInstalled ? "text-brand-500 hover:text-foreground" : (isOneSignal ? "text-foreground" : "text-muted-foreground")
                 )}
             >
                 {isInstalled ? "Edit setup" : "Install"}
@@ -64,7 +79,6 @@ const IntegrationRow = ({
         </div>
     );
 };
-
 
 export default function IntegrationsPage({ params }: { params: Promise<{ id: string }> }) {
     const { projects, loading: projectsLoading } = useProjects();
@@ -103,7 +117,7 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
                         project_id,
                         integration_type_id,
                         config,
-                        is_active,
+                        is_enabled,
                         created_at,
                         integration_types (
                             id,
@@ -132,13 +146,13 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
         try {
             const { error } = await supabase
                 .from('project_integrations')
-                .update({ is_active: !currentStatus })
+                .update({ is_enabled: !currentStatus })
                 .eq('id', integrationId);
             
             if (error) throw error;
                 
             setProjectIntegrations(prev => prev.map(p => 
-                p.id === integrationId ? { ...p, is_active: !currentStatus } : p
+                p.id === integrationId ? { ...p, is_enabled: !currentStatus } : p
             ));
         } catch (err) {
             console.error("Toggle error", err);
@@ -224,8 +238,9 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
                     .insert({
                         project_id: projectId,
                         integration_type_id: selectedType.id,
+                        name: selectedType.display_name || selectedType.name,
                         config: configValues,
-                        is_active: true
+                        is_enabled: true
                     })
                     .select('*, integration_types(*)');
                 
@@ -252,7 +267,7 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
     };
 
     if (projectsLoading) return (
-        <div className="flex items-center gap-2 text-[#444] text-sm p-8">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm p-8">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
             <span>Loading registry...</span>
         </div>
@@ -285,7 +300,7 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
             />
 
             {loading ? (
-                <div className="flex items-center gap-2 text-[#444] text-sm py-10">
+                <div className="flex items-center gap-2 text-muted-foreground text-sm py-10">
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     <span>Synchronizing registry...</span>
                 </div>
@@ -325,7 +340,7 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
                     <div className="flex gap-3">
                         <button 
                             onClick={() => setIsConfigModalOpen(false)}
-                            className="px-4 py-1.5 text-xs font-bold text-[#666] hover:text-[#D8D8D8] bg-[#1C1C1E] border border-[#2A2A2E] rounded-md transition-colors"
+                            className="px-4 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground bg-card border border-border rounded-md transition-colors"
                         >
                             CANCEL
                         </button>
@@ -348,8 +363,8 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
                     />
                     <div className="p-3 bg-brand-500/5 border border-brand-500/10 rounded flex gap-3">
                         <Settings2 className="w-4 h-4 text-brand-500/50 flex-shrink-0 mt-0.5" />
-                        <span className="text-xs text-[#666] leading-relaxed">
-                            Changes will take effect after a project <span className="text-[#A0A0A0] italic font-mono">redeploy</span>.
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                            Changes will take effect after a project <span className="text-foreground italic font-mono">redeploy</span>.
                         </span>
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"
 import { useProjects } from '@/lib/hooks/useProjects';
 import { supabase } from '@/lib/supabase';
 import { Loader2, Globe, Clock, Zap, Users, Eye, Monitor, Smartphone, Tablet } from "lucide-react"
-import { clsx } from "clsx"
+import clsx from "clsx"
 import { TabHeader } from '@/components/ui/TabHeader';
 
 const COUNTRY_FLAGS: { [key: string]: string } = {
@@ -11,9 +11,9 @@ const COUNTRY_FLAGS: { [key: string]: string } = {
 }
 
 const StatCard = ({ label, value, icon: Icon, color }: any) => (
-    <div className="flex flex-col gap-4 p-6 bg-black border border-[#2A2A2E] rounded-xl hover:border-white/10 transition-colors group">
+    <div className="flex flex-col gap-4 p-6 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
         <div className="flex items-center justify-between">
-            <span className="text-[#666] text-xs font-bold uppercase tracking-widest">{label}</span>
+            <span className="text-muted-foreground text-xs font-bold uppercase tracking-widest">{label}</span>
             <div className={clsx(
                 "p-2 rounded-lg bg-opacity-10 transition-transform group-hover:scale-110",
                 color === 'cyan' ? "bg-brand-500 text-brand-400" :
@@ -25,7 +25,7 @@ const StatCard = ({ label, value, icon: Icon, color }: any) => (
             </div>
         </div>
         <div className="flex items-end justify-between">
-            <span className="text-white font-bold text-lg font-mono leading-none">{value}</span>
+            <span className="text-foreground font-bold text-lg font-mono leading-none">{value}</span>
             <span className="text-green-500/80 text-xs bg-green-500/5 px-1.5 py-0.5 rounded border border-green-500/10 font-bold">+12%</span>
         </div>
     </div>
@@ -74,7 +74,7 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
     }, [projectId, project, period]);
 
     if (projectsLoading || loading) return (
-        <div className="flex items-center gap-2 text-[#444] text-sm p-8">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm p-8">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
             <span>SYNCING_ANALYTICS...</span>
         </div>
@@ -98,35 +98,37 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
 
             <div className="flex flex-col gap-8">
                 {/* Stats Summary - Simple List Style */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-6 border-y border-[#2A2A2E]">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-6 border-y border-neutral-200">
                     <div className="flex flex-col gap-1">
-                        <span className="text-[#444] font-bold text-xs uppercase tracking-widest">REQUESTS</span>
-                        <span className="text-white text-lg font-bold font-mono">{formatNumber(stats?.requests || 0)}</span>
+                        <span className="text-muted-foreground font-bold text-xs uppercase tracking-widest">REQUESTS</span>
+                        <span className="text-foreground text-lg font-bold font-mono">{formatNumber(stats?.requests || 0)}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[#444] font-bold text-xs uppercase tracking-widest">VISITORS</span>
-                        <span className="text-white text-lg font-bold font-mono">{formatNumber(stats?.visits || 0)}</span>
+                        <span className="text-muted-foreground font-bold text-xs uppercase tracking-widest">VISITORS</span>
+                        <span className="text-foreground text-lg font-bold font-mono">{formatNumber(stats?.visits || 0)}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[#444] font-bold text-xs uppercase tracking-widest">VIEWS</span>
-                        <span className="text-white text-lg font-bold font-mono">{formatNumber(stats?.views || 0)}</span>
+                        <span className="text-muted-foreground font-bold text-xs uppercase tracking-widest">VIEWS</span>
+                        <span className="text-foreground text-lg font-bold font-mono">{formatNumber(stats?.views || 0)}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[#444] font-bold text-xs uppercase tracking-widest">LIVE</span>
+                        <span className="text-muted-foreground font-bold text-xs uppercase tracking-widest">LIVE</span>
                         <span className="text-brand-400 text-lg font-bold font-mono">{stats?.live_visitors?.toString() || "0"}</span>
                     </div>
                 </div>
 
                 {/* Period Selector */}
                 <div className="flex items-center gap-4">
-                    <span className="text-[#444] font-bold text-xs uppercase tracking-widest mr-2">PERIOD:</span>
+                    <span className="text-muted-foreground font-bold text-xs uppercase tracking-widest mr-2">PERIOD:</span>
                     {['1h', '24h', '7d', '30d'].map((p: any) => (
                         <button 
                             key={p} 
                             onClick={() => setPeriod(p)}
                             className={clsx(
-                                "px-2 py-0.5 rounded text-xs font-mono transition-all",
-                                period === p ? "bg-brand-500/10 text-brand-400 border border-brand-500/20" : "text-[#666] hover:text-[#A0A0A0]"
+                                "px-2 py-0.5 rounded text-[10px] font-mono transition-all",
+                                period === p 
+                                    ? "bg-neutral-200 text-foreground" 
+                                    : "text-muted-foreground hover:text-foreground hover:bg-neutral-100"
                             )}
                         >
                             {p.toUpperCase()}
@@ -136,41 +138,41 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-4">
                     {/* Top Countries */}
-                    <div className="flex flex-col gap-4">
-                        <div className="text-xs font-bold text-[#444] tracking-widest uppercase mb-2">TOP_LOCATIONS</div>
-                        <div className="flex flex-col divide-y divide-[#111] border border-[#2A2A2E] rounded overflow-hidden">
+                     <div className="flex flex-col gap-4">
+                        <div className="text-xs font-bold text-muted-foreground tracking-widest uppercase mb-2">TOP_LOCATIONS</div>
+                        <div className="flex flex-col divide-y divide-neutral-200 border border-neutral-200 rounded overflow-hidden">
                             {(stats?.countries || []).slice(0, 5).map((c: any) => (
-                                <div key={c.country} className="flex items-center justify-between px-4 py-2 hover:bg-black transition-colors">
+                                <div key={c.country} className="flex items-center justify-between px-4 py-2 hover:bg-background transition-colors">
                                     <div className="flex items-center gap-3">
                                         <span className="text-lg">{COUNTRY_FLAGS[c.country] || '🌐'}</span>
-                                        <span className="text-[#A0A0A0] font-mono">{c.country}</span>
+                                        <span className="text-muted-foreground font-mono">{c.country}</span>
                                     </div>
-                                    <span className="text-white font-mono font-bold">{c.count}</span>
+                                    <span className="text-foreground font-mono font-bold">{c.count}</span>
                                 </div>
                             ))}
                             {stats?.countries?.length === 0 && (
-                                <div className="p-4 text-[#444] font-mono italic text-center">No data available</div>
+                                <div className="p-4 text-muted-foreground font-mono italic text-center">No data available</div>
                             )}
                         </div>
                     </div>
 
                     {/* Device Distribution */}
-                    <div className="flex flex-col gap-4">
-                        <div className="text-xs font-bold text-[#444] tracking-widest uppercase mb-2">DEVICE_TYPE</div>
-                        <div className="flex flex-col divide-y divide-[#111] border border-[#2A2A2E] rounded overflow-hidden">
+                     <div className="flex flex-col gap-4">
+                        <div className="text-xs font-bold text-muted-foreground tracking-widest uppercase mb-2">DEVICE_TYPE</div>
+                        <div className="flex flex-col divide-y divide-neutral-200 border border-neutral-200 rounded overflow-hidden">
                              {(stats?.devices || []).map((d: any) => (
-                                <div key={d.device} className="flex items-center justify-between px-4 py-2 hover:bg-black transition-colors">
-                                    <div className="flex items-center gap-3 text-[#A0A0A0]">
+                                <div key={d.device} className="flex items-center justify-between px-4 py-2 hover:bg-background transition-colors">
+                                    <div className="flex items-center gap-3 text-muted-foreground">
                                         {d.device === 'mobile' ? <Smartphone size={14} /> : 
                                          d.device === 'tablet' ? <Tablet size={14} /> : 
                                          <Monitor size={14} />}
                                         <span className="uppercase tracking-wider font-mono">{d.device}</span>
                                     </div>
-                                    <span className="text-white font-mono font-bold">{((d.count / stats.requests) * 100).toFixed(1)}%</span>
+                                    <span className="text-foreground font-mono font-bold">{((d.count / stats.requests) * 100).toFixed(1)}%</span>
                                 </div>
                             ))}
                             {stats?.devices?.length === 0 && (
-                                <div className="p-4 text-[#444] font-mono italic text-center">No data available</div>
+                                <div className="p-4 text-muted-foreground font-mono italic text-center">No data available</div>
                             )}
                         </div>
                     </div>

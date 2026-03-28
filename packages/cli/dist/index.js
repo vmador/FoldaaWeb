@@ -26,6 +26,7 @@ program
     .option('-b, --background <color>', 'Background color')
     .option('-s, --safe-area', 'Ignore safe area (full height)')
     .option('-p, --pwa', 'Enable PWA features')
+    .option('-w, --workspace <id>', 'Target workspace ID')
     .action(async (url, options) => {
     const { wrapCommand } = await import('./commands/wrap.js');
     await wrapCommand(url, options);
@@ -106,8 +107,15 @@ program
     }
 });
 // --- Magic Wrap (Defaults to PREVIEW) ---
-const firstArg = process.argv[2];
-if (firstArg && !firstArg.startsWith('-') && !['login', 'preview', 'claim', 'verify', 'launch', 'list', 'logout', 'help'].includes(firstArg)) {
-    process.argv.splice(2, 0, 'preview');
+export { program };
+async function run() {
+    const firstArg = process.argv[2];
+    if (firstArg && !firstArg.startsWith('-') && !['login', 'preview', 'claim', 'verify', 'launch', 'list', 'logout', 'help'].includes(firstArg)) {
+        process.argv.splice(2, 0, 'preview');
+    }
+    program.parse();
 }
-program.parse();
+import { fileURLToPath } from 'url';
+if (process.argv[1] && fileURLToPath(import.meta.url) === (process.argv[1])) {
+    run();
+}

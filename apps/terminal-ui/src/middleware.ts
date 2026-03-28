@@ -18,46 +18,31 @@ export async function middleware(request: NextRequest) {
                     return request.cookies.get(name)?.value
                 },
                 set(name: string, value: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
+                    // Update the request cookies in case it's read again in this pass
+                    request.cookies.set({ name, value, ...options })
+                    // Append the cookie to the ALREADY CREATED response object
+                    response.cookies.set({ name, value, ...options })
                 },
                 remove(name: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
+                    request.cookies.set({ name, value: '', ...options })
+                    response.cookies.set({ name, value: '', ...options })
                 },
             },
         }
     )
 
-    const {
+    let {
         data: { session },
     } = await supabase.auth.getSession()
+
+    // Defensive parsing: if session is a string, try to parse it
+    if (typeof session === 'string') {
+        try {
+            session = JSON.parse(session);
+        } catch (e) {
+            session = null;
+        }
+    }
 
     // If there is no session and the user is trying to access protected routes, redirect to login
     const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/account')

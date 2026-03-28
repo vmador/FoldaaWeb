@@ -48,7 +48,7 @@ function AccountSettingsContent() {
                 return <SubscriptionSection />
             case "support":
                 return (
-                    <div className="flex flex-col items-center justify-center py-20 text-[#666] font-mono text-xs">
+                    <div className="flex flex-col items-center justify-center py-20 text-muted-foreground font-mono text-xs">
                         {activeTab.toUpperCase()} _ MODULE_NOT_INITIALIZED
                     </div>
                 )
@@ -85,7 +85,7 @@ function AccountSettingsContent() {
 export default function AccountPage() {
     return (
         <Suspense fallback={
-            <div className="flex-1 flex items-center justify-center bg-black text-[#444] font-mono">
+            <div className="flex-1 flex items-center justify-center bg-background text-muted-foreground font-mono">
                 <div className="animate-pulse">BOOTSTRAPPING_ENVIRONMENT...</div>
             </div>
         }>

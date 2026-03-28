@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 
-const WIDTH = 80;
-const HEIGHT = 18;
+const WIDTH = 120;
+const HEIGHT = 24;
 // Block characters from most dense to least dense
 const BLOCKS = ['█', '▓', '▒', '░', ' '];
 
@@ -119,11 +120,11 @@ export default function AsciiVortexAnimation({ status, onExploded }: { status?: 
     return () => cancelAnimationFrame(animationFrameId);
   }, [isExploding, onExploded]);
 
-  return (
-    <div className="flex flex-col w-full bg-black rounded-[10px] border border-[#222] relative overflow-hidden group mb-4">
-      <div className="flex justify-between w-full px-4 py-2 border-b border-[#222] bg-[#0A0A0B]">
+   return (
+    <div className="flex flex-col w-full bg-background rounded-[10px] border border-border relative overflow-hidden group mb-4">
+      <div className="flex justify-between w-full px-4 py-2 border-b border-border bg-secondary/50">
         <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isExploding ? 'bg-white animate-ping' : 'bg-brand-500 animate-pulse'}`}></span>
+            <span className={`w-2 h-2 rounded-full ${isExploding ? 'bg-foreground animate-ping' : 'bg-brand-500 animate-pulse'}`}></span>
             <span className="text-zinc-400 text-[10px] font-mono tracking-widest uppercase">
                 {isExploding ? 'UNPACKING BUNDLE...' : 'CONSTRUCTING ASSETS...'}
             </span>
@@ -133,12 +134,18 @@ export default function AsciiVortexAnimation({ status, onExploded }: { status?: 
         </span>
       </div>
       
-      <div className="relative w-full h-[150px] overflow-hidden bg-black flex items-center justify-center">
-        <pre className={`${isExploding ? 'text-white' : 'text-brand-500'} font-mono text-[8px] leading-[8px] sm:text-[10px] sm:leading-[10px] tracking-[2px] whitespace-pre overflow-hidden select-none pointer-events-none w-full h-full p-2 flex items-center justify-center`} style={{ textShadow: isExploding ? '0px 0px 12px rgba(255, 255, 255, 0.8)' : '0px 0px 8px rgba(217, 70, 239, 0.4)' }}>
+       <div className="relative w-full h-[180px] overflow-hidden bg-background flex items-center justify-center">
+        <pre 
+            className={clsx(
+                isExploding ? 'text-foreground' : 'text-brand-500',
+                "font-mono text-[6px] leading-[6px] sm:text-[8px] sm:leading-[8px] tracking-[1px] whitespace-pre overflow-hidden select-none pointer-events-none w-full h-full flex items-center justify-center"
+            )}
+            style={{ 
+                textShadow: isExploding ? '0px 0px 12px hsl(var(--foreground) / 0.3)' : '0px 0px 8px hsl(var(--brand-500) / 0.2)' 
+            }}
+        >
             {renderString}
         </pre>
-        
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] pointer-events-none opacity-60" />
       </div>
     </div>
   );

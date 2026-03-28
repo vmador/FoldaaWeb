@@ -65,6 +65,7 @@
             "npm:eslint@9",
             "npm:framer-motion@^12.35.2",
             "npm:lucide-react@0.577",
+            "npm:next-themes@~0.4.6",
             "npm:next@16.1.6",
             "npm:qrcode.react@^4.2.0",
             "npm:qrcode@^1.5.3",

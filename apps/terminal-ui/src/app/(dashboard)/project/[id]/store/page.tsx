@@ -18,24 +18,24 @@ import {
     ExternalLink, RefreshCw, ShoppingCart, CheckCircle, 
     AlertCircle, DollarSign, Package, Link as LinkIcon, Plus, Trash2,
     Check, Apple, Monitor, Smartphone, Tablet, ArrowLeft, Eye, Download, Users, Star,
-    CreditCard, Mail, Shield, FileText, Globe as GlobeIcon, Heart, Upload, Edit2, X
+    CreditCard, Mail, Shield, FileText, Globe as GlobeIcon, Heart, Upload, Edit2, X,
+    Camera, MapPin, Mic, Maximize2, Palette
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useToast } from '@/context/ToastContext';
-import { useRouter } from 'next/navigation'; // Added for router.push
+import { useRouter } from 'next/navigation';
+import { Toggle } from '@/components/ui/Toggle';
 
+// No change needed in CATEGORIES definition but ensure usage is consistent
 const CATEGORIES = [
-    { value: "business", label: "Business", emoji: "💼" },
-    { value: "productivity", label: "Productivity", emoji: "⚡" },
-    { value: "education", label: "Education", emoji: "📚" },
-    { value: "entertainment", label: "Entertainment", emoji: "🎮" },
-    { value: "social", label: "Social", emoji: "👥" },
-    { value: "utilities", label: "Utilities", emoji: "🔧" },
-    { value: "lifestyle", label: "Lifestyle", emoji: "🌟" },
-    { value: "news", label: "News", emoji: "📰" },
-    { value: "portfolio", label: "Portfolio", emoji: "🎨" },
-    { value: "ecommerce", label: "E-commerce", emoji: "🛍️" },
-    { value: "other", label: "Other", emoji: "📱" },
+    { value: 'productivity', label: 'Productivity', emoji: '🚀' },
+    { value: 'utilities', label: 'Utilities', emoji: '🛠️' },
+    { value: 'entertainment', label: 'Entertainment', emoji: '🎮' },
+    { value: 'social', label: 'Social', emoji: '📱' },
+    { value: 'finance', label: 'Finance', emoji: '💰' },
+    { value: 'education', label: 'Education', emoji: '📚' },
+    { value: 'lifestyle', label: 'Lifestyle', emoji: '🏠' },
+    { value: 'other', label: 'Other', emoji: '📦' },
 ];
 
 const TECH_CATEGORIES = {
@@ -89,19 +89,19 @@ const INCLUDED_IN_SALE_OPTIONS = [
 
 const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any) => (
     <div className="flex flex-col gap-1.5">
-        <label className="text-[#444] text-xs uppercase tracking-widest font-bold">{label}</label>
+        <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">{label}</label>
         {type === 'textarea' ? (
             <textarea
                 value={value}
                 onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-2 text-[#D8D8D8] outline-none font-mono text-xs h-28 resize-none focus:border-white/20 transition-colors placeholder:text-[#222]"
+                className="bg-neutral-50 border border-neutral-200 rounded px-3 py-2 text-foreground outline-none font-mono text-xs h-28 resize-none focus:border-neutral-300 hover:border-neutral-400 transition-all duration-300 placeholder:text-muted-foreground/30"
             />
         ) : type === 'select' ? (
             <select
                 value={value}
                 onChange={e => onChange(e.target.value)}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-white/20 transition-colors"
+                className="bg-neutral-50 border border-neutral-200 rounded px-3 py-1.5 text-foreground outline-none font-mono text-xs focus:border-neutral-300 transition-colors"
             >
                 {CATEGORIES.map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.emoji} {cat.label}</option>
@@ -113,7 +113,7 @@ const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any)
                 value={value}
                 onChange={e => onChange(type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value)}
                 placeholder={placeholder}
-                className="bg-black border border-[#2A2A2E] rounded px-3 py-1.5 text-[#D8D8D8] outline-none font-mono text-xs focus:border-white/20 transition-colors placeholder:text-[#222]"
+                className="bg-neutral-50 border border-neutral-200 rounded px-3 py-1.5 text-foreground outline-none font-mono text-xs focus:border-neutral-300 transition-colors placeholder:text-muted-foreground/30"
             />
         )}
     </div>
@@ -287,7 +287,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
         }
     }, [project, listing, metadata?.name]);
 
-    if (projectsLoading || loading) return <div className="text-[#666] font-mono text-sm">Loading store data...</div>;
+    if (projectsLoading || loading) return <div className="text-muted-foreground font-mono text-sm">Loading store data...</div>;
     if (!project || !metadata) return null;
 
     const handleSaveMetadata = async () => {
@@ -657,15 +657,15 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
     };
 
     return (
-        <div className="flex flex-col h-full overflow-hidden text-sm animate-in fade-in duration-500 bg-black">
+        <div className="flex flex-col h-full overflow-hidden text-sm animate-in fade-in duration-500 bg-background">
             {/* Unified Full-Width Header */}
-            <div className="h-[60px] flex-shrink-0 flex items-center justify-between px-8 border-b border-white/[0.05] bg-black/40 backdrop-blur-md sticky top-0 z-20 w-full">
+            <div className="h-[60px] flex-shrink-0 flex items-center justify-between px-8 border-b border-neutral-200 bg-neutral-50/80 backdrop-blur-md sticky top-0 z-20 w-full">
                 <div className="flex items-center gap-4">
-                    <h2 className="text-[#D8D8D8] text-base font-bold tracking-tight">Store configuration</h2>
+                    <h2 className="text-foreground text-base font-bold tracking-tight">Store configuration</h2>
                 </div>
                 <div className="flex items-center gap-6">
                     {/* Device Selector */}
-                    <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/[0.03]">
+                    <div className="flex items-center gap-1 bg-background/40 p-1 rounded-lg border border-white/[0.03]">
                         {[
                             { id: 'desktop', icon: Monitor },
                             { id: 'tablet', icon: Tablet },
@@ -677,8 +677,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     key={device.id}
                                     onClick={() => setPreviewMode(device.id as any)}
                                     className={clsx(
-                                        "p-1.5 rounded transition-all",
-                                        previewMode === device.id ? "bg-white/10 text-white" : "text-[#444] hover:text-[#666]"
+                                        "btn-ghost p-1.5",
+                                        previewMode === device.id && "bg-neutral-200 text-foreground"
                                     )}
                                 >
                                     <Icon size={14} />
@@ -690,11 +690,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                     <button
                         onClick={handleSaveMetadata}
                         disabled={saving}
-                        className="flex items-center gap-2 px-4 py-1.5 bg-[#111] hover:bg-[#1A1A1A] border border-[#333] hover:border-white/20 text-white rounded text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                        className="btn-filled px-4"
                     >
                         {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                         <span>Save and update</span>
-                        <span className="ml-2 px-1 py-0.5 bg-black/10 rounded text-xs opacity-40">⌘+S</span>
+                        <span className="ml-2 px-1 py-0.5 bg-white/10 rounded text-[10px] opacity-40">⌘+S</span>
                     </button>
                 </div>
             </div>
@@ -702,59 +702,54 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
             {/* Split Screen Layout */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Left Side: Configuration Panel (Scrollable) */}
-                <div className="flex-1 flex flex-col min-w-0 border-r border-white/[0.05]">
+                <div className="flex-1 flex flex-col min-w-0 border-r border-neutral-200">
                     <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-8 pb-20">
                         <div className="max-w-[640px] flex flex-col gap-10">
                             {/* Toggle: Show Public */}
-                            <div className="flex items-center justify-between px-6 py-4 bg-white/[0.02] border border-white/[0.05] rounded-xl">
-                                <span className="text-[#D8D8D8] text-sm font-medium">Show Public on Store</span>
-                                <button 
-                                    onClick={() => setMetadata({...metadata, is_public: !metadata.is_public})}
-                                    className={clsx(
-                                        "w-10 h-5 rounded-full relative transition-all duration-300",
-                                        metadata.is_public ? "bg-white/20" : "bg-[#1A1A1A]"
-                                    )}
-                                >
-                                        metadata.is_public ? "translate-x-5" : "translate-x-0"
-                                </button>
+                            <div className="flex items-center justify-between px-6 py-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+                                <span className="text-foreground text-sm font-medium">Show Public on Store</span>
+                                <Toggle 
+                                    checked={metadata.is_public || false}
+                                    onChange={() => setMetadata({...metadata, is_public: !metadata.is_public})}
+                                />
                             </div>
 
                             {/* Automation */}
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-white/60 text-xs uppercase tracking-widest font-bold">Automation</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.05]" />
+                                    <label className="text-foreground/60 text-xs uppercase tracking-widest font-bold">Automation</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-neutral-200" />
                                 </div>
                                 
                                 {!isExtractingAssets ? (
                                     <button
                                         onClick={handleExtractAssets}
                                         disabled={saving || isExtractingAssets || !project?.worker_url}
-                                        className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-30 group"
+                                        className="w-full btn-outline justify-center py-3 text-[10px] uppercase tracking-widest"
                                     >
                                         <RefreshCw size={14} className={clsx("transition-transform group-hover:rotate-180 duration-500")} />
                                         <span>Auto-Sync Details from Site</span>
                                     </button>
                                 ) : (
-                                    <div className="w-full flex items-center justify-center gap-3 py-3 bg-white/5 border border-white/10 rounded-xl">
-                                        <Loader2 size={16} className="animate-spin text-white" />
-                                        <span className="text-white/40 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
+                                    <div className="w-full flex items-center justify-center gap-3 py-3 bg-foreground/5 border border-white/10 rounded-xl">
+                                        <Loader2 size={16} className="animate-spin text-foreground" />
+                                        <span className="text-foreground/40 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
                                     </div>
                                 )}
                             </div>
 
                             {/* App Icon Area */}
                             <div className="flex flex-col gap-4">
-                                <h4 className="text-[#444] text-xs uppercase tracking-widest font-bold">App Icon</h4>
+                                <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">App Icon</h4>
                                 <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 rounded-2xl bg-black border border-white/5 flex items-center justify-center relative group overflow-hidden">
+                                    <div className="w-20 h-20 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-center justify-center relative group overflow-hidden">
                                         {imagePreviews.icon ? (
                                             <img src={imagePreviews.icon} alt="Icon" className="w-full h-full object-cover" />
                                         ) : (
                                             <ImageIcon size={24} className="text-[#222]" />
                                         )}
-                                        <label className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                            <Upload size={16} className="text-white" />
+                                        <label className="absolute inset-0 bg-background/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            <Upload size={16} className="text-foreground" />
                                             <input type="file" className="hidden" accept="image/*" onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
@@ -767,8 +762,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         </label>
                                     </div>
                                     <div className="flex flex-col gap-1.5 flex-1">
-                                        <span className="text-[#D8D8D8] text-xs font-medium">Global App Icon</span>
-                                        <p className="text-[#444] text-xs leading-relaxed">
+                                        <span className="text-foreground text-xs font-medium">Global App Icon</span>
+                                        <p className="text-muted-foreground text-xs leading-relaxed">
                                             High-resolution 512x512 icon for store listings and dashboard.
                                         </p>
                                     </div>
@@ -778,8 +773,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Standard Metadata */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Standard Metadata</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Standard Metadata</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-neutral-200" />
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-6">
@@ -829,19 +824,19 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Publisher Branding */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Publisher Branding</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Publisher Branding</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                 </div>
 
                                 <div className="flex items-center gap-6">
-                                    <div className="w-16 h-16 rounded-full bg-black border border-white/5 flex items-center justify-center relative group overflow-hidden">
+                                    <div className="w-16 h-16 rounded-full bg-background border border-white/5 flex items-center justify-center relative group overflow-hidden">
                                         {avatarPreview || publisher?.avatar_url || publisher?.profile_picture_url || publisher?.avatar_path ? (
                                             <img src={avatarPreview || publisher?.avatar_url || publisher?.profile_picture_url || publisher?.avatar_path} alt="Avatar" className="w-full h-full object-cover" />
                                         ) : (
                                             <Users size={20} className="text-[#222]" />
                                         )}
-                                        <label className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                            <Upload size={14} className="text-white" />
+                                        <label className="absolute inset-0 bg-background/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            <Upload size={14} className="text-foreground" />
                                             <input type="file" className="hidden" accept="image/*" onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
@@ -854,8 +849,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         </label>
                                     </div>
                                     <div className="flex flex-col gap-1.5 flex-1">
-                                        <span className="text-[#D8D8D8] text-xs font-medium">Developer Avatar</span>
-                                        <p className="text-[#444] text-xs leading-relaxed">
+                                        <span className="text-foreground text-xs font-medium">Developer Avatar</span>
+                                        <p className="text-muted-foreground text-xs leading-relaxed">
                                             This avatar will represent you across the marketplace.
                                         </p>
                                     </div>
@@ -880,8 +875,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Support & Legal */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Support & Legal</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Support & Legal</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -915,8 +910,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Technologies & Stack */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Technologies & Stack</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Technologies & Stack</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                 </div>
 
                                 <div className="flex flex-col gap-6">
@@ -928,8 +923,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                 className={clsx(
                                                     "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
                                                     selectedTechCategory === key 
-                                                        ? "bg-white/10 border-white/20 text-white shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
-                                                        : "bg-white/[0.02] border-white/5 text-[#444] hover:border-white/10"
+                                                        ? "bg-foreground/10 border-white/20 text-foreground shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
+                                                        : "bg-foreground/[0.02] border-white/5 text-muted-foreground hover:border-white/10"
                                                 )}
                                             >
                                                 {cat.label}
@@ -959,8 +954,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                     className={clsx(
                                                         "px-3 py-2 rounded-lg border text-xs font-medium text-left transition-all",
                                                         isSelected 
-                                                            ? "bg-white/[0.05] border-white/20 text-[#D8D8D8]" 
-                                                            : "bg-black/20 border-white/[0.03] text-[#444] hover:border-white/10 hover:text-[#666]"
+                                                            ? "bg-foreground/[0.05] border-white/20 text-foreground" 
+                                                            : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10 hover:text-muted-foreground"
                                                     )}
                                                 >
                                                     {opt}
@@ -974,16 +969,16 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Interface Assets (Screenshots) */}
                             <div className="flex flex-col gap-6 relative z-10">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Interface Assets</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Interface Assets</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4">
-                                    <div className="w-full h-48 rounded-2xl bg-black border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-3 group hover:border-white/20 transition-all cursor-pointer relative overflow-hidden">
-                                        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Upload size={20} className="text-[#444] group-hover:text-white" />
+                                    <div className="w-full h-48 rounded-2xl bg-background border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-3 group hover:border-white/20 transition-all cursor-pointer relative overflow-hidden">
+                                        <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Upload size={20} className="text-muted-foreground group-hover:text-foreground" />
                                         </div>
-                                        <span className="text-[#444] text-xs uppercase tracking-widest font-bold group-hover:text-white/60">Drag or paste images here</span>
+                                        <span className="text-muted-foreground text-xs uppercase tracking-widest font-bold group-hover:text-foreground/60">Drag or paste images here</span>
                                         <input 
                                             type="file" 
                                             multiple 
@@ -1003,7 +998,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     {screenshotPreviews.length > 0 && (
                                         <div className="grid grid-cols-5 gap-3">
                                             {screenshotPreviews.map((preview, i) => (
-                                                <div key={i} className="aspect-[9/16] rounded-lg bg-black border border-white/5 relative group overflow-hidden">
+                                                <div key={i} className="aspect-[9/16] rounded-lg bg-background border border-white/5 relative group overflow-hidden">
                                                     <img src={preview} alt={`Screenshot ${i+1}`} className="w-full h-full object-cover" />
                                                     <button 
                                                         onClick={() => {
@@ -1016,7 +1011,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                                 setScreenshotFiles(prev => prev.filter((_, idx) => idx !== fileIndex));
                                                             }
                                                         }}
-                                                        className="absolute top-2 right-2 p-1 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-white hover:text-red-500"
+                                                        className="absolute top-2 right-2 p-1 bg-background/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-foreground hover:text-red-500"
                                                     >
                                                         <Trash2 size={12} />
                                                     </button>
@@ -1031,26 +1026,18 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             <div className="flex flex-col gap-6 relative z-20">
                                 <div className="flex items-center gap-2">
                                      <label className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Marketplace Status</label>
-                                     <div className="h-[1px] flex-1 bg-white/[0.05]" />
+                                     <div className="h-[1px] flex-1 bg-foreground/[0.05]" />
                                 </div>
                                 
-                                <div className="flex items-center justify-between px-5 py-4 bg-white/[0.02] border border-white/[0.05] rounded-xl transition-colors hover:bg-white/[0.04]">
+                                <div className="flex items-center justify-between px-5 py-4 bg-foreground/[0.02] border border-white/[0.05] rounded-xl transition-all duration-300 hover:bg-foreground/[0.04] hover:border-white/10">
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-[#D8D8D8] text-xs font-medium">Available for Acquisition</span>
-                                        <span className="text-[#444] text-xs uppercase tracking-tight">Enable automated transfer flow</span>
+                                        <span className="text-foreground text-xs font-medium">Available for Acquisition</span>
+                                        <span className="text-muted-foreground text-xs uppercase tracking-tight">Enable automated transfer flow</span>
                                     </div>
-                                    <button 
-                                        onClick={() => setMetadata({...metadata, is_for_sale: !metadata.is_for_sale})}
-                                        className={clsx(
-                                            "w-10 h-5 rounded-full relative transition-all duration-300",
-                                            metadata.is_for_sale ? "bg-white/20" : "bg-[#1A1A1A]"
-                                        )}
-                                    >
-                                        <div className={clsx(
-                                            "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform duration-300 border border-white/10",
-                                            metadata.is_for_sale ? "translate-x-5" : "translate-x-0"
-                                        )} />
-                                    </button>
+                                    <Toggle 
+                                        checked={metadata.is_for_sale || false}
+                                        onChange={() => setMetadata({...metadata, is_for_sale: !metadata.is_for_sale})}
+                                    />
                                 </div>
 
                                 {metadata.is_for_sale && (
@@ -1089,7 +1076,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         </div>
 
                                         <div className="flex flex-col gap-6 pt-6 border-t border-white/5">
-                                            <h4 className="text-[#444] text-xs uppercase tracking-widest font-bold">Sale Details</h4>
+                                            <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Sale Details</h4>
                                             
                                             <MetaField 
                                                 label="Reason for Selling" 
@@ -1100,7 +1087,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                             />
 
                                             <div className="flex flex-col gap-3">
-                                                <label className="text-[#444] text-xs uppercase tracking-widest font-bold">What's included</label>
+                                                <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">What's included</label>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                     {INCLUDED_IN_SALE_OPTIONS.map(opt => {
                                                         const isSelected = metadata.included_in_sale?.includes(opt.value);
@@ -1117,12 +1104,12 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                                 className={clsx(
                                                                     "flex items-center justify-between px-4 py-3 rounded-xl border text-xs font-medium transition-all text-left",
                                                                     isSelected 
-                                                                        ? "bg-white/[0.05] border-white/20 text-[#D8D8D8]" 
-                                                                        : "bg-black/20 border-white/[0.03] text-[#444] hover:border-white/10"
+                                                                        ? "bg-foreground/[0.05] border-white/20 text-foreground" 
+                                                                        : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10"
                                                                 )}
                                                             >
                                                                 {opt.label}
-                                                                {isSelected && <Check size={14} className="text-[#444]" />}
+                                                                {isSelected && <Check size={14} className="text-muted-foreground" />}
                                                             </button>
                                                         );
                                                     })}
@@ -1136,44 +1123,44 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Payouts & Monetization */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center gap-2">
-                                    <label className="text-[#444] text-xs uppercase tracking-widest font-bold">Payouts & Monetization</label>
-                                    <div className="h-[1px] flex-1 bg-white/[0.03]" />
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Payouts & Monetization</label>
+                                    <div className="h-[1px] flex-1 bg-foreground/[0.03]" />
                                 </div>
 
                                 {!sellerAccount ? (
-                                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-8 flex flex-col items-center text-center gap-6">
-                                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                                            <CreditCard size={32} className="text-white/20" />
+                                    <div className="bg-foreground/[0.02] border border-white/5 rounded-2xl p-8 flex flex-col items-center text-center gap-6">
+                                        <div className="w-16 h-16 rounded-full bg-foreground/5 flex items-center justify-center border border-white/10">
+                                            <CreditCard size={32} className="text-foreground/20" />
                                         </div>
                                         <div className="flex flex-col gap-2 max-w-[280px]">
-                                            <h3 className="text-[#D8D8D8] text-sm font-bold">Connect your Store</h3>
-                                            <p className="text-[#666] text-xs leading-relaxed">
+                                            <h3 className="text-foreground text-sm font-bold">Connect your Store</h3>
+                                            <p className="text-muted-foreground text-xs leading-relaxed">
                                                 We use Lemon Squeezy to handle global payments, taxes, and payouts automatically.
                                             </p>
                                         </div>
                                         <button
                                             onClick={handleConnectSeller}
                                             disabled={saving}
-                                            className="px-8 py-3 bg-white text-black rounded-full text-xs font-bold uppercase tracking-widest hover:scale-105 transition-all disabled:opacity-50"
+                                            className="px-8 py-3 bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 disabled:opacity-50"
                                         >
                                             {saving ? <Loader2 size={16} className="animate-spin" /> : "Connect Lemon Squeezy"}
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col gap-4">
-                                        <div className="p-5 bg-white/[0.02] border border-white/5 rounded-xl flex items-center justify-between group">
+                                        <div className="p-5 bg-foreground/[0.02] border border-white/5 rounded-xl flex items-center justify-between group">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20">
                                                     <CheckCircle size={20} className="text-green-500" />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-[#D8D8D8] text-xs font-medium">{sellerAccount.store_name || "Merchant Account"}</span>
-                                                    <span className="text-[#444] text-xs uppercase tracking-widest">{user?.email}</span>
+                                                    <span className="text-foreground text-xs font-medium">{sellerAccount.store_name || "Merchant Account"}</span>
+                                                    <span className="text-muted-foreground text-xs uppercase tracking-widest">{user?.email}</span>
                                                 </div>
                                             </div>
                                             <button 
                                                 onClick={handleDisconnectSeller}
-                                                className="p-2 opacity-0 group-hover:opacity-100 text-[#444] hover:text-red-500 transition-all"
+                                                className="p-2 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-500 transition-all"
                                                 title="Disconnect Account"
                                             >
                                                 <Trash2 size={16} />
@@ -1182,11 +1169,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                                         {/* Checkout Management */}
                                         {metadata.is_for_sale && (
-                                            <div className="p-5 bg-white/[0.02] border border-white/[0.05] rounded-xl flex flex-col gap-4">
+                                            <div className="p-5 bg-foreground/[0.02] border border-white/[0.05] rounded-xl flex flex-col gap-4">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[#D8D8D8] text-xs font-medium uppercase tracking-widest">Marketplace Checkout</span>
-                                                        <span className="text-[#444] text-xs">Automated Lemon Squeezy link</span>
+                                                        <span className="text-foreground text-xs font-medium uppercase tracking-widest">Marketplace Checkout</span>
+                                                        <span className="text-muted-foreground text-xs">Automated Lemon Squeezy link</span>
                                                     </div>
                                                     {listing?.ls_checkout_url && (
                                                         <div className="px-2 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded text-xs font-bold">
@@ -1199,7 +1186,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                     <button 
                                                         onClick={() => handleCreateCheckout(metadata.asking_price)}
                                                         disabled={saving}
-                                                        className="w-full flex items-center justify-center gap-2 py-3 bg-white text-black rounded-xl text-xs font-bold uppercase tracking-widest hover:scale-[1.02] transition-all disabled:opacity-50"
+                                                        className="w-full flex items-center justify-center gap-2 py-3 bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 disabled:opacity-50"
                                                     >
                                                         {saving ? <Loader2 size={14} className="animate-spin mx-auto" /> : (
                                                             <>
@@ -1210,16 +1197,16 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                                     </button>
                                                 ) : (
                                                     <div className="flex flex-col gap-3">
-                                                        <div className="flex items-center gap-2 p-3 bg-black/40 border border-white/5 rounded-xl overflow-hidden">
-                                                            <LinkIcon size={14} className="text-[#444] shrink-0" />
-                                                            <span className="text-xs text-[#666] truncate">{listing.ls_checkout_url}</span>
+                                                        <div className="flex items-center gap-2 p-3 bg-background/40 border border-white/5 rounded-xl overflow-hidden">
+                                                            <LinkIcon size={14} className="text-muted-foreground shrink-0" />
+                                                            <span className="text-xs text-muted-foreground truncate">{listing.ls_checkout_url}</span>
                                                         </div>
                                                         
                                                         {metadata.asking_price !== (listing as any).asking_price && (
                                                             <button 
                                                                 onClick={handleUpdateCheckoutPrice}
                                                                 disabled={saving}
-                                                                className="w-full flex items-center justify-center gap-2 py-2 bg-white/5 text-white/60 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
+                                                                className="w-full flex items-center justify-center gap-2 py-2 bg-foreground/5 text-foreground/60 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-foreground/10 transition-all disabled:opacity-50"
                                                             >
                                                                 {saving ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                                                                 Sync Price (${metadata.asking_price})
@@ -1237,76 +1224,76 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 </div>
 
                 {/* Right Side: Fixed Full Height Preview */}
-                <div className="w-[420px] xl:w-[480px] bg-black border-l border-white/[0.05] flex flex-col relative shrink-0">
+                <div className="w-[420px] xl:w-[480px] bg-background border-l border-white/[0.05] flex flex-col relative shrink-0">
                     <div className="sticky top-0 h-full flex flex-col overflow-hidden">
                         {/* Preview Content (Internal Scroll) */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-8 flex flex-col gap-10">
                             {/* Title Section */}
                             <div className="flex items-start gap-6">
-                                <div className="w-20 h-20 rounded-2xl bg-[#1C1C1E] border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden shrink-0">
+                                <div className="w-20 h-20 rounded-2xl bg-card border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden shrink-0">
                                     {imagePreviews.icon ? (
                                         <img src={imagePreviews.icon} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
-                                        <span className="text-lg font-bold text-white/10">{metadata.name?.charAt(0) || project?.name?.charAt(0)}</span>
+                                        <span className="text-lg font-bold text-foreground/10">{metadata.name?.charAt(0) || project?.name?.charAt(0)}</span>
                                     )}
                                 </div>
                                 <div className="flex flex-col gap-2 flex-1 min-w-0">
                                     <div className="flex items-center gap-3">
-                                        <h2 className="text-[#D8D8D8] text-lg font-bold tracking-tight leading-none truncate">{metadata.name || project?.name}</h2>
+                                        <h2 className="text-foreground text-lg font-bold tracking-tight leading-none truncate">{metadata.name || project?.name}</h2>
                                         {metadata.is_for_sale && (
-                                            <span className="px-1.5 py-0.5 bg-white/10 text-white text-[10px] font-bold rounded border border-white/10 uppercase tracking-widest">
+                                            <span className="px-1.5 py-0.5 bg-foreground/10 text-foreground text-[10px] font-bold rounded border border-white/10 uppercase tracking-widest">
                                                 PRO
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-[#666] text-sm leading-snug">
+                                    <p className="text-muted-foreground text-sm leading-snug">
                                         {metadata.subtitle || "Your application tagline goes here"}
                                     </p>
                                     <div className="flex items-center gap-3 mt-1">
-                                        <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center border border-white/10 overflow-hidden">
+                                        <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center border border-white/10 overflow-hidden">
                                             {publisher?.avatar_url || publisher?.profile_picture_url || publisher?.avatar_path ? (
                                                 <img src={publisher.avatar_url || publisher.profile_picture_url || publisher.avatar_path} alt={publisher.username} className="w-full h-full object-cover" />
                                             ) : (
-                                                <Users size={12} className="text-white/60" />
+                                                <Users size={12} className="text-foreground/60" />
                                             )}
                                         </div>
-                                        <span className="text-xs text-[#D8D8D8] font-medium">{publisher?.username || publisher?.first_name || 'Anonymous Developer'}</span>
+                                        <span className="text-xs text-foreground font-medium">{publisher?.username || publisher?.first_name || 'Anonymous Developer'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Metrics Bar */}
-                            <div className="flex items-center justify-between px-6 py-4 bg-white/[0.02] border border-white/[0.05] rounded-2xl">
+                            <div className="flex items-center justify-between px-6 py-4 bg-foreground/[0.02] border border-white/[0.05] rounded-2xl">
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="flex items-center gap-1.5 text-white/40">
+                                    <div className="flex items-center gap-1.5 text-foreground/40">
                                         <Eye size={12} />
                                         <span className="text-xs uppercase tracking-widest font-bold">Views</span>
                                     </div>
-                                    <span className="text-sm font-bold text-white leading-none">{listing?.view_count || 0}</span>
+                                    <span className="text-sm font-bold text-foreground leading-none">{listing?.view_count || 0}</span>
                                 </div>
-                                <div className="w-[1px] h-8 bg-white/[0.05]" />
+                                <div className="w-[1px] h-8 bg-foreground/[0.05]" />
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="flex items-center gap-1.5 text-white/40">
+                                    <div className="flex items-center gap-1.5 text-foreground/40">
                                         <Download size={12} />
                                         <span className="text-xs uppercase tracking-widest font-bold">Installs</span>
                                     </div>
-                                    <span className="text-sm font-bold text-white leading-none">{listing?.install_count || 0}</span>
+                                    <span className="text-sm font-bold text-foreground leading-none">{listing?.install_count || 0}</span>
                                 </div>
-                                <div className="w-[1px] h-8 bg-white/[0.05]" />
+                                <div className="w-[1px] h-8 bg-foreground/[0.05]" />
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="flex items-center gap-1.5 text-white/40">
+                                    <div className="flex items-center gap-1.5 text-foreground/40">
                                         <Users size={12} />
                                         <span className="text-xs uppercase tracking-widest font-bold">Users</span>
                                     </div>
-                                    <span className="text-sm font-bold text-white leading-none">{metadata.total_users || 0}</span>
+                                    <span className="text-sm font-bold text-foreground leading-none">{metadata.total_users || 0}</span>
                                 </div>
-                                <div className="w-[1px] h-8 bg-white/[0.05]" />
+                                <div className="w-[1px] h-8 bg-foreground/[0.05]" />
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="flex items-center gap-1.5 text-white/40">
+                                    <div className="flex items-center gap-1.5 text-foreground/40">
                                         <Star size={12} className="text-yellow-500/50" />
                                         <span className="text-xs uppercase tracking-widest font-bold">Rating</span>
                                     </div>
-                                    <span className="text-sm font-bold text-white leading-none">{listing?.rating_average || 5.0}</span>
+                                    <span className="text-sm font-bold text-foreground leading-none">{listing?.rating_average || 5.0}</span>
                                 </div>
                             </div>
 
@@ -1317,7 +1304,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         href={metadata.live_url} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-white/[0.05] border border-white/10 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-foreground/[0.05] border border-white/10 text-foreground rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-foreground/10 transition-colors"
                                     >
                                         <Globe size={14} />
                                         Open Live
@@ -1325,7 +1312,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                 )}
                                 {metadata.is_for_sale && (
                                     <button className={clsx(
-                                        "flex-[2] flex items-center justify-center gap-2 py-3 bg-[#111] border border-white/20 text-white hover:text-white/60 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#1A1A1A] hover:border-white/40 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+                                        "flex-[2] flex items-center justify-center gap-2 py-3 bg-card border border-foreground/12 hover:border-foreground/20 text-foreground rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-foreground/5 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)]",
                                         !metadata.live_url && "w-full"
                                     )}>
                                         <CreditCard size={14} />
@@ -1337,10 +1324,10 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Screenshots Preview */}
                             {screenshotPreviews.length > 0 && (
                                 <div className="flex flex-col gap-4">
-                                    <h3 className="text-[#D8D8D8] text-sm font-bold">Gallery</h3>
+                                    <h3 className="text-foreground text-sm font-bold">Gallery</h3>
                                     <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x">
                                         {screenshotPreviews.map((p, i) => (
-                                            <div key={i} className="shrink-0 w-48 aspect-[9/16] rounded-xl border border-white/5 overflow-hidden bg-black snap-start">
+                                            <div key={i} className="shrink-0 w-48 aspect-[9/16] rounded-xl border border-white/5 overflow-hidden bg-background snap-start">
                                                 <img src={p} alt={`Preview ${i+1}`} className="w-full h-full object-cover" />
                                             </div>
                                         ))}
@@ -1350,7 +1337,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                             {/* About Section */}
                             <div className="flex flex-col gap-4">
-                                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#444]">Description</h3>
+                                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Description</h3>
                                 <p className="text-[#999] text-sm leading-relaxed whitespace-pre-wrap">
                                     {metadata.description || "No description provided yet."}
                                 </p>
@@ -1359,13 +1346,13 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Tech Stack Section */}
                             {metadata.tech_stack && Object.values(metadata.tech_stack).some((arr: any) => arr.length > 0) && (
                                 <div className="flex flex-col gap-4">
-                                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#444]">Technologies</h3>
+                                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Technologies</h3>
                                     <div className="flex flex-wrap gap-2">
                                         {Object.entries(metadata.tech_stack).map(([cat, techs]: [string, any]) => 
                                             techs.map((tech: string) => (
-                                                <div key={`${cat}-${tech}`} className="px-2.5 py-1 bg-white/[0.03] border border-white/10 rounded-lg flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.1)]" />
-                                                    <span className="text-xs text-[#D8D8D8] font-mono">{tech}</span>
+                                                <div key={`${cat}-${tech}`} className="px-2.5 py-1 bg-foreground/[0.03] border border-white/10 rounded-lg flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-foreground/40 shadow-[0_0_8px_rgba(255,255,255,0.1)]" />
+                                                    <span className="text-xs text-foreground font-mono">{tech}</span>
                                                 </div>
                                             ))
                                         )}
@@ -1376,15 +1363,15 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             {/* Insights Section (If for sale) */}
                             {metadata.is_for_sale && (
                                 <div className="flex flex-col gap-4">
-                                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#444]">Growth & Insights</h3>
+                                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Growth & Insights</h3>
                                     <div className="grid grid-cols-2 gap-3">
-                                        <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl">
-                                            <span className="text-xs text-[#444] uppercase tracking-widest font-bold block mb-1">Monthly Revenue</span>
+                                        <div className="p-3 bg-foreground/[0.02] border border-white/[0.05] rounded-xl">
+                                            <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold block mb-1">Monthly Revenue</span>
                                             <span className="text-sm font-bold text-green-500">${metadata.monthly_revenue?.toLocaleString() || 0}</span>
                                         </div>
-                                        <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl">
-                                            <span className="text-xs text-[#444] uppercase tracking-widest font-bold block mb-1">MAU</span>
-                                            <span className="text-sm font-bold text-white">{metadata.monthly_active_users?.toLocaleString() || 0}</span>
+                                        <div className="p-3 bg-foreground/[0.02] border border-white/[0.05] rounded-xl">
+                                            <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold block mb-1">MAU</span>
+                                            <span className="text-sm font-bold text-foreground">{metadata.monthly_active_users?.toLocaleString() || 0}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1392,34 +1379,34 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                             {/* Technical Info Table */}
                             <div className="flex flex-col gap-4">
-                                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#444]">Technical Info</h3>
-                                <div className="flex flex-col border border-white/[0.05] rounded-xl overflow-hidden divide-y divide-white/[0.05]">
+                                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Technical Info</h3>
+                                <div className="flex flex-col border border-foreground/12 bg-card/20 rounded divide-y divide-foreground/12">
                                     <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                                        <span className="text-[#444]">Version</span>
-                                        <span className="text-[#D8D8D8] font-mono">{metadata.version || '1.0.0'}</span>
+                                        <span className="text-muted-foreground">Version</span>
+                                        <span className="text-foreground font-mono">{metadata.version || '1.0.0'}</span>
                                     </div>
                                     <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                                        <span className="text-[#444]">Category</span>
-                                        <span className="text-[#D8D8D8] capitalize">{metadata.primary_category}</span>
+                                        <span className="text-muted-foreground">Category</span>
+                                        <span className="text-foreground capitalize">{metadata.primary_category}</span>
                                     </div>
                                     <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                                        <span className="text-[#444]">Platform</span>
-                                        <span className="text-[#D8D8D8]">Web / Cloudflare</span>
+                                        <span className="text-muted-foreground">Platform</span>
+                                        <span className="text-foreground">Web / Cloudflare</span>
                                     </div>
                                     <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                                        <span className="text-[#444]">Published</span>
-                                        <span className="text-[#D8D8D8]">{listing?.published_at ? new Date(listing.published_at).toLocaleDateString() : 'Draft'}</span>
+                                        <span className="text-muted-foreground">Published</span>
+                                        <span className="text-foreground">{listing?.published_at ? new Date(listing.published_at).toLocaleDateString() : 'Draft'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Developer Support Section */}
-                            <div className="p-5 bg-[#080808] border border-white/[0.05] rounded-2xl flex flex-col gap-2">
-                                <div className="flex items-center gap-2 text-white/60">
+                            <div className="p-5 bg-foreground/[0.02] border border-white/[0.05] rounded-2xl flex flex-col gap-2">
+                                <div className="flex items-center gap-2 text-foreground/60">
                                     <Shield size={14} />
                                     <h3 className="text-xs font-bold uppercase tracking-widest">Developer Support</h3>
                                 </div>
-                                <p className="text-xs text-[#666] leading-relaxed">
+                                <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                                     Need help with this project? Contact the developer directly for assistance with deployment or customization.
                                 </p>
                                 {metadata.support_url && (
@@ -1427,7 +1414,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         href={metadata.support_url} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="mt-1 flex items-center gap-2 text-white/40 text-xs font-bold hover:underline"
+                                        className="mt-1 flex items-center gap-2 text-foreground/40 text-xs font-bold hover:underline"
                                     >
                                         <ExternalLink size={10} />
                                         Support Resource

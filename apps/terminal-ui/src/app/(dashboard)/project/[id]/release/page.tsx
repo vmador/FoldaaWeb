@@ -11,7 +11,7 @@ export default function ReleasePage({ params }: { params: Promise<{ id: string }
 
     if (loading) {
         return (
-            <div className="flex-1 flex flex-col min-w-0 bg-black p-6 text-[#666] text-sm font-mono">
+            <div className="flex-1 flex flex-col min-w-0 bg-background p-6 text-muted-foreground text-sm font-mono">
                 Loading project details...
             </div>
         );
@@ -19,7 +19,7 @@ export default function ReleasePage({ params }: { params: Promise<{ id: string }
 
     if (!project) {
         return (
-            <div className="flex-1 flex flex-col min-w-0 bg-black p-6 text-red-500 text-sm font-mono">
+            <div className="flex-1 flex flex-col min-w-0 bg-background p-6 text-red-500 text-sm font-mono">
                 Project not found.
             </div>
         );

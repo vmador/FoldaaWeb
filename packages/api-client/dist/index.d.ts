@@ -36,6 +36,7 @@ export declare class FoldaaClient {
         name: string;
         type: 'url' | 'bundle';
         source: string;
+        workspaceId?: string;
     }): Promise<{
         projectId: string;
     }>;

@@ -9,8 +9,9 @@ import { UIProvider, useUI } from '@/lib/contexts/UIContext';
 import { supabase } from '@/lib/supabase';
 import { Globe, Gear, SignOut, CaretDown, Plus, Package, Flame, Tent, User, Check, SquaresFour } from "@phosphor-icons/react";
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
+import { Skeleton } from '@/components/ui/Skeleton';
 import CreateProjectForm from '@/components/terminal/CreateProjectForm';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useUserProfile } from '@/lib/hooks/useUserProfile';
 import { ToastContainer } from '@/components/Toast';
@@ -28,7 +29,7 @@ function DashboardLayoutContent({
     const { activeWorkspace, workspaces, setActiveWorkspaceId } = useWorkspaces();
     const [isWorkspaceModalOpen, setWorkspaceModalOpen] = useState(false);
     const [isEditWorkspaceModalOpen, setEditWorkspaceModalOpen] = useState(false);
-    const { profile } = useUserProfile();
+    const { profile, loading: profileLoading } = useUserProfile();
     const router = useRouter();
     const pathname = usePathname();
     const [activeTab, setActiveTab] = useState<'projects' | 'domains' | 'campfire'>('projects');
@@ -76,13 +77,21 @@ function DashboardLayoutContent({
     };
 
     return (
-        <div className="flex flex-col h-dvh bg-black text-[#D8D8D8] font-mono overflow-hidden selection:bg-[#343A46]">
+        <div className="flex flex-col h-dvh bg-background text-foreground font-sans overflow-hidden selection:bg-secondary">
             {/* Top Bar (MacOS / Warp Title bar) */}
-            <div className="h-10 flex-shrink-0 flex items-center justify-between px-3 bg-[#000000] border-b border-[#202020] relative z-50">
+            <motion.div 
+                initial={{ y: -40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="h-10 flex-shrink-0 flex items-center justify-between px-3 bg-background border-b border-neutral-200 relative z-50 text-[11px] font-bold tracking-tight"
+            >
+                <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none opacity-40 uppercase">
+                    Foldaa
+                </div>
                 <div className="flex items-center gap-6">
                     {/* Sidebar Toggle & Split */}
                     {!isSettingsPath && (
-                        <div className="flex items-center gap-2 text-[#666]">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                             <svg
                                 width="14"
                                 height="14"
@@ -92,7 +101,7 @@ function DashboardLayoutContent({
                                 strokeWidth="2"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="cursor-pointer hover:text-white transition-colors"
+                                className="cursor-pointer hover:text-foreground transition-colors"
                                 onClick={toggleSidebar}
                             >
                                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
@@ -106,7 +115,7 @@ function DashboardLayoutContent({
                                 }}
                                 className={clsx(
                                     "transition-colors",
-                                    activeTab === 'projects' && dashboardView === 'grid' ? "text-white" : "hover:text-white"
+                                    activeTab === 'projects' && dashboardView === 'grid' ? "text-foreground" : "hover:text-foreground"
                                 )}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
@@ -116,7 +125,7 @@ function DashboardLayoutContent({
 
                     {/* Tab Selectors */}
                     {!isSettingsPath && (
-                        <div className="flex items-center gap-4 text-[#444]">
+                        <div className="flex items-center gap-4 text-muted-foreground">
                             <button
                                 onClick={() => {
                                     setActiveTab('projects');
@@ -125,7 +134,7 @@ function DashboardLayoutContent({
                                 }}
                                 className={clsx(
                                     "transition-colors flex items-center gap-1.5", 
-                                    activeTab === 'projects' && dashboardView === 'terminal' ? 'text-white' : 'hover:text-white'
+                                    activeTab === 'projects' && dashboardView === 'terminal' ? 'text-foreground' : 'hover:text-foreground'
                                 )}
                             >
                                 <span className="text-lg leading-none">፨</span>
@@ -134,16 +143,16 @@ function DashboardLayoutContent({
                                 onClick={() => {
                                     setActiveTab('domains');
                                 }}
-                                className={clsx("transition-colors flex items-center gap-1.5", activeTab === 'domains' ? 'text-white' : 'hover:text-white')}
+                                className={clsx("transition-colors flex items-center gap-1.5", activeTab === 'domains' ? 'text-foreground' : 'hover:text-foreground')}
                             >
                                 <Globe size={14} />
                             </button>
-                            <button
+                             <button
                                 onClick={() => {
                                     setActiveTab('campfire');
                                     router.push('/campfire');
                                 }}
-                                className={clsx("transition-colors flex items-center justify-center p-1 rounded-md", activeTab === 'campfire' ? 'bg-[#1a1a1a] text-yellow-500' : 'text-[#444] hover:text-white')}
+                                className={clsx("transition-colors flex items-center justify-center p-1 rounded-md", activeTab === 'campfire' ? 'bg-secondary text-yellow-500' : 'text-muted-foreground hover:text-foreground')}
                                 title="Marketplace"
                             >
                                 <Tent size={16} />
@@ -153,29 +162,27 @@ function DashboardLayoutContent({
                 </div>
 
                 {/* Workspace Selector */}
-                <div className="flex-1 flex justify-center">
+                 <div className="absolute left-1/2 -translate-x-1/2 flex items-center h-full">
                     <Dropdown
                         align="left"
                         trigger={
-                            <div className="flex items-center gap-2 text-[#A0A0A0] hover:text-white transition-colors cursor-pointer group">
-                                {activeWorkspace?.logo_url ? (
-                                    <div className="w-5 h-5 rounded-md border border-white/[0.08] overflow-hidden">
-                                        <Image src={activeWorkspace.logo_url} alt="Logo" width={20} height={20} className="object-cover w-full h-full" />
-                                    </div>
-                                ) : (
-                                    <div className="w-5 h-5 rounded-md bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[10px] font-bold text-white uppercase overflow-hidden">
-                                        {activeWorkspace?.name.charAt(0) || 'W'}
-                                    </div>
-                                )}
+                            <div className="btn-outline px-2 py-1.5 border-neutral-200 cursor-pointer group">
+                                <div className="w-5 h-5 rounded-sm bg-foreground flex items-center justify-center text-[10px] font-bold text-background uppercase overflow-hidden">
+                                     {activeWorkspace?.logo_url ? (
+                                        <img src={activeWorkspace.logo_url} alt="Logo" className="object-cover w-full h-full" />
+                                    ) : (
+                                        activeWorkspace?.name.charAt(0) || 'W'
+                                    )}
+                                </div>
                                 <span className="text-sm font-medium font-sans">
                                     {activeWorkspace?.name || 'Workspace'}
                                 </span>
-                                <CaretDown size={14} className="text-[#444] group-hover:text-[#888] transition-colors" />
+                                <CaretDown size={14} className="text-muted-foreground group-hover:text-muted-foreground transition-colors" />
                             </div>
                         }
                     >
-                        <div className="px-3 py-2 border-b border-[#202020] mb-1 flex items-center justify-between group/title">
-                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Workspaces</p>
+                        <div className="px-3 py-2 border-b border-neutral-200 mb-1 flex items-center justify-between group/title">
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Workspaces</p>
                             {activeWorkspace?.owner_id === profile?.id && (
                                 <button 
                                     onClick={(e) => {
@@ -183,7 +190,7 @@ function DashboardLayoutContent({
                                         e.stopPropagation();
                                         setEditWorkspaceModalOpen(true);
                                     }}
-                                    className="text-[#444] hover:text-white transition-colors p-1"
+                                    className="text-muted-foreground hover:text-foreground transition-colors p-1"
                                     title="Workspace Settings"
                                 >
                                     <Gear size={12} weight="bold" />
@@ -192,33 +199,33 @@ function DashboardLayoutContent({
                         </div>
                         <div className="max-h-[300px] overflow-y-auto overflow-x-hidden py-1 px-1 flex flex-col gap-0.5">
                             {workspaces.map((ws) => (
-                                <DropdownItem 
+                                 <DropdownItem 
                                     key={ws.id}
                                     onClick={() => setActiveWorkspaceId(ws.id)}
                                     className={clsx(
                                         "w-full transition-all",
-                                        activeWorkspace?.id === ws.id ? "bg-[#1A1A1A] text-white" : "text-zinc-500 hover:text-zinc-300"
+                                        activeWorkspace?.id === ws.id ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
                                     )}
                                 >
                                     <div className={clsx(
                                         "w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold uppercase overflow-hidden",
-                                        activeWorkspace?.id === ws.id ? "bg-white text-black" : "bg-white/5 text-zinc-600 border border-white/[0.05]"
+                                        activeWorkspace?.id === ws.id ? "bg-foreground text-foreground" : "bg-foreground/5 text-zinc-600 border border-white/[0.05]"
                                     )}>
                                         {ws.logo_url ? (
-                                            <Image src={ws.logo_url} alt="Logo" width={20} height={20} className="object-cover w-full h-full" />
+                                            <img src={ws.logo_url} alt="Logo" className="object-cover w-full h-full" />
                                         ) : (
                                             ws.name.charAt(0)
                                         )}
                                     </div>
                                     <span className="truncate">{ws.name}</span>
                                     {activeWorkspace?.id === ws.id && (
-                                        <Check size={12} weight="bold" className="ml-auto text-white/50" />
+                                        <Check size={12} weight="bold" className="ml-auto text-foreground/50" />
                                     )}
                                 </DropdownItem>
                             ))}
                         </div>
-                        <div className="h-px bg-[#202020] my-1" />
-                        <DropdownItem onClick={() => setWorkspaceModalOpen(true)} className="text-zinc-400 hover:text-white">
+                         <div className="h-px bg-border my-1" />
+                        <DropdownItem onClick={() => setWorkspaceModalOpen(true)} className="text-muted-foreground hover:text-foreground">
                             <Plus size={16} weight="bold" />
                             New Workspace
                         </DropdownItem>
@@ -227,58 +234,78 @@ function DashboardLayoutContent({
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
-                    {!isPro && (
-                        <div 
-                            className="flex items-center gap-1.5 border border-[#333] bg-[#111] rounded px-2 py-0.5 pr-1.5 transition-colors cursor-pointer hover:border-[#555] group"
+                    {profileLoading ? (
+                        <Skeleton className="w-20 h-6" />
+                    ) : !isPro && (
+                         <div 
+                            className="flex items-center gap-1.5 border border-foreground/12 bg-card rounded px-2 py-0.5 pr-1.5 transition-colors cursor-pointer hover:border-foreground/20 group"
                             onClick={() => router.push('/account?tab=subscription')}
                         >
-                            <span className="text-xs font-sans font-medium text-[#A0A0A0] group-hover:text-white transition-colors">
-                                Free {projects.length}/3
+                            <span className="text-[10px] font-mono-hud font-bold text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
+                                {isPro ? 'Pro' : `Free ${projects.length}/3`}
                             </span>
                         </div>
                     )}
 
-                    <Dropdown
-                        align="right"
-                        trigger={
-                            <div className="w-6 h-6 rounded-full bg-[#111] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity border border-[#333] overflow-hidden">
-                                {profile?.avatar_url ? (
-                                    <Image src={profile.avatar_url} alt="Avatar" width={24} height={24} className="object-cover" />
-                                ) : (
-                                    <span className="text-xs text-[#D8D8D8] font-bold uppercase">
-                                        {(profile?.first_name || profile?.email || 'F').charAt(0)}
-                                    </span>
-                                )}
+                    {profileLoading ? (
+                        <Skeleton className="w-6 h-6 rounded-full" />
+                    ) : (
+                        <Dropdown
+                            align="right"
+                            trigger={
+                                <div className="w-6 h-6 rounded-full bg-card flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity border border-neutral-200 overflow-hidden">
+                                    {profile?.avatar_url ? (
+                                        <img src={profile.avatar_url} alt="Avatar" className="object-cover w-full h-full" />
+                                    ) : (
+                                        <span className="text-xs text-foreground font-bold uppercase">
+                                            {(profile?.first_name || profile?.email || 'F').charAt(0)}
+                                        </span>
+                                    )}
+                                </div>
+                            }
+                        >
+                            <div className="px-3 py-2 border-b border-foreground/12 mb-1">
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Account Settings</p>
                             </div>
-                        }
-                    >
-                        <div className="px-3 py-2 border-b border-[#202020] mb-1">
-                            <p className="text-xs font-bold text-[#444] uppercase tracking-wider">Account Settings</p>
-                        </div>
-                        <DropdownItem href="/account">
-                            <Gear size={14} />
-                            Settings
-                        </DropdownItem>
-                        {profile?.username && (
-                            <DropdownItem href={`/u/${profile.username}`}>
-                                <User size={14} />
-                                Creator Profile
+                            <DropdownItem href="/account">
+                                <Gear size={14} />
+                                Settings
                             </DropdownItem>
-                        )}
-                        <DropdownItem onClick={handleLogout} className="text-red-400/80 hover:text-red-400">
-                            <SignOut size={14} />
-                            Log out
-                        </DropdownItem>
-                    </Dropdown>
+                            {profile?.username && (
+                                <DropdownItem href={`/u/${profile.username}`}>
+                                    <User size={14} />
+                                    Creator Profile
+                                </DropdownItem>
+                            )}
+                            <DropdownItem onClick={handleLogout} className="text-red-400/80 hover:text-red-400">
+                                <SignOut size={14} />
+                                Log out
+                            </DropdownItem>
+                        </Dropdown>
+                    )}
                 </div>
-            </div>
+            </motion.div>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex min-w-0 bg-[#000000] relative overflow-hidden">
-                {!isSettingsPath && <Sidebar activeTab={activeTab} />}
-                <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+            <main className="flex-1 flex min-w-0 bg-background relative overflow-hidden">
+                {!isSettingsPath && (
+                    <motion.div
+                        initial={{ x: -260, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                        className="flex h-full"
+                    >
+                        <Sidebar activeTab={activeTab} />
+                    </motion.div>
+                )}
+                <motion.div 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                    className="flex-1 flex flex-col min-w-0 overflow-hidden relative"
+                >
                     {children}
-                </div>
+                </motion.div>
             </main>
 
             {/* Modals */}

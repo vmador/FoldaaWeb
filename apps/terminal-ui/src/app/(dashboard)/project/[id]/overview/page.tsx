@@ -17,15 +17,15 @@ const AnalyticsCard = ({ title, value, percentage, points, color, isInverse, onC
         <div 
             onClick={onClick}
             className={clsx(
-                "bg-[#080808] border border-[#111] rounded-[10px] p-4 flex flex-col gap-1 group hover:border-[#1c1c1e] transition-all relative overflow-hidden h-[100px]",
+                "bg-neutral-50 border border-neutral-200 rounded-[10px] p-4 flex flex-col gap-1 group hover:bg-neutral-100 transition-all duration-300 relative overflow-hidden h-[100px]",
                 onClick && "cursor-pointer active:scale-[0.98]"
             )}
         >
             <div className="flex justify-between items-start relative z-10">
                 <div className="flex flex-col">
-                    <span className="text-[#333] text-[9px] font-bold uppercase tracking-widest mb-1">{title}</span>
+                    <span className="text-muted-foreground/60 text-[9px] font-bold uppercase tracking-widest mb-1">{title}</span>
                     <div className="flex items-baseline gap-2">
-                        <span className="text-[#CCC] text-2xl font-bold tracking-tight">{value}</span>
+                        <span className="text-foreground text-2xl font-bold tracking-tight">{value}</span>
                         <div className={clsx(
                             "flex items-center text-[9px] font-bold px-1 py-0.5 rounded",
                             percentage.startsWith('+') ? (isInverse ? "bg-red-500/5 text-red-500/60" : "bg-green-500/5 text-green-500/60") : 
@@ -35,7 +35,7 @@ const AnalyticsCard = ({ title, value, percentage, points, color, isInverse, onC
                         </div>
                     </div>
                 </div>
-                <div className="w-8 h-8 rounded-lg bg-[#111] border border-[#1A1A1A] flex items-center justify-center text-[#222] group-hover:text-[#444] transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-muted-foreground/20 group-hover:text-muted-foreground/60 transition-colors">
                     <Activity className="w-3.5 h-3.5" />
                 </div>
             </div>
@@ -48,7 +48,7 @@ const AnalyticsCard = ({ title, value, percentage, points, color, isInverse, onC
 };
 
 const Sparkline = ({ points, color }: { points: number[], color: string }) => {
-    if (!points || points.length < 2) return <div className="h-full w-full bg-[#111]/20 animate-pulse" />;
+    if (!points || points.length < 2) return <div className="h-full w-full bg-card/20 animate-pulse" />;
     
     const max = Math.max(...points) || 1;
     const min = Math.min(...points);
@@ -369,6 +369,22 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             // Derive subdomain directly from name to ensure they stay in sync
             // and bypass the problematic 'app' fallback in the cloud.
             const subdomain = (project.name || 'unregistered').trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+            const worker_url = `https://${subdomain}.foldaa.com`;
+
+            // Consolidate updates to prevent race conditions and ensure all fields are set
+            const { error: updateError } = await supabase
+                .from('projects')
+                .update({ 
+                    subdomain, 
+                    worker_url,
+                    status: 'deploying'
+                })
+                .eq('id', projectId);
+
+            if (updateError) {
+                console.error('Initial database update failed:', updateError);
+                throw new Error(`Failed to initialize deployment state: ${updateError.message}`);
+            }
 
             // Initiate redeploy with explicit naming to prevent subdomain changes
             const { error: functionError } = await supabase.functions.invoke('deploy-project', {
@@ -377,7 +393,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     action: 'deploy',
                     project_data: {
                         name: project.name,
-                        subdomain: subdomain
+                        subdomain,
+                        worker_url
                     }
                 }
             });
@@ -612,7 +629,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
 
     if (projectLoading) {
         return (
-            <div className="flex items-center gap-2 text-[#444] text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 <span>Loading overview...</span>
             </div>
@@ -637,8 +654,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         const projectIcon = project.icon_512_url || project.icon_192_url || project.apple_touch_icon_url || project.favicon_url;
                         return (
                             <div 
-                                className="w-12 h-12 rounded-[10px] flex-shrink-0 flex items-center justify-center overflow-hidden bg-[#111] border border-[#222] shadow-xl transition-transform hover:scale-105"
-                                style={{ backgroundColor: projectIcon ? '#000' : (project.theme_color || '#111') }}
+                                className="w-12 h-12 rounded-[10px] flex-shrink-0 flex items-center justify-center overflow-hidden bg-neutral-100 border border-neutral-200 shadow-sm transition-transform hover:scale-105"
+                                style={{ backgroundColor: projectIcon ? 'transparent' : (project.theme_color || 'var(--secondary)') }}
                             >
                                 {projectIcon ? (
                                     <img 
@@ -647,7 +664,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                         className="w-full h-full object-cover" 
                                     />
                                 ) : (
-                                    <span className="font-bold text-white/20 text-xl select-none">
+                                    <span className="font-bold text-foreground/20 text-xl select-none">
                                         {project.name.charAt(0).toUpperCase()}
                                     </span>
                                 )}
@@ -670,19 +687,18 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                 setIsEditingName(false);
                                             }
                                         }}
-                                        className="bg-[#1C1C1E] border border-[#333] rounded px-2 py-0.5 text-white font-bold text-xl outline-none focus:border-white/20"
+                                         className="bg-secondary border border-border rounded px-2 py-0.5 text-foreground font-bold text-xl outline-none focus:border-border/80"
                                     />
                                 </div>
                             ) : (
                                 <h1 
                                     onClick={() => setIsEditingName(true)}
-                                    className="text-white font-bold text-2xl tracking-tight cursor-text hover:text-white/60 transition-colors"
+                                    className="text-foreground font-bold text-2xl tracking-tight cursor-text hover:text-foreground/60 transition-colors"
                                 >
-                                    {project.name}
                                 </h1>
                             )}
                         </div>
-                        <p className="text-[#555] text-xs font-medium tracking-wide">
+                        <p className="text-muted-foreground/60 text-xs font-medium tracking-wide">
                             {project.framework || 'PWA Experience'} Dashboard
                         </p>
                     </div>
@@ -690,8 +706,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
 
                 <div className="flex items-center gap-6">
                     <div className="flex flex-col items-end">
-                        <span className="text-[#333] text-[9px] font-bold tracking-[0.2em] uppercase">Visibility</span>
-                        <p className="text-[10px] text-[#444] leading-tight">Publish on Store...</p>
+                        <span className="text-muted-foreground/40 text-[9px] font-bold tracking-[0.2em] uppercase">Visibility</span>
+                        <p className="text-[10px] text-muted-foreground/60 leading-tight">Publish on Store...</p>
                     </div>
                     {(() => {
                         const listing = project.marketplace_listings?.[0];
@@ -704,10 +720,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 onClick={handleTogglePublish}
                                 disabled={isPublishing}
                                 className={clsx(
-                                    "flex items-center gap-2 px-3 py-1.5 rounded-[10px] font-bold text-xs shadow-sm transition-all duration-300 group",
-                                    isPublished 
-                                        ? "bg-[#1c1c1e] border border-green-500/30 text-white shadow-[0_0_15px_rgba(34,197,94,0.1)] hover:border-green-500/50" 
-                                        : "bg-[#111] border border-[#222] text-[#444] hover:border-[#333] hover:text-[#666]"
+                                    "btn-outline",
+                                     isPublished && "bg-neutral-100" 
                                 )}
                             >
                                 <span className={clsx(isPublishing && "opacity-0")}>
@@ -715,13 +729,13 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 </span>
                                 {isPublishing ? (
                                     <div className="absolute inset-x-0 flex justify-center">
-                                        <Loader2 className="w-3 h-3 animate-spin text-white" />
+                                        <Loader2 className="w-3 h-3 animate-spin text-foreground" />
                                     </div>
                                 ) : (
                                     isPublished ? (
-                                        <Check className="w-3.5 h-3.5 text-green-400 animate-in zoom-in duration-500 group-hover:scale-110 transition-transform" />
+                                        <Check className="w-3.5 h-3.5 text-brand-500 animate-in zoom-in duration-500 group-hover:scale-110 transition-transform" />
                                     ) : (
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[#333] group-hover:bg-white transition-colors" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 group-hover:bg-muted-foreground transition-colors" />
                                     )
                                 )}
                             </button>
@@ -733,19 +747,19 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             {/* 2. PWA Settings & Test Section */}
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3 px-1">
-                    <h2 className="text-white font-bold text-base tracking-tight">PWA Settings</h2>
-                    <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[#1c1c1e] border border-[#2a2a2e] rounded-full text-[9px] font-bold text-[#666] tracking-widest uppercase">
+                    <h2 className="text-foreground font-bold text-base tracking-tight">PWA Settings</h2>
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 bg-neutral-100 border border-neutral-200 rounded-full text-[9px] font-bold text-muted-foreground tracking-widest uppercase">
                         <span>Viewport Size</span>
-                        <div className="w-1 h-1 rounded-full bg-white/40 animate-pulse" />
-                        <span className="text-white/60">PWA</span>
+                        <div className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" />
+                        <span className="text-foreground/60">PWA</span>
                     </div>
                     <ChevronRight 
-                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        className="w-3.5 h-3.5 text-muted-foreground/40 cursor-pointer hover:text-foreground transition-colors" 
                         onClick={() => router.push(`/project/${projectId}/banner`)}
                     />
                 </div>
 
-                <div className="flex items-center justify-center gap-16 bg-black border border-[#111] rounded-[10px] p-10 relative overflow-hidden group min-h-[320px]">
+                <div className="flex items-center justify-center gap-16 bg-neutral-50 border border-neutral-200 rounded-[10px] p-10 relative overflow-hidden group/card hover:bg-neutral-100 transition-all min-h-[320px]">
                     {/* Background subtle glow removed per user request for neutral aesthetic */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 pointer-events-none" />
                     
@@ -755,7 +769,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             <img 
                                 src="/images/iphone-mockup.png" 
                                 alt="iPhone Mockup" 
-                                className="w-full h-full object-cover pointer-events-none drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+                                className="w-full h-full object-cover pointer-events-none drop-shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]"
                             />
                             <div 
                                 className="absolute overflow-hidden rounded-[22%] shadow-2xl transition-transform duration-500 hover:scale-105"
@@ -764,7 +778,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     left: '48.01px',
                                     width: '43.08px',
                                     aspectRatio: '1/1',
-                                    backgroundColor: (project.icon_512_url || project.icon_192_url || project.apple_touch_icon_url || project.favicon_url) ? '#000' : (project.theme_color || '#111')
+                                    backgroundColor: (project.icon_512_url || project.icon_192_url || project.apple_touch_icon_url || project.favicon_url) ? 'transparent' : (project.theme_color || 'var(--secondary)')
                                 }}
                             >
                                 {(() => {
@@ -776,7 +790,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                             className="w-full h-full object-cover" 
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-white/20 font-bold text-xs select-none">
+                                        <div className="w-full h-full flex items-center justify-center text-foreground/20 font-bold text-xs select-none">
                                             {project.name.charAt(0).toUpperCase()}
                                         </div>
                                     );
@@ -784,23 +798,23 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
                         <div className="mt-3 flex flex-col items-center">
-                            <span className="text-[#333] text-[9px] font-bold tracking-[0.2em] uppercase">PREVIEW</span>
-                            <span className="text-[#555] text-[9px] font-mono">{project.name.toLowerCase()}.app</span>
+                            <span className="text-muted-foreground/40 text-[9px] font-bold tracking-[0.2em] uppercase">PREVIEW</span>
+                            <span className="text-muted-foreground/60 text-[9px] font-mono">{project.name?.toLowerCase().replace(/[^a-z0-9-]/g, '-')}.app</span>
                         </div>
                     </div>
 
                     {/* QR Code Testing */}
                     <div className="flex flex-col gap-5 items-center">
                         <div className="flex flex-col items-center gap-1.5 text-center">
-                            <h3 className="text-white font-bold text-base tracking-tight">Scan to test</h3>
-                            <p className="text-[#555] text-[11px] max-w-[160px] leading-relaxed">View your PWA directly on your device.</p>
+                            <h3 className="text-foreground font-bold text-base tracking-tight">Scan to test</h3>
+                            <p className="text-muted-foreground/60 text-[11px] max-w-[160px] leading-relaxed">View your PWA directly on your device.</p>
                         </div>
-                        <div className="p-3 bg-black border border-[#111] rounded-[10px] shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                        <div className="p-3 bg-white rounded-[10px] shadow-2xl group-hover:scale-105 transition-transform duration-500 border border-border">
                             <QRCodeCanvas 
                                 value={project.worker_url || `https://${project.subdomain}.foldaa.com`} 
                                 size={114}
-                                bgColor="#000000"
-                                fgColor="#ffffff"
+                                bgColor="#ffffff"
+                                fgColor="#000000"
                                 level="H"
                             />
                         </div>
@@ -811,36 +825,36 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
             {/* 3. Web Experience Section */}
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between px-1">
-                    <h2 className="text-white font-bold text-base tracking-tight">Web Experience</h2>
+                    <h2 className="text-foreground font-bold text-base tracking-tight">Web Experience</h2>
                     <ChevronRight 
-                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-foreground/60 transition-colors" 
                         onClick={() => router.push(`/project/${projectId}/domains`)}
                     />
                 </div>
                 
-                <div className="flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-colors">
+                <div className="flex items-center justify-between p-4 bg-card border border-border rounded-[10px] group hover:border-border/80 transition-colors">
                     <div className="flex items-center gap-4">
-                        <div className="w-9 h-9 rounded-[8px] bg-[#111] border border-[#222] flex items-center justify-center text-[#444]">
+                        <div className="w-9 h-9 rounded-[8px] bg-background border border-border flex items-center justify-center text-muted-foreground">
                             <Globe className="w-4 h-4" />
                         </div>
                         <div className="flex flex-col gap-0.5">
                             <div className="flex items-center gap-2">
-                                <span className="text-[#CCC] font-bold tracking-tight text-sm">{(project.worker_url || `${project.subdomain}.foldaa.com`).replace(/^https?:\/\//, '')}</span>
+                                <span className="text-foreground font-bold tracking-tight text-sm">{(project.worker_url || `${project.subdomain}.foldaa.com`).replace(/^https?:\/\//, '')}</span>
                                 <div className="flex items-center gap-1 px-1.5 py-0.5 bg-green-500/10 rounded-md text-[8px] font-bold text-green-500 uppercase tracking-widest">
                                     <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
                                     <span>Active</span>
                                 </div>
                             </div>
-                            <span className="text-[#333] text-[10px] font-medium tracking-wide">Automatic deployment detecting</span>
+                            <span className="text-muted-foreground/60 text-[10px] font-medium tracking-wide">Automatic deployment detecting</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-[#333] text-[10px] font-mono">{formatDistanceToNow(new Date(project.updated_at || project.created_at), { addSuffix: true })}</span>
+                        <span className="text-muted-foreground/40 text-[10px] font-mono">{formatDistanceToNow(new Date(project.updated_at || project.created_at), { addSuffix: true })}</span>
                         <div className="flex items-center gap-2">
                             <button 
                                 disabled={actionLoading === 'redeploy'}
                                 onClick={handleRedeploy}
-                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors flex items-center gap-2 disabled:opacity-50"
+                                className="btn-outline text-[11px] disabled:opacity-50"
                             >
                                 {actionLoading === 'redeploy' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                                 <span>Redeploy</span>
@@ -848,17 +862,17 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             <button 
                                 disabled={actionLoading === 'update-brand'}
                                 onClick={handleUpdateBrand}
-                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors flex items-center gap-2 disabled:opacity-50"
+                                className="btn-outline text-[11px] disabled:opacity-50"
                             >
                                 {actionLoading === 'update-brand' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                                 <span>Regenerate Brand</span>
                             </button>
-                            <button className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-[#AAA] transition-colors">Edit</button>
+                            <button className="btn-outline text-[11px]">Edit</button>
                             <a 
                                 href={project.worker_url || `https://${project.subdomain}.foldaa.com`} 
                                 target="_blank" 
                                 rel="noreferrer" 
-                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#666] text-[11px] font-bold hover:bg-[#111] hover:text-white transition-colors flex items-center gap-2"
+                                className="btn-outline text-[11px]"
                             >
                                 <span>Open Live</span>
                                 <ExternalLink className="w-2.5 h-2.5" />
@@ -870,14 +884,14 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
 
 
             {/* 4. Native Platforms Section */}
-            <div className="flex flex-col gap-6 pt-4 border-t border-[#111]/50">
+            <div className="flex flex-col gap-6 pt-4 border-t border-border">
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-baseline gap-3">
-                        <h2 className="text-white font-bold text-base tracking-tight">Native Platforms</h2>
-                        <span className="text-[#333] text-[10px] font-bold uppercase tracking-[0.2em]">Desktop & Mobile</span>
+                        <h2 className="text-foreground font-bold text-base tracking-tight">Native Platforms</h2>
+                        <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-[0.2em]">Desktop & Mobile</span>
                     </div>
                     <ChevronRight 
-                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        className="w-3.5 h-3.5 text-muted-foreground/60 cursor-pointer hover:text-foreground transition-colors" 
                         onClick={() => router.push(`/project/${projectId}/release`)}
                     />
                 </div>
@@ -886,11 +900,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     {/* 4.1 macOS Build Section */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between px-1">
-                            <span className="text-[#555] text-[10px] font-bold uppercase tracking-widest">macOS</span>
+                            <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest">macOS</span>
                             {macBuild?.status === 'ready' && (
                                 <div className="flex items-center gap-1.5">
                                     <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                    <span className="text-[#333] text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
+                                    <span className="text-muted-foreground/60 text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
                                         Last build: {formatDistanceToNow(new Date(macBuild.updated_at), { addSuffix: true })}
                                     </span>
                                 </div>
@@ -907,35 +921,36 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                             <div 
                                 onClick={() => router.push(`/project/${projectId}/release`)}
                                 className={clsx(
-                                    "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
-                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-white/20 bg-white/[0.02]"
+                                    "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99] group/card",
+                                    "hover:border-border/40 hover:bg-secondary/22",
+                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-border/40 bg-secondary/30"
                                 )}
                             >
                                 {/* Animated Progress Bar */}
                                 {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
-                                    <div className="absolute bottom-0 left-0 h-[1.5px] bg-white animate-[progress_3s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '40%' }} />
+                                    <div className="absolute bottom-0 left-0 h-[1.5px] bg-foreground animate-[progress_3s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '40%' }} />
                                 )}
 
                                 <div className="flex flex-col gap-6 w-full">
                                     <div className="flex items-center justify-between w-full">
                                         <div className="flex items-center gap-4">
                                             <div className={clsx(
-                                                "w-10 h-10 rounded-[10px] bg-[#111] border border-[#222] flex items-center justify-center transition-all",
-                                                (macBuild?.status === 'building' || macBuild?.status === 'pending') && "animate-pulse border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                                "w-10 h-10 rounded-[10px] bg-secondary border border-border flex items-center justify-center transition-all",
+                                                (macBuild?.status === 'building' || macBuild?.status === 'pending') && "animate-pulse border-border/40 shadow-sm"
                                             )}>
                                                 <Monitor className={clsx(
                                                     "w-5 h-5 transition-colors",
-                                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') ? "text-white/60" : "text-white"
+                                                    (macBuild?.status === 'building' || macBuild?.status === 'pending') ? "text-muted-foreground/60" : "text-foreground"
                                                 )} />
                                             </div>
                                             <div className="flex flex-col gap-0.5">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-[#CCC] font-bold tracking-tight text-sm">macOS Application</span>
+                                                    <span className="text-foreground font-bold tracking-tight text-sm">macOS Application</span>
                                                     {(macBuild?.status === 'building' || macBuild?.status === 'pending') && (
-                                                        <span className="text-white/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
+                                                        <span className="text-muted-foreground/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
                                                     )}
                                                 </div>
-                                                <span className="text-[#555] text-[11px] font-medium tracking-wide">Build a native installer (DMG) for your project.</span>
+                                                <span className="text-muted-foreground/60 text-[11px] font-medium tracking-wide">Build a native installer (DMG) for your project.</span>
                                             </div>
                                         </div>
 
@@ -946,8 +961,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                 className={clsx(
                                                     "px-4 py-2 rounded-[8px] text-[11px] font-black transition-all flex items-center gap-2 disabled:opacity-50",
                                                     macBuild?.status === 'ready' 
-                                                        ? "bg-black/40 border border-[#111] text-[#444] hover:text-[#666]" 
-                                                        : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                                                        ? "bg-secondary border border-border text-muted-foreground hover:bg-secondary/80" 
+                                                        : "bg-foreground border border-foreground/10 text-background hover:bg-foreground/90"
                                                 )}
                                             >
                                                 <>{macBuild?.status === 'ready' ? 'Rebuild App' : 'Build Mac App'}</>
@@ -957,7 +972,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                 <a 
                                                     href={macBuild.dmg_url}
                                                     download
-                                                    className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all flex items-center gap-2"
+                                                    className="px-4 py-2 rounded-[8px] bg-secondary border border-border text-foreground text-[11px] font-black hover:bg-secondary/80 transition-all flex items-center gap-2"
                                                 >
                                                     <span>Download</span>
                                                     <Download className="w-2.5 h-2.5" />
@@ -967,13 +982,13 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     </div>
 
                                     {/* Build Type Switcher */}
-                                    <div className="flex items-center gap-3 pt-4 border-t border-[#111]">
-                                        <div className="flex gap-2 p-1 bg-black/50 border border-[#111] rounded-[10px]">
+                                    <div className="flex items-center gap-3 pt-4 border-t border-border">
+                                        <div className="flex gap-2 p-1 bg-background border border-border rounded-[10px]">
                                             <button 
                                                 onClick={() => setSelectedBuildMode('fast')}
                                                 className={clsx(
                                                     "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2",
-                                                    selectedBuildMode === 'fast' ? "bg-white/10 text-white border border-white/20" : "text-[#444]"
+                                                    selectedBuildMode === 'fast' ? "bg-secondary text-foreground border border-border" : "text-muted-foreground hover:text-foreground"
                                                 )}
                                             >
                                                 Fast Build
@@ -982,7 +997,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                 onClick={() => setSelectedBuildMode('pro')}
                                                 className={clsx(
                                                     "px-3 py-1.5 rounded-[7px] text-[10px] font-bold transition-all flex items-center gap-2",
-                                                    selectedBuildMode === 'pro' ? "bg-white/10 text-white border border-white/20" : "text-[#444]"
+                                                    selectedBuildMode === 'pro' ? "bg-secondary text-foreground border border-border" : "text-muted-foreground hover:text-foreground"
                                                 )}
                                             >
                                                 Pro Build
@@ -991,7 +1006,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                         {selectedBuildMode === 'pro' && (
                                             <button 
                                                 onClick={() => setShowProSettings(!showProSettings)}
-                                                className="px-3 py-1.5 rounded-[8px] border border-[#1A1A1A] text-[#444] text-[10px] font-bold hover:border-[#333] transition-all"
+                                                className="px-3 py-1.5 rounded-[8px] border border-border text-muted-foreground text-[10px] font-bold hover:bg-secondary hover:text-foreground transition-all"
                                             >
                                                 Configure Settings
                                             </button>
@@ -1003,105 +1018,105 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
 
                         {/* Pro Settings Configurator (Nested) */}
                         {selectedBuildMode === 'pro' && showProSettings && macConfig && (
-                            <div className="flex flex-col gap-8 p-6 bg-[#050505] border border-[#111] rounded-[12px] animate-in slide-in-from-top-2 duration-300">
+                            <div className="flex flex-col gap-8 p-6 bg-card border border-border rounded-[12px] animate-in slide-in-from-top-2 duration-300">
                                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
                                     <div className="flex flex-col gap-8">
                                         {/* 1. Window & Dimensions */}
                                         <div className="flex flex-col gap-4">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                                                <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Window & Layout</h3>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-foreground/40" />
+                                                <h3 className="text-[11px] font-black text-foreground/40 uppercase tracking-[0.1em]">Window & Layout</h3>
                                             </div>
                                             <div className="grid grid-cols-2 gap-6">
                                                 <div className="flex flex-col gap-2">
-                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Width</label>
+                                                    <label className="text-[10px] font-bold text-muted-foreground uppercase">Width</label>
                                                     <div className="relative">
                                                         <input 
                                                             type="number"
                                                             value={macConfig.window?.width}
                                                             onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, width: parseInt(e.target.value)}})}
-                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors"
+                                                            className="w-full bg-background border border-border rounded-[8px] px-3 py-2 text-foreground text-xs outline-none focus:border-border/40 transition-colors"
                                                         />
-                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
+                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-muted-foreground/40">PX</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col gap-2">
-                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Height</label>
+                                                    <label className="text-[10px] font-bold text-muted-foreground uppercase">Height</label>
                                                     <div className="relative">
                                                         <input 
                                                             type="number"
                                                             value={macConfig.window?.height}
                                                             onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, height: parseInt(e.target.value)}})}
-                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors"
+                                                            className="w-full bg-background border border-border rounded-[8px] px-3 py-2 text-foreground text-xs outline-none focus:border-border/40 transition-colors"
                                                         />
-                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-[#222]">PX</span>
+                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-muted-foreground/40">PX</span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-6 pt-1">
-                                                <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                    <input 
-                                                        type="checkbox"
-                                                        checked={macConfig.window?.frameless}
-                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, frameless: e.target.checked}})}
-                                                        className="sr-only"
-                                                    />
-                                                    <div className={clsx(
-                                                        "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                        macConfig.window?.frameless ? "bg-white border-white/40" : "bg-black"
-                                                    )}>
-                                                        {macConfig.window?.frameless && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                    </div>
-                                                    <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Frameless</span>
-                                                </label>
-                                                <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                    <input 
-                                                        type="checkbox"
-                                                        checked={macConfig.window?.transparent}
-                                                        onChange={(e) => setMacConfig({...macConfig, window: {...macConfig.window, transparent: e.target.checked}})}
-                                                        className="sr-only"
-                                                    />
-                                                    <div className={clsx(
-                                                        "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                        macConfig.window?.transparent ? "bg-white border-white/40" : "bg-black"
-                                                    )}>
-                                                        {macConfig.window?.transparent && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                    </div>
-                                                    <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888] transition-colors">Transparent</span>
-                                                </label>
+                                                <div className="flex items-center gap-3">
+                                                    <button 
+                                                        onClick={() => setMacConfig({...macConfig, window: {...macConfig.window, frameless: !macConfig.window?.frameless}})}
+                                                        className={clsx(
+                                                            "w-8 h-4 rounded-full relative transition-all duration-300",
+                                                            macConfig.window?.frameless ? "bg-brand-500/20" : "bg-black/50"
+                                                        )}
+                                                    >
+                                                        <div className={clsx(
+                                                            "absolute top-0.5 left-0.5 w-3 h-3 rounded-full transition-all duration-300",
+                                                            macConfig.window?.frameless ? "translate-x-4 bg-black dark:bg-white" : "translate-x-0 bg-black dark:bg-white"
+                                                        )} />
+                                                    </button>
+                                                    <span className="text-[11px] font-bold text-muted-foreground/60 transition-colors">Frameless</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <button 
+                                                        onClick={() => setMacConfig({...macConfig, window: {...macConfig.window, transparent: !macConfig.window?.transparent}})}
+                                                        className={clsx(
+                                                            "w-8 h-4 rounded-full relative transition-all duration-300",
+                                                            macConfig.window?.transparent ? "bg-brand-500/20" : "bg-black/50"
+                                                        )}
+                                                    >
+                                                        <div className={clsx(
+                                                            "absolute top-0.5 left-0.5 w-3 h-3 rounded-full transition-all duration-300",
+                                                            macConfig.window?.transparent ? "translate-x-4 bg-black dark:bg-white" : "translate-x-0 bg-black dark:bg-white"
+                                                        )} />
+                                                    </button>
+                                                    <span className="text-[11px] font-bold text-muted-foreground/60 transition-colors">Transparent</span>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* 2. Visual Effects & Toolbar */}
-                                        <div className="grid grid-cols-2 gap-10 border-t border-[#111] pt-6">
+                                        <div className="grid grid-cols-2 gap-10 border-t border-border pt-6">
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                                                    <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Visual Effects</h3>
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-foreground/40" />
+                                                    <h3 className="text-[11px] font-black text-foreground/40 uppercase tracking-[0.1em]">Visual Effects</h3>
                                                 </div>
                                                 <div className="flex flex-col gap-4">
-                                                    <label className="flex items-center gap-2.5 cursor-pointer group">
-                                                        <input 
-                                                            type="checkbox"
-                                                            checked={macConfig.vibrancy?.enabled}
-                                                            onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, enabled: e.target.checked}})}
-                                                            className="sr-only"
-                                                        />
-                                                        <div className={clsx(
-                                                            "w-3.5 h-3.5 rounded-full border border-[#222] transition-all flex items-center justify-center",
-                                                            macConfig.vibrancy?.enabled ? "bg-white border-white/40" : "bg-black"
-                                                        )}>
-                                                            {macConfig.vibrancy?.enabled && <Check className="w-2 h-2 text-black stroke-[4]" />}
-                                                        </div>
-                                                        <span className="text-[11px] font-bold text-[#555] group-hover:text-[#888]">Enable Blur (Vibrancy)</span>
-                                                    </label>
+                                                    <div className="flex items-center gap-3">
+                                                        <button 
+                                                            onClick={() => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, enabled: !macConfig.vibrancy?.enabled}})}
+                                                            className={clsx(
+                                                                "w-8 h-4 rounded-full relative transition-all duration-300",
+                                                                macConfig.vibrancy?.enabled ? "bg-brand-500/20" : "bg-black/50"
+                                                            )}
+                                                        >
+                                                            <div className={clsx(
+                                                                "absolute top-0.5 left-0.5 w-3 h-3 rounded-full transition-all duration-300",
+                                                                macConfig.vibrancy?.enabled ? "translate-x-4 bg-black dark:bg-white" : "translate-x-0 bg-black dark:bg-white"
+                                                            )} />
+                                                        </button>
+                                                        <span className="text-[11px] font-bold text-muted-foreground/60">Enable Blur (Vibrancy)</span>
+                                                    </div>
                                                     <div className="flex flex-col gap-2">
-                                                        <label className="text-[10px] font-bold text-[#444] uppercase">Blur Type</label>
+                                                        <label className="text-[10px] font-bold text-muted-foreground uppercase">Blur Type</label>
                                                         <select 
                                                             value={macConfig.vibrancy?.type}
                                                             disabled={!macConfig.vibrancy?.enabled}
                                                             onChange={(e) => setMacConfig({...macConfig, vibrancy: {...macConfig.vibrancy, type: e.target.value}})}
-                                                            className="w-full bg-black border border-[#111] rounded-[8px] px-3 py-2 text-white text-xs outline-none focus:border-white/20 transition-colors disabled:opacity-30"
+                                                            className="w-full bg-background border border-border rounded-[8px] px-3 py-2 text-foreground text-xs outline-none focus:border-border/40 transition-colors disabled:opacity-30"
                                                         >
                                                             <option value="under-window">Under Window</option>
                                                             <option value="fullscreen-ui">Fullscreen UI</option>
@@ -1114,11 +1129,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
 
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                                                    <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.1em]">Toolbar Style</h3>
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-foreground/40" />
+                                                    <h3 className="text-[11px] font-black text-foreground/40 uppercase tracking-[0.1em]">Toolbar Style</h3>
                                                 </div>
                                                 <div className="flex flex-col gap-2">
-                                                    <label className="text-[10px] font-bold text-[#444] uppercase">Mac Traffic Lights</label>
+                                                    <label className="text-[10px] font-bold text-muted-foreground uppercase">Mac Traffic Lights</label>
                                                     <div className="grid grid-cols-1 gap-2">
                                                         {['Default', 'Hidden', 'Overlay'].map((style) => (
                                                             <button
@@ -1127,8 +1142,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                                 className={clsx(
                                                                     "px-3 py-2 rounded-[8px] border text-[10px] font-bold text-left transition-all",
                                                                     macConfig.toolbar?.style === style 
-                                                                        ? "bg-white/10 border-white/20 text-white" 
-                                                                        : "bg-black border-[#111] text-[#444] hover:border-[#222]"
+                                                                        ? "bg-secondary border-border/60 text-foreground" 
+                                                                        : "bg-background border-border text-muted-foreground hover:border-border/60"
                                                                 )}
                                                             >
                                                                 {style}
@@ -1141,23 +1156,23 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     </div>
 
                                     {/* Live Visual Preview Side Panel */}
-                                    <div className="flex flex-col gap-4 bg-black/40 border border-[#111] rounded-[12px] p-6 relative overflow-hidden group/preview">
+                                    <div className="flex flex-col gap-4 bg-secondary/10 border border-border rounded-[12px] p-6 relative overflow-hidden group/preview">
                                         <div className="flex items-center justify-between mb-2">
-                                            <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[0.1em]">Visual Preview</h3>
-                                            <div className="px-1.5 py-0.5 rounded-md bg-[#111] border border-[#222] text-[8px] font-black text-[#666] uppercase tracking-widest">Live</div>
+                                            <h3 className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-[0.1em]">Visual Preview</h3>
+                                            <div className="px-1.5 py-0.5 rounded-md bg-background border border-border text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest">Live</div>
                                         </div>
                                         
                                         {/* Mock macOS Window */}
                                         <div className="flex-1 flex items-center justify-center py-6 relative">
                                             {/* Mock Background (for vibrancy) */}
                                             <div className="absolute inset-0 z-0 opacity-40 select-none pointer-events-none">
-                                                <div className="w-full h-full bg-gradient-to-br from-white/5 via-black to-white/5 rounded-lg blur-xl" />
+                                                <div className="w-full h-full bg-gradient-to-br from-foreground/5 via-transparent to-foreground/5 rounded-lg blur-xl" />
                                             </div>
 
                                             <div className={clsx(
-                                                "relative w-full max-w-[200px] aspect-[1.4/1] bg-[#0A0A0A] border border-[#222] rounded-[10px] shadow-2xl transition-all duration-500 overflow-hidden",
+                                                "relative w-full max-w-[200px] aspect-[1.4/1] bg-card border border-border rounded-[10px] shadow-xl transition-all duration-500 overflow-hidden",
                                                 macConfig.window?.transparent && "opacity-80",
-                                                macConfig.vibrancy?.enabled && "backdrop-blur-md bg-black/40"
+                                                macConfig.vibrancy?.enabled && "backdrop-blur-md bg-card/40"
                                             )}>
                                                 {/* Toolbar Area */}
                                                 {macConfig.toolbar?.style !== 'Hidden' && (
@@ -1174,25 +1189,25 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                                     </div>
                                                 )}
                                                 <div className="p-4 flex flex-col gap-2">
-                                                    <div className="w-full h-2 rounded-full bg-[#111]" />
-                                                    <div className="w-2/3 h-2 rounded-full bg-[#111]" />
+                                                    <div className="w-full h-2 rounded-full bg-card" />
+                                                    <div className="w-2/3 h-2 rounded-full bg-card" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#111]">
+                                <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
                                     <button 
                                         onClick={() => setShowProSettings(false)}
-                                        className="px-4 py-2 rounded-[8px] bg-black/40 border border-[#111] text-[#444] text-[11px] font-black hover:text-[#666] transition-all"
+                                        className="px-4 py-2 rounded-[8px] bg-secondary border border-border text-muted-foreground text-[11px] font-black hover:text-foreground transition-all"
                                     >
                                         Cancel
                                     </button>
                                     <button 
                                         onClick={handleSaveMacConfig}
                                         disabled={isSavingConfig}
-                                        className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all disabled:opacity-50"
+                                        className="px-4 py-2 rounded-[8px] bg-foreground border border-foreground/10 text-background text-[11px] font-black hover:bg-foreground/90 transition-all disabled:opacity-50"
                                     >
                                         {isSavingConfig ? 'Saving...' : 'Apply & Save Config'}
                                     </button>
@@ -1204,11 +1219,11 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                     {/* 4.2 iOS Build Section */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between px-1">
-                            <span className="text-[#555] text-[10px] font-bold uppercase tracking-widest">iOS</span>
+                            <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest">iOS</span>
                             {iosBuild?.status === 'completed' && (
                                 <div className="flex items-center gap-1.5">
                                     <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                    <span className="text-[#333] text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
+                                    <span className="text-muted-foreground/60 text-[9px] font-mono tracking-tighter uppercase whitespace-nowrap">
                                         Version: {iosBuild.version} ({iosBuild.build_number})
                                     </span>
                                 </div>
@@ -1218,32 +1233,32 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         <div 
                             onClick={() => router.push(`/project/${projectId}/release`)}
                             className={clsx(
-                                "flex items-center justify-between p-4 bg-[#080808] border border-[#111] rounded-[10px] group hover:border-[#1c1c1e] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
-                                (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "border-white/20 bg-white/[0.02]"
+                                "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] group hover:border-border/80 transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
+                                (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "border-border/40 bg-secondary/30"
                             )}
                         >
                             {(iosBuild?.status === 'building' || iosBuild?.status === 'pending') && (
-                                <div className="absolute bottom-0 left-0 h-[1.5px] bg-white animate-[progress_5s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '60%' }} />
+                                <div className="absolute bottom-0 left-0 h-[1.5px] bg-foreground animate-[progress_5s_infinite_ease-in-out] shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ width: '60%' }} />
                             )}
 
                             <div className="flex items-center gap-4">
                                 <div className={clsx(
-                                    "w-10 h-10 rounded-[10px] bg-[#111] border border-[#222] flex items-center justify-center transition-all",
-                                    (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "animate-pulse border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                    "w-10 h-10 rounded-[10px] bg-secondary border border-border flex items-center justify-center transition-all",
+                                    (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "animate-pulse border-border/40 shadow-sm"
                                 )}>
                                     <Smartphone className={clsx(
                                         "w-5 h-5 transition-colors",
-                                        (iosBuild?.status === 'building' || iosBuild?.status === 'pending') ? "text-white/60" : "text-white"
+                                        (iosBuild?.status === 'building' || iosBuild?.status === 'pending') ? "text-muted-foreground/60" : "text-foreground"
                                     )} />
                                 </div>
                                 <div className="flex flex-col gap-0.5">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[#CCC] font-bold tracking-tight text-sm">iOS Application</span>
+                                        <span className="text-foreground font-bold tracking-tight text-sm">iOS Application</span>
                                         {(iosBuild?.status === 'building' || iosBuild?.status === 'pending') && (
-                                            <span className="text-white/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
+                                            <span className="text-muted-foreground/40 text-[8px] font-black uppercase tracking-widest animate-pulse">Processing...</span>
                                         )}
                                     </div>
-                                    <span className="text-[#555] text-[11px] font-medium tracking-wide">Cloud-synced IPA build for Apple App Store release.</span>
+                                    <span className="text-muted-foreground/60 text-[11px] font-medium tracking-wide">Cloud-synced IPA build for Apple App Store release.</span>
                                 </div>
                             </div>
 
@@ -1254,8 +1269,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     className={clsx(
                                         "px-4 py-2 rounded-[8px] text-[11px] font-black transition-all flex items-center gap-2 disabled:opacity-50",
                                         iosBuild?.status === 'completed' 
-                                            ? "bg-black/40 border border-[#111] text-[#444] hover:text-[#666]" 
-                                            : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                                            ? "bg-secondary border border-border text-muted-foreground hover:bg-secondary/80" 
+                                            : "bg-foreground border border-foreground/10 text-background hover:bg-foreground/90"
                                     )}
                                 >
                                     {actionLoading === 'build-ios' || iosBuild?.status === 'pending' || iosBuild?.status === 'building' ? (
@@ -1269,7 +1284,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                     <a 
                                         href={iosBuild.ipa_url}
                                         target="_blank"
-                                        className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-white text-[11px] font-black hover:bg-white/10 transition-all flex items-center gap-2"
+                                        className="px-4 py-2 rounded-[8px] bg-secondary border border-border text-foreground text-[11px] font-black hover:bg-secondary/80 transition-all flex items-center gap-2"
                                     >
                                         <span>Download</span>
                                         <Download className="w-2.5 h-2.5" />
@@ -1281,15 +1296,14 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                 </div>
             </div>
 
-            {/* 4. Analytics Section */}
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-baseline gap-3">
-                        <h2 className="text-white font-bold text-base tracking-tight">Analytics</h2>
-                        <span className="text-[#333] text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
+                        <h2 className="text-foreground font-bold text-base tracking-tight">Analytics</h2>
+                        <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
                     </div>
                     <ChevronRight 
-                        className="w-3.5 h-3.5 text-[#222] cursor-pointer hover:text-white/60 transition-colors" 
+                        className="w-3.5 h-3.5 text-muted-foreground/40 cursor-pointer hover:text-foreground transition-colors" 
                         onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                 </div>
@@ -1300,7 +1314,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         value={formatNumber(analytics?.requests || 130)} 
                         percentage="+59200.00%" 
                         points={[10, 15, 12, 18, 14, 22, 19, 25, 23, 30, 28, 35, 32, 40]} 
-                        color="#ffffff" 
+                        color="var(--foreground)" 
                         onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                     <AnalyticsCard 
@@ -1308,7 +1322,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         value="1.25 ms" 
                         percentage="-12.50%" 
                         points={[40, 38, 42, 35, 37, 30, 33, 28, 30, 25, 27, 22, 24, 20]} 
-                        color="#ffffff" 
+                        color="var(--foreground)" 
                         isInverse
                         onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
@@ -1317,23 +1331,22 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         value={formatNumber(analytics?.visits || 0)} 
                         percentage="+8500.00%" 
                         points={[5, 8, 6, 10, 9, 15, 12, 18, 16, 22, 20, 25, 23, 30]} 
-                        color="#ffffff" 
+                        color="var(--foreground)" 
                         onClick={() => router.push(`/project/${projectId}/analytics`)}
                     />
                 </div>
             </div>
 
-            {/* 5. Store Analytics Section */}
             <div className="flex flex-col gap-4">
                 <div className="flex items-baseline gap-3 px-1">
-                    <h2 className="text-white/20 font-bold text-base tracking-tight">Store Analytics</h2>
-                    <span className="text-[#222] text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
+                    <h2 className="text-muted-foreground/20 font-bold text-base tracking-tight">Store Analytics</h2>
+                    <span className="text-muted-foreground/10 text-[10px] font-bold uppercase tracking-[0.2em]">Last 24 hours</span>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 opacity-30 grayscale cursor-pointer group hover:opacity-100 transition-opacity" onClick={() => router.push(`/project/${projectId}/store`)}>
-                    <AnalyticsCard title="Store Requests" value="0" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />
-                    <AnalyticsCard title="Sales" value="0%" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />
-                    <AnalyticsCard title="Revenue" value="$0.00" percentage="0.00%" points={[0, 0, 0, 0]} color="#444" />
+                    <AnalyticsCard title="Store Requests" value="0" percentage="0.00%" points={[0, 0, 0, 0]} color="var(--border)" />
+                    <AnalyticsCard title="Sales" value="0%" percentage="0.00%" points={[0, 0, 0, 0]} color="var(--border)" />
+                    <AnalyticsCard title="Revenue" value="$0.00" percentage="0.00%" points={[0, 0, 0, 0]} color="var(--border)" />
                 </div>
             </div>
         </div>

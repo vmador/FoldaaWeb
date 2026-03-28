@@ -64,7 +64,7 @@ export function ContextMenu({ x, y, onClose, children, className }: ContextMenuP
                 zIndex: 9999,
             }}
             className={clsx(
-                "min-w-[160px] bg-[#080808] border border-[#333336] rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-1 animate-in fade-in zoom-in-95 duration-100",
+                "min-w-[160px] bg-background border border-border rounded-lg shadow-xl py-1 animate-in fade-in zoom-in-95 duration-100",
                 className
             )}
             onClick={(e) => e.stopPropagation()}
@@ -95,7 +95,7 @@ export function ContextMenuItem({
             }}
             className={clsx(
                 "flex items-center gap-2 px-3 py-1.5 text-sm transition-colors cursor-pointer",
-                disabled ? "text-[#444] cursor-not-allowed" : "text-[#A0A0A0] hover:bg-[#111111] hover:text-white",
+                disabled ? "text-muted-foreground cursor-not-allowed" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 className
             )}
         >
@@ -105,7 +105,7 @@ export function ContextMenuItem({
 }
 
 export function ContextMenuSeparator() {
-    return <div className="h-px bg-[#333336] my-1 mx-1" />;
+    return <div className="h-px bg-secondary my-1 mx-1" />;
 }
 
 export function ContextMenuSubmenu({
@@ -130,8 +130,8 @@ export function ContextMenuSubmenu({
             <div
                 className={clsx(
                     "flex items-center justify-between gap-2 px-3 py-1.5 text-sm transition-colors cursor-pointer",
-                    disabled ? "text-[#444] cursor-not-allowed" : "text-[#A0A0A0] hover:bg-[#111111] hover:text-white",
-                    isOpen && "bg-[#111111] text-white"
+                    disabled ? "text-muted-foreground cursor-not-allowed" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                    isOpen && "bg-secondary text-foreground"
                 )}
             >
                 {label}
@@ -139,8 +139,8 @@ export function ContextMenuSubmenu({
             </div>
 
             {isOpen && (
-                <div
-                    className="absolute left-full top-0 ml-px min-w-[160px] bg-[#080808] border border-[#333336] rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-1"
+                 <div
+                    className="absolute left-full top-0 ml-px min-w-[160px] bg-background border border-border rounded-lg shadow-xl py-1"
                     style={{ marginTop: "-5px" }}
                 >
                     {children}

@@ -31,43 +31,7 @@ type ViewMode = "featured" | "all" | "categories"
 type PageView = "marketplace" | "project" | "developer"
 type SortOption = "trending" | "new" | "most_viewed" | "most_installed"
 
-// ── Theme Hook ───────────────────────────────────────────────────────────────
-const useFramerTheme = () => {
-    const [theme, setTheme] = React.useState<"light" | "dark">("dark")
-
-    React.useEffect(() => {
-        const getTheme = (): "light" | "dark" => {
-            const framerTheme = document.body.dataset.framerTheme
-            if (framerTheme === "dark" || framerTheme === "light") {
-                return framerTheme
-            }
-            if (
-                window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-            ) {
-                return "dark"
-            }
-            return "light"
-        }
-
-        setTheme(getTheme())
-
-        const observer = new MutationObserver(() => {
-            setTheme(getTheme())
-        })
-
-        observer.observe(document.body, {
-            attributes: true,
-            attributeFilter: ["data-framer-theme"],
-        })
-
-        return () => {
-            observer.disconnect()
-        }
-    }, [])
-
-    return theme
-}
+// ── Theme is managed via next-themes and Tailwind semantic classes ──
 
 // ── Utility Components ──────────────────────────────────────────────────────
 
@@ -93,34 +57,10 @@ const MarketplaceCard = ({ listing, onClick, onViewDeveloper, colors }: any) => 
     return (
         <div
             onClick={onClick}
-            style={{
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                borderRadius: "16px",
-                overflow: "hidden",
-                border: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-                padding: "16px",
-            }}
-            className="group hover:bg-white/5 active:scale-[0.98]"
+            className="group hover:bg-neutral-100 active:scale-[0.98] transition-all duration-200 p-4 rounded-2xl flex items-center gap-4 cursor-pointer"
         >
             {/* App Icon */}
-            <div
-                style={{
-                    width: "56px",
-                    height: "56px",
-
-                    borderRadius: "14px",
-                    overflow: "hidden",
-                    backgroundColor: "#1C1C1E",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    flexShrink: 0,
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.4)"
-                }}
-            >
+            <div className="w-14 h-14 rounded-xl overflow-hidden bg-neutral-50 border border-neutral-200 flex-shrink-0 shadow-lg">
                 {(() => {
                     const project = Array.isArray(listing.projects) ? listing.projects[0] : listing.projects;
                     const iconUrl = project?.icon_512_url || project?.icon_192_url || project?.favicon_url || listing.icon_url;
@@ -135,15 +75,7 @@ const MarketplaceCard = ({ listing, onClick, onViewDeveloper, colors }: any) => 
             </div>
 
             <div style={{ minWidth: 0, flex: 1 }}>
-                <h3
-                    style={{
-                        fontSize: "15px",
-                        fontWeight: "700",
-                        color: "white",
-                        margin: "0 0 2px 0",
-                        letterSpacing: "-0.01em"
-                    }}
-                >
+                <h3 className="text-[15px] font-bold text-foreground m-0 mb-0.5 tracking-tight">
                     {listing.title}
                 </h3>
                 <button
@@ -151,28 +83,16 @@ const MarketplaceCard = ({ listing, onClick, onViewDeveloper, colors }: any) => 
                         e.stopPropagation()
                         onViewDeveloper(listing.user_id, listing.profiles?.username)
                     }}
-                    style={{
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                        fontSize: "12px",
-                        color: "#666",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        fontWeight: "500"
-                    }}
-                    className="hover:text-white/60 transition-colors"
+                    className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors p-0 border-none bg-transparent cursor-pointer"
                 >
-                    <div className="w-4 h-4 rounded-full bg-[#1C1C1E] flex items-center justify-center overflow-hidden">
+                    <div className="w-4 h-4 rounded-full bg-neutral-100 flex items-center justify-center overflow-hidden">
                         {(() => {
                             const profile = Array.isArray(listing.profiles) ? listing.profiles[0] : listing.profiles;
                             const avatarUrl = profile?.avatar_url || profile?.profile_picture_url || profile?.avatar_path;
                             return avatarUrl ? (
-                                <img src={avatarUrl} className="w-full h-full object-cover" />
+                                <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
                             ) : (
-                                <User size={10} color="#666" />
+                                <User size={10} className="text-muted-foreground" />
                             );
                         })()}
                     </div>
@@ -184,7 +104,7 @@ const MarketplaceCard = ({ listing, onClick, onViewDeveloper, colors }: any) => 
 }
 
 // ── Featured Carousel (New Component) ─────────────────────────────────────────
-const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
+const FeaturedCarousel = ({ listings, onClick }: any) => {
     const featured = listings.slice(0, 3); // Take first 3 for carousel
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -196,13 +116,13 @@ const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
         <div style={{ marginBottom: "48px" }}>
             <div 
                 onClick={() => onClick(current)}
-                className="relative w-full aspect-[21/9] rounded-[22px] overflow-hidden cursor-pointer group shadow-2xl border border-white/[0.05]"
+                className="relative w-full aspect-[21/9] rounded-[22px] overflow-hidden cursor-pointer group shadow-2xl border border-border"
             >
                 {/* Holographic/Gradient Background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A2E] to-[#0A0A0B]" />
+                <div className="absolute inset-0 bg-gradient-to-br from-secondary/80 to-background" />
                 <div className="absolute inset-0 opacity-40 mix-blend-screen">
-                    <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[120%] bg-white/5 blur-[120px] rounded-full animate-pulse" />
-                    <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[100%] bg-white/5 blur-[100px] rounded-full" />
+                    <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[120%] bg-foreground/5 blur-[120px] rounded-full animate-pulse" />
+                    <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[100%] bg-foreground/5 blur-[100px] rounded-full" />
                 </div>
                 
                 {/* Banner Image (if available) */}
@@ -215,31 +135,31 @@ const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
                 )}
 
                 {/* Content Overlay */}
-                <div className="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+                <div className="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-background/90 via-background/20 to-transparent">
                     <div className="flex items-end justify-between gap-8">
                         <div className="flex items-center gap-4">
                             {/* Icon */}
-                            <div className="w-20 h-20 rounded-[20px] bg-[#1C1C1E] border border-white/10 shadow-2xl overflow-hidden p-0.5">
+                            <div className="w-20 h-20 rounded-[20px] bg-neutral-50 border border-neutral-200 shadow-2xl overflow-hidden p-0.5">
                                 {(() => {
                                     const project = Array.isArray(current.projects) ? current.projects[0] : current.projects;
                                     const iconUrl = project?.icon_512_url || project?.icon_192_url || project?.favicon_url || current.icon_url;
                                     return iconUrl ? (
                                         <img src={iconUrl} alt="" className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-white/10 font-bold text-lg">
+                                        <div className="w-full h-full flex items-center justify-center text-foreground/10 font-bold text-lg">
                                             {current.title.charAt(0)}
                                         </div>
                                     );
                                 })()}
                             </div>
                             <div className="space-y-2">
-                                <h2 className="text-lg font-extrabold text-white tracking-tight">{current.title}</h2>
-                                <p className="text-sm text-white/60 font-medium max-w-xl line-clamp-2 leading-relaxed">
+                                <h2 className="text-lg font-extrabold text-foreground tracking-tight">{current.title}</h2>
+                                <p className="text-sm text-foreground/60 font-medium max-w-xl line-clamp-2 leading-relaxed">
                                     {current.tagline || current.description}
                                 </p>
                             </div>
                         </div>
-                        <button className="px-10 py-4 bg-white text-black text-sm font-black rounded-full hover:bg-white/90 transition-all hover:scale-105 shadow-xl uppercase tracking-widest">
+                        <button className="px-10 py-4 bg-foreground text-background text-sm font-black rounded-full hover:bg-foreground/90 transition-all hover:scale-105 shadow-xl uppercase tracking-widest border border-neutral-200">
                             Install
                         </button>
                     </div>
@@ -255,7 +175,7 @@ const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
                             onClick={() => setActiveIndex(idx)}
                             className={clsx(
                                 "h-1.5 rounded-full transition-all duration-300",
-                                idx === activeIndex ? "w-10 bg-white" : "w-6 bg-white/10 hover:bg-white/20"
+                                idx === activeIndex ? "w-10 bg-foreground" : "w-6 bg-foreground/10 hover:bg-foreground/20"
                             )}
                         />
                     ))}
@@ -266,19 +186,10 @@ const FeaturedCarousel = ({ listings, onClick, colors }: any) => {
 }
 
 // ── Marketplace Filters ───────────────────────────────────────────────────
-const MarketplaceFilters = ({ sortBy, onSortChange, colors, viewMode, setViewMode }: any) => {
+const MarketplaceFilters = ({ sortBy, onSortChange, viewMode, setViewMode }: any) => {
     return (
-        <div
-            style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0 40px",
-                borderBottom: `1px solid ${colors.headerBorder}`,
-                backgroundColor: colors.headerBg,
-            }}
-        >
-            <div style={{ display: "flex", gap: "24px", marginLeft: "4px" }}>
+        <div className="flex items-center justify-between px-10 border-b border-neutral-200 bg-background">
+            <div className="flex gap-6 ml-1">
                 {[
                     { id: "featured", label: "Featured" },
                     { id: "all", label: "All Templates" },
@@ -289,25 +200,15 @@ const MarketplaceFilters = ({ sortBy, onSortChange, colors, viewMode, setViewMod
                         <button
                             key={tab.id}
                             onClick={() => setViewMode(tab.id as ViewMode)}
-                            style={{
-                                padding: "10px 0",
-                                background: "none",
-                                border: "none",
-                                color: isActive ? colors.tabActive : colors.tabInactive,
-                                fontSize: "13px",
-                                fontWeight: "500",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "6px",
-                                transition: "all 0.2s ease",
-                            }}
+                            className={clsx(
+                                "py-2.5 bg-transparent border-none text-[13px] font-medium cursor-pointer flex items-center gap-1.5 transition-all",
+                                isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                            )}
                         >
-                            <span style={{ 
-                                fontSize: '10px', 
-                                color: isActive ? colors.tabActive : colors.statsText,
-                                marginTop: "1px"
-                            }}>
+                            <span className={clsx(
+                                "text-[10px] mt-0.5",
+                                isActive ? "text-foreground" : "text-muted-foreground/40"
+                            )}>
                                 {"\u2237"}
                             </span>
                             {tab.label}
@@ -316,21 +217,12 @@ const MarketplaceFilters = ({ sortBy, onSortChange, colors, viewMode, setViewMod
                 })}
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <span style={{ fontSize: "12px", color: colors.textMuted }}>Sort by:</span>
+            <div className="flex items-center gap-3">
+                <span className="text-xs text-muted-foreground">Sort by:</span>
                 <select
                     value={sortBy}
                     onChange={(e) => onSortChange(e.target.value)}
-                    style={{
-                        backgroundColor: colors.searchBg,
-                        border: `1px solid ${colors.searchBorder}`,
-                        color: colors.text,
-                        fontSize: "12px",
-                        padding: "6px 12px",
-                        borderRadius: "6px",
-                        outline: "none",
-                        cursor: "pointer",
-                    }}
+                    className="bg-neutral-50 border border-neutral-200 text-foreground text-xs px-3 py-1.5 rounded-md outline-none cursor-pointer hover:border-neutral-300 transition-colors"
                 >
                     <option value="trending">Trending</option>
                     <option value="new">Newest</option>
@@ -343,43 +235,27 @@ const MarketplaceFilters = ({ sortBy, onSortChange, colors, viewMode, setViewMod
 }
 
 // ── Marketplace Pagination ──────────────────────────────────────────────────
-const MarketplacePagination = ({ currentPage, totalPages, onPageChange, colors }: any) => {
+const MarketplacePagination = ({ currentPage, totalPages, onPageChange }: any) => {
     if (totalPages <= 1) return null
 
     return (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "40px 0" }}>
+        <div className="flex items-center justify-center gap-2 py-10">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                style={{
-                    padding: "8px",
-                    backgroundColor: colors.paginBg,
-                    border: `1px solid ${colors.paginBorder}`,
-                    borderRadius: "6px",
-                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
-                    opacity: currentPage === 1 ? 0.5 : 1,
-                    color: colors.paginText,
-                }}
+                className="p-2 bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-foreground"
             >
                 <ChevronLeft size={16} />
             </button>
 
-            <span style={{ fontSize: "13px", color: colors.text, fontWeight: "500", margin: "0 12px" }}>
+            <span className="text-[13px] text-foreground font-medium mx-3">
                 Page {currentPage} of {totalPages}
             </span>
 
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                style={{
-                    padding: "8px",
-                    backgroundColor: colors.paginBg,
-                    border: `1px solid ${colors.paginBorder}`,
-                    borderRadius: "6px",
-                    cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-                    opacity: currentPage === totalPages ? 0.5 : 1,
-                    color: colors.paginText,
-                }}
+                className="p-2 bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-foreground"
             >
                 <ChevronRight size={16} />
             </button>
@@ -389,38 +265,6 @@ const MarketplacePagination = ({ currentPage, totalPages, onPageChange, colors }
 
 // ── Main Marketplace Orchestrator ───────────────────────────────────────────────
 export default function Marketplace() {
-    const theme = useFramerTheme()
-    const colors = useMemo(() => {
-        const isDark = theme === "dark"
-        return {
-            pageBg: isDark ? "#000000" : "#FAFAFA",
-            headerBg: isDark ? "#000000" : "#FFFFFF",
-            headerBorder: isDark ? "#1A1A1A" : "#E0E0E0",
-            text: isDark ? "#FFFFFF" : "#000000",
-            textSecondary: isDark ? "#9CA3AF" : "#666666",
-            textMuted: isDark ? "#6B7280" : "#999999",
-            searchBg: isDark ? "#0A0A0A" : "#F5F5F5",
-            searchBorder: isDark ? "#1A1A1A" : "#E0E0E0",
-            tabActive: isDark ? "#FFFFFF" : "#000000",
-            tabInactive: isDark ? "#6B7280" : "#666666",
-            tabBorder: isDark ? "#79D9EC" : "#79D9EC",
-            cardBg: isDark ? "#080808" : "#FFFFFF",
-            cardBgHover: isDark ? "#0C0C0C" : "#FAFAFA",
-            cardBorder: isDark ? "#121212" : "#E0E0E0",
-            cardPreviewBg: isDark ? "#050505" : "#F5F5F5",
-            iconBg: isDark ? "#0A0A0A" : "#F5F5F5",
-            iconBorder: isDark ? "#1A1A1A" : "#E0E0E0",
-            iconPlaceholder: isDark ? "#333333" : "#CCCCCC",
-            statsText: isDark ? "#666666" : "#888888",
-            statsBorder: isDark ? "#121212" : "#F0F0F0",
-            badgeBg: isDark ? "rgba(121, 217, 236, 0.1)" : "rgba(121, 217, 236, 0.1)",
-            badgeText: "#79D9EC",
-            paginBg: isDark ? "#0A0A0A" : "#FFFFFF",
-            paginBorder: isDark ? "#1A1A1A" : "#E0E0E0",
-            paginText: isDark ? "#FFFFFF" : "#000000",
-        }
-    }, [theme])
-
     const [listings, setListings] = useState<any[]>([])
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
@@ -587,39 +431,29 @@ export default function Marketplace() {
     }
 
     return (
-        <div style={{ height: "100%", backgroundColor: "#000000", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div className="h-full bg-background flex flex-col overflow-hidden">
             <MarketplaceFilters 
                 sortBy={sortBy} 
                 onSortChange={setSortBy} 
-                colors={{...colors, headerBg: "#000000", headerBorder: "rgba(255,255,255,0.05)"}} 
                 viewMode={viewMode}
                 setViewMode={setViewMode}
             />
 
-            <div style={{ 
-                flex: 1, 
-                padding: "60px 40px", 
-                maxWidth: "1100px", 
-                margin: "0 auto", 
-                width: "100%", 
-                overflowY: "auto",
-                height: "100%",
-                minHeight: 0
-            }} className="custom-scrollbar">
+            <div className="flex-1 px-10 py-16 max-w-[1100px] mx-auto w-full overflow-y-auto custom-scrollbar h-full min-h-0">
                 {isLoading ? (
-                    <div style={{ display: "flex", justifyContent: "center", paddingTop: "80px" }}>
-                        <Loader2 size={32} color="white" style={{ animation: "spin 1s linear infinite" }} />
+                    <div className="flex justify-center pt-20">
+                        <Loader2 className="w-8 h-8 text-foreground animate-spin" />
                     </div>
                 ) : error ? (
-                    <div style={{ textAlign: "center", paddingTop: "80px" }}>
-                        <AlertCircle size={48} color="#444" style={{ marginBottom: "16px" }} />
-                        <h3 style={{ color: "white" }}>{error}</h3>
-                        <button onClick={loadListings} style={{ marginTop: "16px", color: "#666" }}>Try Again</button>
+                    <div className="text-center pt-20">
+                        <AlertCircle className="w-12 h-12 text-muted-foreground/40 mb-4 mx-auto" />
+                        <h3 className="text-foreground">{error}</h3>
+                        <button onClick={loadListings} className="mt-4 text-muted-foreground hover:text-foreground">Try Again</button>
                     </div>
                 ) : listings.length === 0 ? (
-                    <div style={{ textAlign: "center", paddingTop: "80px", color: "#666" }}>
-                        <Package size={48} style={{ marginBottom: "16px", opacity: 0.3 }} />
-                        <p>No listings found matching your filters.</p>
+                    <div className="text-center pt-20 text-muted-foreground/60">
+                        <Package size={48} className="mb-4 mx-auto opacity-20" />
+                        <p className="text-sm font-medium">No listings found matching your filters.</p>
                     </div>
                 ) : (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -628,12 +462,11 @@ export default function Marketplace() {
                             <FeaturedCarousel 
                                 listings={listings} 
                                 onClick={handleCardClick}
-                                colors={colors}
                             />
                         )}
 
                         <div className="space-y-8">
-                            <h2 className="text-lg font-black text-white px-1 tracking-tight">Browse Apps</h2>
+                            <h2 className="text-lg font-black text-foreground px-1 tracking-tight">Browse Apps</h2>
                             
                             <div
                                 style={{
@@ -643,19 +476,18 @@ export default function Marketplace() {
                                 }}
                             >
                                 {listings.map((listing) => (
-                                    <MarketplaceCard
-                                        key={listing.id}
-                                        listing={listing}
-                                        colors={colors}
-                                        onClick={() => handleCardClick(listing)}
-                                        onViewDeveloper={(id: string, username?: string) => {
-                                            setSelectedDeveloperId(id)
-                                            setPageView("developer")
-                                            if (username) {
-                                                window.history.pushState(null, '', `/u/${username}`)
-                                            }
-                                        }}
-                                    />
+                                <MarketplaceCard
+                                    key={listing.id}
+                                    listing={listing}
+                                    onClick={() => handleCardClick(listing)}
+                                    onViewDeveloper={(id: string, username?: string) => {
+                                        setSelectedDeveloperId(id)
+                                        setPageView("developer")
+                                        if (username) {
+                                            window.history.pushState(null, '', `/u/${username}`)
+                                        }
+                                    }}
+                                />
                                 ))}
                             </div>
                         </div>
@@ -668,7 +500,6 @@ export default function Marketplace() {
                                 const container = document.querySelector('.overflow-y-auto')
                                 container?.scrollTo({ top: 0, behavior: "smooth" })
                             }}
-                            colors={colors}
                         />
                     </div>
                 )}
