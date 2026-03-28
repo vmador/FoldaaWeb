@@ -917,6 +917,7 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 status={macBuild?.status} 
                                 onExploded={() => setShowVortex(false)} 
                             />
+                        ) : (
                             <div 
                                 className={clsx(
                                     "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] transition-all relative overflow-hidden group/card",
