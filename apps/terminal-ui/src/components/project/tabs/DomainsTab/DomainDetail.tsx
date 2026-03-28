@@ -122,6 +122,12 @@ export default function DomainDetail({ domainId, onBack }: DomainDetailProps) {
                 .eq("id", domainId)
             
             if (error) throw error
+
+            // Sync with Cloudflare to cleanup routes
+            await supabase.functions.invoke('deploy-project', {
+                body: { project_id: domain.project_id }
+            })
+
             onBack() // Go back to list after deletion
         } catch (error: any) {
             console.error("Error deleting domain:", error)

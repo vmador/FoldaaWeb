@@ -118,6 +118,22 @@ Deno.serve(async (req: Request) => {
       }
     }
 
+    // 3. Cleanup: Remove routes pointing to this script that are no longer in our list
+    const activePatterns = new Set(patterns)
+    for (const route of existingRoutes) {
+      if (route.script === scriptName && !activePatterns.has(route.pattern)) {
+        const deleteUrl = `https://api.cloudflare.com/client/v4/zones/${FOLDAA_CF_ZONE_ID}/workers/routes/${route.id}`
+        try {
+          await cloudflareApiRequest(deleteUrl, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${FOLDAA_CF_TOKEN}` }
+          }, `Cleaning up orphaned route ${route.pattern}`)
+        } catch (e) {
+          console.error(`Failed to cleanup route ${route.pattern}:`, e)
+        }
+      }
+    }
+
     const { error: finalUpdateError } = await supabaseClient.from("projects").update({ 
       deployment_status: 'ready',
       last_deployed_at: new Date().toISOString(),

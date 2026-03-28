@@ -23,6 +23,12 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
                 .eq("id", route.id)
             
             if (error) throw error
+            
+            // Sync with Cloudflare
+            await supabase.functions.invoke('deploy-project', {
+                body: { project_id: route.project_id }
+            })
+
             onRefresh()
         } catch (error) {
             console.error("Error toggling route:", error)
@@ -42,6 +48,12 @@ export default function RouteCard({ route, onRefresh }: RouteCardProps) {
                 .eq("id", route.id)
             
             if (error) throw error
+            
+            // Sync with Cloudflare
+            await supabase.functions.invoke('deploy-project', {
+                body: { project_id: route.project_id }
+            })
+
             onRefresh()
         } catch (error) {
             console.error("Error deleting route:", error)

@@ -40,6 +40,11 @@ export default function EditRouteModal({ route, onClose, onSuccess }: EditRouteM
                 }
                 throw updateError
             }
+
+            // Sync with Cloudflare
+            await supabase.functions.invoke('deploy-project', {
+                body: { project_id: route.project_id }
+            })
             
             onSuccess()
         } catch (err: any) {

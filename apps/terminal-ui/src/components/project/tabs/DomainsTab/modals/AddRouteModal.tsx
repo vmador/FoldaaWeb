@@ -46,6 +46,11 @@ export default function AddRouteModal({ domainId, projectId, onClose, onSuccess 
                 }
                 throw insertError
             }
+
+            // Sync with Cloudflare
+            await supabase.functions.invoke('deploy-project', {
+                body: { project_id: projectId }
+            })
             
             onSuccess()
         } catch (err: any) {
