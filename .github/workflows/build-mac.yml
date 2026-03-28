@@ -55,7 +55,7 @@ jobs:
               echo "Detected SVG icon. Converting to PNG using sharp-cli..."
               curl -sL "$ICON_URL" -o temp-icon.svg
               # Render SVG to a high-res 1024x1024 PNG for ICNS generation
-              npx -y sharp-cli -i temp-icon.svg -o app-icon.png --width 1024 --height 1024
+              npx -y sharp-cli resize 1024 1024 -i temp-icon.svg -o app-icon.png
             else
               curl -sL "$ICON_URL" -o app-icon.png
             fi
