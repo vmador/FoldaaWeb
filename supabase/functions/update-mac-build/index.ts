@@ -144,20 +144,10 @@ Deno.serve(async (req: Request) => {
       height: 72px;
       border-radius: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      position: relative;
       background: #ffffff;
       border: 1px solid #eeeeee;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .dock-icon-main img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-      display: block;
+      margin: 0 auto;
     }
 
     .app-name {
@@ -171,11 +161,10 @@ Deno.serve(async (req: Request) => {
     .btn {
       display: inline-block;
       padding: 12px 32px;
-      background: #fdf2ff !important;
-      border: 1px solid #f0abfc !important;
-      border-radius: 50px;
-      color: #d946ef !important;
-      text-decoration: none !important;
+      background: #000000;
+      border-radius: 8px;
+      color: #ffffff;
+      text-decoration: none;
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 35px;
@@ -203,7 +192,7 @@ Deno.serve(async (req: Request) => {
   </div>
 
   <div class="container">
-    <div class="logo">፨</div>
+    <div class="logo">Foldaa</div>
     
     <div class="build-ref-header">Build #${buildUid}</div>
 
@@ -216,7 +205,13 @@ Deno.serve(async (req: Request) => {
           <td><div class="dock-icon-ghost"></div></td>
           <td align="center">
             <div class="dock-icon-main">
-              <img src="${iconUrl}" alt="${projectData.name}">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" valign="middle">
+                    <img src="${iconUrl}" width="48" height="48" alt="${projectData.name}" style="display: block; width: 48px; height: 48px; border-radius: 12px;">
+                  </td>
+                </tr>
+              </table>
             </div>
           </td>
           <td><div class="dock-icon-ghost"></div></td>
@@ -227,13 +222,13 @@ Deno.serve(async (req: Request) => {
     
     <h2 class="app-name">${projectData.name}</h2>
     
-    <a href="${dmg_url}" class="btn">
-      <span style="color: #d946ef !important;">${projectData.name}.dmg</span>
+    <a href="https://app.foldaa.com/project/${projectData.id}/overview" class="btn">
+      <span style="color: #ffffff;">Download via Dashboard</span>
     </a>
     
     <p class="description">
       The cloud build for ${projectData.name} has completed successfully.<br>
-      Your native desktop wrapper is now ready for deployment.
+      Access your dashboard to safely download your native desktop wrapper.
     </p>
     
     <div class="footer">
@@ -251,7 +246,7 @@ Deno.serve(async (req: Request) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            from: 'Foldaa ፨ <builds@notifications.foldaa.com>',
+            from: 'Foldaa <welcome@notifications.foldaa.com>',
             to: userData.user.email,
             subject: `፨ @${projectData.name} — Your Mac App is ready! #${buildUid}`,
             html: htmlContent
@@ -266,6 +261,10 @@ Deno.serve(async (req: Request) => {
         }
       } catch (emailErr) {
         console.error("CRITICAL: Failed to send email notification:", emailErr.message)
+        return new Response(JSON.stringify({ success: false, emailError: emailErr.message }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400
+        })
       }
     }
 
