@@ -917,11 +917,9 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                                 status={macBuild?.status} 
                                 onExploded={() => setShowVortex(false)} 
                             />
-                        ) : (
                             <div 
-                                onClick={() => router.push(`/project/${projectId}/release`)}
                                 className={clsx(
-                                    "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] transition-all relative overflow-hidden cursor-pointer active:scale-[0.99] group/card",
+                                    "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] transition-all relative overflow-hidden group/card",
                                     "hover:border-border/40 hover:bg-secondary/22",
                                     (macBuild?.status === 'building' || macBuild?.status === 'pending') && "border-border/40 bg-secondary/30"
                                 )}
@@ -1231,9 +1229,8 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ id: 
                         </div>
 
                         <div 
-                            onClick={() => router.push(`/project/${projectId}/release`)}
                             className={clsx(
-                                "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] group hover:border-border/80 transition-all relative overflow-hidden cursor-pointer active:scale-[0.99]",
+                                "flex items-center justify-between p-4 bg-card border border-border rounded-[10px] group hover:border-border/80 transition-all relative overflow-hidden",
                                 (iosBuild?.status === 'building' || iosBuild?.status === 'pending') && "border-border/40 bg-secondary/30"
                             )}
                         >
