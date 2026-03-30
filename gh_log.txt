@@ -1,0 +1,1626 @@
+build	Set up job	﻿2026-03-28T05:17:44.7742780Z Current runner version: '2.333.0'
+build	Set up job	2026-03-28T05:17:44.7761530Z ##[group]Runner Image Provisioner
+build	Set up job	2026-03-28T05:17:44.7762190Z Hosted Compute Agent
+build	Set up job	2026-03-28T05:17:44.7762560Z Version: 20260213.493
+build	Set up job	2026-03-28T05:17:44.7762950Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+build	Set up job	2026-03-28T05:17:44.7763410Z Build Date: 2026-02-13T00:28:41Z
+build	Set up job	2026-03-28T05:17:44.7763840Z Worker ID: {e407f193-a975-4e26-973e-90943b686370}
+build	Set up job	2026-03-28T05:17:44.7764290Z Azure Region: westus
+build	Set up job	2026-03-28T05:17:44.7764640Z ##[endgroup]
+build	Set up job	2026-03-28T05:17:44.7766160Z ##[group]Operating System
+build	Set up job	2026-03-28T05:17:44.7766550Z macOS
+build	Set up job	2026-03-28T05:17:44.7766870Z 15.7.4
+build	Set up job	2026-03-28T05:17:44.7767170Z 24G517
+build	Set up job	2026-03-28T05:17:44.7767480Z ##[endgroup]
+build	Set up job	2026-03-28T05:17:44.7767820Z ##[group]Runner Image
+build	Set up job	2026-03-28T05:17:44.7768190Z Image: macos-15-arm64
+build	Set up job	2026-03-28T05:17:44.7768540Z Version: 20260325.0234.1
+build	Set up job	2026-03-28T05:17:44.7769270Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20260325.0234/images/macos/macos-15-arm64-Readme.md
+build	Set up job	2026-03-28T05:17:44.7770410Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20260325.0234
+build	Set up job	2026-03-28T05:17:44.7771050Z ##[endgroup]
+build	Set up job	2026-03-28T05:17:44.7771820Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-03-28T05:17:44.7773510Z Contents: read
+build	Set up job	2026-03-28T05:17:44.7773890Z Metadata: read
+build	Set up job	2026-03-28T05:17:44.7774230Z Packages: read
+build	Set up job	2026-03-28T05:17:44.7774570Z ##[endgroup]
+build	Set up job	2026-03-28T05:17:44.7776610Z Secret source: Actions
+build	Set up job	2026-03-28T05:17:44.7777240Z Prepare workflow directory
+build	Set up job	2026-03-28T05:17:44.8041750Z Prepare all required actions
+build	Set up job	2026-03-28T05:17:44.8069560Z Getting action download info
+build	Set up job	2026-03-28T05:17:45.2738060Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	Set up job	2026-03-28T05:17:45.5750720Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build	Set up job	2026-03-28T05:17:45.7222970Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:29eef336d9b2848a0b548edc03f92a220660cdb8)
+build	Set up job	2026-03-28T05:17:46.2695900Z Complete job name: build
+build	Checkout Repository	﻿2026-03-28T05:17:46.3195520Z ##[group]Run actions/checkout@v4
+build	Checkout Repository	2026-03-28T05:17:46.3196610Z with:
+build	Checkout Repository	2026-03-28T05:17:46.3196950Z   repository: vmador/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:46.3197580Z   token: ***
+build	Checkout Repository	2026-03-28T05:17:46.3197880Z   ssh-strict: true
+build	Checkout Repository	2026-03-28T05:17:46.3198190Z   ssh-user: git
+build	Checkout Repository	2026-03-28T05:17:46.3198510Z   persist-credentials: true
+build	Checkout Repository	2026-03-28T05:17:46.3198860Z   clean: true
+build	Checkout Repository	2026-03-28T05:17:46.3199180Z   sparse-checkout-cone-mode: true
+build	Checkout Repository	2026-03-28T05:17:46.3199540Z   fetch-depth: 1
+build	Checkout Repository	2026-03-28T05:17:46.3199850Z   fetch-tags: false
+build	Checkout Repository	2026-03-28T05:17:46.3200170Z   show-progress: true
+build	Checkout Repository	2026-03-28T05:17:46.3200490Z   lfs: false
+build	Checkout Repository	2026-03-28T05:17:46.3200790Z   submodules: false
+build	Checkout Repository	2026-03-28T05:17:46.3201110Z   set-safe-directory: true
+build	Checkout Repository	2026-03-28T05:17:46.3201610Z env:
+build	Checkout Repository	2026-03-28T05:17:46.3201920Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Checkout Repository	2026-03-28T05:17:46.3202280Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:46.6480140Z Syncing repository: vmador/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:46.6481760Z ##[group]Getting Git version info
+build	Checkout Repository	2026-03-28T05:17:46.6482410Z Working directory is '/Users/runner/work/FoldaaWeb/FoldaaWeb'
+build	Checkout Repository	2026-03-28T05:17:46.6483320Z [command]/opt/homebrew/bin/git version
+build	Checkout Repository	2026-03-28T05:17:46.6953100Z git version 2.53.0
+build	Checkout Repository	2026-03-28T05:17:46.7013840Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:46.7019290Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/007eb32f-3629-404a-b451-092558044324/.gitconfig'
+build	Checkout Repository	2026-03-28T05:17:46.7020570Z Temporarily overriding HOME='/Users/runner/work/_temp/007eb32f-3629-404a-b451-092558044324' before making global git config changes
+build	Checkout Repository	2026-03-28T05:17:46.7021770Z Adding repository directory to the temporary git global config as a safe directory
+build	Checkout Repository	2026-03-28T05:17:46.7023010Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/FoldaaWeb/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:46.7119430Z Deleting the contents of '/Users/runner/work/FoldaaWeb/FoldaaWeb'
+build	Checkout Repository	2026-03-28T05:17:46.7129960Z ##[group]Initializing the repository
+build	Checkout Repository	2026-03-28T05:17:46.7132170Z [command]/opt/homebrew/bin/git init /Users/runner/work/FoldaaWeb/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:46.7313490Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	Checkout Repository	2026-03-28T05:17:46.7315870Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	Checkout Repository	2026-03-28T05:17:46.7318100Z hint: to use in all of your new repositories, which will suppress this warning,
+build	Checkout Repository	2026-03-28T05:17:46.7319000Z hint: call:
+build	Checkout Repository	2026-03-28T05:17:46.7319640Z hint:
+build	Checkout Repository	2026-03-28T05:17:46.7320200Z hint: 	git config --global init.defaultBranch <name>
+build	Checkout Repository	2026-03-28T05:17:46.7320730Z hint:
+build	Checkout Repository	2026-03-28T05:17:46.7321390Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	Checkout Repository	2026-03-28T05:17:46.7322340Z hint: 'development'. The just-created branch can be renamed via this command:
+build	Checkout Repository	2026-03-28T05:17:46.7323040Z hint:
+build	Checkout Repository	2026-03-28T05:17:46.7325510Z hint: 	git branch -m <name>
+build	Checkout Repository	2026-03-28T05:17:46.7326130Z hint:
+build	Checkout Repository	2026-03-28T05:17:46.7326810Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	Checkout Repository	2026-03-28T05:17:46.7331080Z Initialized empty Git repository in /Users/runner/work/FoldaaWeb/FoldaaWeb/.git/
+build	Checkout Repository	2026-03-28T05:17:46.7333280Z [command]/opt/homebrew/bin/git remote add origin https://github.com/vmador/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:46.7396450Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:46.7398130Z ##[group]Disabling automatic garbage collection
+build	Checkout Repository	2026-03-28T05:17:46.7398990Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+build	Checkout Repository	2026-03-28T05:17:46.7460610Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:46.7461580Z ##[group]Setting up auth
+build	Checkout Repository	2026-03-28T05:17:46.7463960Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Checkout Repository	2026-03-28T05:17:46.7526140Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Checkout Repository	2026-03-28T05:17:46.8573870Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Checkout Repository	2026-03-28T05:17:46.8629270Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Checkout Repository	2026-03-28T05:17:46.9721580Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Checkout Repository	2026-03-28T05:17:46.9739270Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Checkout Repository	2026-03-28T05:17:47.0600510Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	Checkout Repository	2026-03-28T05:17:47.0667910Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:47.0717100Z ##[group]Fetching the repository
+build	Checkout Repository	2026-03-28T05:17:47.0718530Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +73606f299ded9dfc0a62531f604fc78004e5a069:refs/remotes/origin/main
+build	Checkout Repository	2026-03-28T05:17:47.6450690Z From https://github.com/vmador/FoldaaWeb
+build	Checkout Repository	2026-03-28T05:17:47.6451880Z  * [new ref]         73606f299ded9dfc0a62531f604fc78004e5a069 -> origin/main
+build	Checkout Repository	2026-03-28T05:17:47.6543540Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:47.6544630Z ##[group]Determining the checkout info
+build	Checkout Repository	2026-03-28T05:17:47.6545690Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:47.6546730Z [command]/opt/homebrew/bin/git sparse-checkout disable
+build	Checkout Repository	2026-03-28T05:17:47.6617690Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+build	Checkout Repository	2026-03-28T05:17:47.6674920Z ##[group]Checking out the ref
+build	Checkout Repository	2026-03-28T05:17:47.6677310Z [command]/opt/homebrew/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build	Checkout Repository	2026-03-28T05:17:47.7236420Z Switched to a new branch 'main'
+build	Checkout Repository	2026-03-28T05:17:47.7338660Z branch 'main' set up to track 'origin/main'.
+build	Checkout Repository	2026-03-28T05:17:47.7539250Z ##[endgroup]
+build	Checkout Repository	2026-03-28T05:17:47.7585720Z [command]/opt/homebrew/bin/git log -1 --format=%H
+build	Checkout Repository	2026-03-28T05:17:47.7587750Z 73606f299ded9dfc0a62531f604fc78004e5a069
+build	Notify Build Started	﻿2026-03-28T05:17:47.7739790Z ##[group]Run curl -X POST "***/functions/v1/update-mac-build" \
+build	Notify Build Started	2026-03-28T05:17:47.7741890Z [36;1mcurl -X POST "***/functions/v1/update-mac-build" \[0m
+build	Notify Build Started	2026-03-28T05:17:47.7747210Z [36;1m  -H "Authorization: ***" \[0m
+build	Notify Build Started	2026-03-28T05:17:47.7748240Z [36;1m  -H 'Content-Type: application/json' \[0m
+build	Notify Build Started	2026-03-28T05:17:47.7749780Z [36;1m  -d "{\"build_id\": \"05af6b28-0075-401e-b0af-838fe924a567\", \"status\": \"building\"}"[0m
+build	Notify Build Started	2026-03-28T05:17:47.7791230Z shell: /bin/bash -e {0}
+build	Notify Build Started	2026-03-28T05:17:47.7792090Z env:
+build	Notify Build Started	2026-03-28T05:17:47.7792860Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Notify Build Started	2026-03-28T05:17:47.7793760Z ##[endgroup]
+build	Notify Build Started	2026-03-28T05:17:47.8126500Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+build	Notify Build Started	2026-03-28T05:17:47.8128260Z                                  Dload  Upload   Total   Spent    Left  Speed
+build	Notify Build Started	2026-03-28T05:17:47.8129150Z 
+build	Notify Build Started	2026-03-28T05:17:48.7798350Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+build	Notify Build Started	2026-03-28T05:17:48.7798940Z 100    90    0    16  100    74     16     76 --:--:-- --:--:-- --:--:--    92
+build	Notify Build Started	2026-03-28T05:17:48.7799340Z 100    90    0    16  100    74     16     76 --:--:-- --:--:-- --:--:--    92
+build	Notify Build Started	2026-03-28T05:17:48.7808490Z {"success":true}
+build	Setup Node.js	﻿2026-03-28T05:17:48.7884930Z ##[group]Run actions/setup-node@v4
+build	Setup Node.js	2026-03-28T05:17:48.7885210Z with:
+build	Setup Node.js	2026-03-28T05:17:48.7885410Z   node-version: 22
+build	Setup Node.js	2026-03-28T05:17:48.7885610Z   always-auth: false
+build	Setup Node.js	2026-03-28T05:17:48.7885830Z   check-latest: false
+build	Setup Node.js	2026-03-28T05:17:48.7886180Z   token: ***
+build	Setup Node.js	2026-03-28T05:17:48.7886340Z env:
+build	Setup Node.js	2026-03-28T05:17:48.7886500Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Setup Node.js	2026-03-28T05:17:48.7886720Z ##[endgroup]
+build	Setup Node.js	2026-03-28T05:17:48.9141320Z Found in cache @ /Users/runner/hostedtoolcache/node/22.22.2/arm64
+build	Setup Node.js	2026-03-28T05:17:48.9146060Z ##[group]Environment details
+build	Setup Node.js	2026-03-28T05:17:49.5639340Z node: v22.22.2
+build	Setup Node.js	2026-03-28T05:17:49.5652450Z npm: 10.9.7
+build	Setup Node.js	2026-03-28T05:17:49.5652870Z yarn: 1.22.22
+build	Setup Node.js	2026-03-28T05:17:49.5653740Z ##[endgroup]
+build	Setup Build Variables	﻿2026-03-28T05:17:49.5730590Z ##[group]Run # Robust naming and ID handling
+build	Setup Build Variables	2026-03-28T05:17:49.5730990Z [36;1m# Robust naming and ID handling[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5731220Z [36;1mNAME_VAL="fld"[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5731540Z [36;1mif [ -z "$NAME_VAL" ] || [ "$NAME_VAL" == "null" ]; then NAME_VAL="Foldaa_DEBUG_FIX"; fi[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5731870Z [36;1m[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5732060Z [36;1mID_VAL="5c50003e-4150-415f-99b3-712af5f7dedd"[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5732380Z [36;1mif [ -z "$ID_VAL" ] || [ "$ID_VAL" == "null" ]; then ID_VAL="default"; fi[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5732670Z [36;1m[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5732870Z [36;1mURL_VAL="https://fld.foldaa.com"[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5733300Z [36;1mif [ -z "$URL_VAL" ] || [ "$URL_VAL" == "null" ]; then URL_VAL="https://foldaa.com"; fi[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5733620Z [36;1m[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5733840Z [36;1mecho "PROJECT_NAME=$NAME_VAL" >> $GITHUB_ENV[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5734120Z [36;1mecho "PROJECT_ID=$ID_VAL" >> $GITHUB_ENV[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5734390Z [36;1mecho "LIVE_URL=$URL_VAL" >> $GITHUB_ENV[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5734710Z [36;1mecho "REPONAME=vmador/FoldaaWeb" >> $GITHUB_ENV[0m
+build	Setup Build Variables	2026-03-28T05:17:49.5773570Z shell: /bin/bash -e {0}
+build	Setup Build Variables	2026-03-28T05:17:49.5773850Z env:
+build	Setup Build Variables	2026-03-28T05:17:49.5774020Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Setup Build Variables	2026-03-28T05:17:49.5774210Z ##[endgroup]
+build	Download & Convert Icon	﻿2026-03-28T05:17:49.6239020Z ##[group]Run ICON_URL="https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Download & Convert Icon	2026-03-28T05:17:49.6239600Z [36;1mICON_URL="https://foldaa-terminal-ui.vercel.app/icon.svg"[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6239980Z [36;1mif [ -n "$ICON_URL" ] && [ "$ICON_URL" != "null" ]; then[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6240310Z [36;1m  echo "Downloading icon from $ICON_URL"[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6240560Z [36;1m  [0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6240720Z [36;1m  # Detect if it's an SVG[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6240980Z [36;1m  if [[ "$ICON_URL" == *.svg* ]]; then[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6241320Z [36;1m    echo "Detected SVG icon. Converting to PNG using sharp-cli..."[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6242230Z [36;1m    curl -sL "$ICON_URL" -o temp-icon.svg[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6242570Z [36;1m    # Render SVG to a high-res 1024x1024 PNG for ICNS generation[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6243170Z [36;1m    npx -y sharp-cli resize 1024 1024 -i temp-icon.svg -o app-icon.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6243550Z [36;1m  else[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6243760Z [36;1m    curl -sL "$ICON_URL" -o app-icon.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6244050Z [36;1m  fi[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6244220Z [36;1m[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6244420Z [36;1m  # Convert to ICNS using MacOS native tools[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6244710Z [36;1m  mkdir app-icon.iconset[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6245020Z [36;1m  sips -z 16 16     app-icon.png --out app-icon.iconset/icon_16x16.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6245440Z [36;1m  sips -z 32 32     app-icon.png --out app-icon.iconset/icon_16x16@2x.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6245850Z [36;1m  sips -z 32 32     app-icon.png --out app-icon.iconset/icon_32x32.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6246260Z [36;1m  sips -z 64 64     app-icon.png --out app-icon.iconset/icon_32x32@2x.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6246730Z [36;1m  sips -z 128 128   app-icon.png --out app-icon.iconset/icon_128x128.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6247180Z [36;1m  sips -z 256 256   app-icon.png --out app-icon.iconset/icon_128x128@2x.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6247610Z [36;1m  sips -z 256 256   app-icon.png --out app-icon.iconset/icon_256x256.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6248120Z [36;1m  sips -z 512 512   app-icon.png --out app-icon.iconset/icon_256x256@2x.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6248610Z [36;1m  sips -z 512 512   app-icon.png --out app-icon.iconset/icon_512x512.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6249050Z [36;1m  sips -z 1024 1024 app-icon.png --out app-icon.iconset/icon_512x512@2x.png[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6249450Z [36;1m  iconutil -c icns app-icon.iconset[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6249760Z [36;1m  echo "icon_args=--icon app-icon.icns" >> $GITHUB_ENV[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6250050Z [36;1melse[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6250240Z [36;1m  echo "icon_args=" >> $GITHUB_ENV[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6250490Z [36;1mfi[0m
+build	Download & Convert Icon	2026-03-28T05:17:49.6288670Z shell: /bin/bash -e {0}
+build	Download & Convert Icon	2026-03-28T05:17:49.6289680Z env:
+build	Download & Convert Icon	2026-03-28T05:17:49.6290150Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Download & Convert Icon	2026-03-28T05:17:49.6290870Z   PROJECT_NAME: fld
+build	Download & Convert Icon	2026-03-28T05:17:49.6291130Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Download & Convert Icon	2026-03-28T05:17:49.6291470Z   LIVE_URL: https://fld.foldaa.com
+build	Download & Convert Icon	2026-03-28T05:17:49.6291700Z   REPONAME: vmador/FoldaaWeb
+build	Download & Convert Icon	2026-03-28T05:17:49.6291910Z ##[endgroup]
+build	Download & Convert Icon	2026-03-28T05:17:49.6573100Z Downloading icon from https://foldaa-terminal-ui.vercel.app/icon.svg
+build	Download & Convert Icon	2026-03-28T05:17:49.6573930Z Detected SVG icon. Converting to PNG using sharp-cli...
+build	Download & Convert Icon	2026-03-28T05:17:52.3287830Z npm warn deprecated lodash.pick@3.1.0: This package is deprecated. Use destructuring assignment syntax instead.
+build	Download & Convert Icon	2026-03-28T05:17:52.4611580Z npm warn deprecated glob@11.0.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+build	Download & Convert Icon	2026-03-28T05:17:55.5490280Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6313650Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6315010Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_16x16.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6491650Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6493100Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_16x16@2x.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6668930Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6672410Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_32x32.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6850000Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.6851790Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_32x32@2x.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7038450Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7046250Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_128x128.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7237260Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7238700Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_128x128@2x.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7445520Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7446420Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_256x256.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7682370Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7683870Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_256x256@2x.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7903210Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.7904080Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_512x512.png
+build	Download & Convert Icon	2026-03-28T05:17:55.8038940Z /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.png
+build	Download & Convert Icon	2026-03-28T05:17:55.8040420Z   /Users/runner/work/FoldaaWeb/FoldaaWeb/app-icon.iconset/icon_512x512@2x.png
+build	Install Rust Toolchain	﻿2026-03-28T05:17:55.8590430Z ##[group]Run dtolnay/rust-toolchain@stable
+build	Install Rust Toolchain	2026-03-28T05:17:55.8590690Z with:
+build	Install Rust Toolchain	2026-03-28T05:17:55.8590840Z   toolchain: stable
+build	Install Rust Toolchain	2026-03-28T05:17:55.8593650Z   targets: x86_64-apple-darwin,aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:17:55.8593950Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.8594120Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.8594350Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.8596210Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.8596510Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.8596750Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.8598930Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.8599410Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:55.8694080Z ##[group]Run : parse toolchain version
+build	Install Rust Toolchain	2026-03-28T05:17:55.8694400Z [36;1m: parse toolchain version[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8694640Z [36;1mif [[ -z $toolchain ]]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8695070Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8695600Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8695850Z [36;1m  exit 1[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8696170Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8696550Z [36;1m  if [[ macOS == macOS ]]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8697040Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8697480Z [36;1m  else[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8697860Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8698260Z [36;1m  fi[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8698500Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8698960Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8699340Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8701920Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8702350Z [36;1melse[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8702560Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8702810Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.8747820Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:17:55.8748130Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.8748300Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.8748510Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.8748710Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.8748980Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.8749190Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.8749410Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.8749600Z   toolchain: stable
+build	Install Rust Toolchain	2026-03-28T05:17:55.8749750Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:55.9067940Z ##[group]Run : construct rustup command line
+build	Install Rust Toolchain	2026-03-28T05:17:55.9068340Z [36;1m: construct rustup command line[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9068730Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9069280Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9069740Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9106520Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:17:55.9106820Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.9106990Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.9107250Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.9107460Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.9107720Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.9121530Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.9121830Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.9122110Z   targets: x86_64-apple-darwin,aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:17:55.9123070Z   components: 
+build	Install Rust Toolchain	2026-03-28T05:17:55.9123240Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:55.9356920Z ##[group]Run : set $CARGO_HOME
+build	Install Rust Toolchain	2026-03-28T05:17:55.9357240Z [36;1m: set $CARGO_HOME[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9357500Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9392290Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:17:55.9392580Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.9392780Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.9392990Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.9393220Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.9393510Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.9393730Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.9393940Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.9394140Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:55.9617810Z ##[group]Run : install rustup if needed
+build	Install Rust Toolchain	2026-03-28T05:17:55.9618190Z [36;1m: install rustup if needed[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9618470Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9619160Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9619780Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9620010Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9654870Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:17:55.9655190Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.9655380Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.9655590Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.9655830Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.9656100Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.9656330Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.9656540Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.9656760Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:17:55.9656960Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:55.9866170Z ##[group]Run rustup toolchain install stable --target x86_64-apple-darwin --target aarch64-apple-darwin --profile minimal --no-self-update
+build	Install Rust Toolchain	2026-03-28T05:17:55.9867110Z [36;1mrustup toolchain install stable --target x86_64-apple-darwin --target aarch64-apple-darwin --profile minimal --no-self-update[0m
+build	Install Rust Toolchain	2026-03-28T05:17:55.9897610Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:17:55.9897950Z env:
+build	Install Rust Toolchain	2026-03-28T05:17:55.9898140Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:17:55.9898360Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:17:55.9898570Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:17:55.9898980Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:17:55.9899210Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:17:55.9899430Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:17:55.9899660Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:17:55.9899890Z   RUSTUP_PERMIT_COPY_RENAME: 1
+build	Install Rust Toolchain	2026-03-28T05:17:55.9900090Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:17:56.2538820Z info: syncing channel updates for stable-aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:17:56.3596980Z info: latest update on 2026-03-26 for version 1.94.1 (e408947bf 2026-03-25)
+build	Install Rust Toolchain	2026-03-28T05:17:56.3702220Z info: removing previous version of component clippy
+build	Install Rust Toolchain	2026-03-28T05:17:56.3720010Z info: removing previous version of component rustfmt
+build	Install Rust Toolchain	2026-03-28T05:17:56.3730980Z info: removing previous version of component cargo
+build	Install Rust Toolchain	2026-03-28T05:17:56.3793990Z info: removing previous version of component rust-std
+build	Install Rust Toolchain	2026-03-28T05:17:56.3872090Z info: removing previous version of component rustc
+build	Install Rust Toolchain	2026-03-28T05:17:56.3937550Z info: downloading 6 components
+build	Install Rust Toolchain	2026-03-28T05:18:05.2931480Z 
+build	Install Rust Toolchain	2026-03-28T05:18:05.3485020Z   stable-aarch64-apple-darwin updated - rustc 1.94.1 (e408947bf 2026-03-25) (from rustc 1.94.0 (4a4ef493e 2026-03-02))
+build	Install Rust Toolchain	2026-03-28T05:18:05.3486040Z info: self-update is disabled for this build of rustup
+build	Install Rust Toolchain	2026-03-28T05:18:05.3486330Z 
+build	Install Rust Toolchain	2026-03-28T05:18:05.3486980Z info: any updates to rustup will need to be fetched with your system package manager
+build	Install Rust Toolchain	2026-03-28T05:18:05.3668840Z ##[group]Run rustup default stable
+build	Install Rust Toolchain	2026-03-28T05:18:05.3669600Z [36;1mrustup default stable[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.3710320Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.3710670Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.3710920Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.3711160Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.3711490Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.3711820Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.3712090Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.3712360Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.3712680Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.3712940Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.4227010Z info: using existing install for stable-aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:18:05.4239040Z info: default toolchain set to stable-aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:18:05.4239380Z 
+build	Install Rust Toolchain	2026-03-28T05:18:05.4335530Z   stable-aarch64-apple-darwin unchanged - rustc 1.94.1 (e408947bf 2026-03-25)
+build	Install Rust Toolchain	2026-03-28T05:18:05.4338780Z 
+build	Install Rust Toolchain	2026-03-28T05:18:05.4362490Z ##[group]Run : create cachekey
+build	Install Rust Toolchain	2026-03-28T05:18:05.4362860Z [36;1m: create cachekey[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.4363340Z [36;1mDATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.4364000Z [36;1mHASH=$(rustc +stable --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.4364480Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.4394270Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.4394590Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.4394860Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.4395110Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.4395430Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.4395760Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.4396080Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.4396330Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.4396680Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.4396890Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.5070870Z ##[group]Run : disable incremental compilation
+build	Install Rust Toolchain	2026-03-28T05:18:05.5071330Z [36;1m: disable incremental compilation[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5071710Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5072010Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5072290Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5110770Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.5111070Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.5111280Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.5111540Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.5111820Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.5112100Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.5112320Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.5112520Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.5112810Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.5118860Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.5385690Z ##[group]Run : enable colors in Cargo output
+build	Install Rust Toolchain	2026-03-28T05:18:05.5386120Z [36;1m: enable colors in Cargo output[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5386390Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5386730Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5386990Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5430440Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.5430810Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.5431030Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.5431280Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.5431520Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.5431830Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.5432120Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.5432330Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.5432570Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.5432840Z   CARGO_INCREMENTAL: 0
+build	Install Rust Toolchain	2026-03-28T05:18:05.5433130Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.5656360Z ##[group]Run : enable Cargo sparse registry
+build	Install Rust Toolchain	2026-03-28T05:18:05.5656690Z [36;1m: enable Cargo sparse registry[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5657000Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5657590Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5658300Z [36;1m  if rustc +stable --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5658790Z [36;1m    touch "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5659260Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5659680Z [36;1m  elif rustc +stable --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5660180Z [36;1m    touch "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5660680Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5660970Z [36;1m  fi[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5661110Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.5699110Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.5699440Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.5699630Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.5700000Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.5700230Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.5700570Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.5700820Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.5701040Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.5701300Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.5701510Z   CARGO_INCREMENTAL: 0
+build	Install Rust Toolchain	2026-03-28T05:18:05.5701700Z   CARGO_TERM_COLOR: always
+build	Install Rust Toolchain	2026-03-28T05:18:05.5701880Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.6307670Z ##[group]Run : work around spurious network errors in curl 8.0
+build	Install Rust Toolchain	2026-03-28T05:18:05.6308170Z [36;1m: work around spurious network errors in curl 8.0[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6308620Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6309240Z [36;1mif rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6309620Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6309890Z [36;1mfi[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6347400Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.6347720Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.6347930Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.6348190Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.6348410Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.6348730Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.6348980Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.6349240Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.6349460Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.6350050Z   CARGO_INCREMENTAL: 0
+build	Install Rust Toolchain	2026-03-28T05:18:05.6350270Z   CARGO_TERM_COLOR: always
+build	Install Rust Toolchain	2026-03-28T05:18:05.6350460Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.6761050Z ##[group]Run rustc +stable --version --verbose
+build	Install Rust Toolchain	2026-03-28T05:18:05.6761390Z [36;1mrustc +stable --version --verbose[0m
+build	Install Rust Toolchain	2026-03-28T05:18:05.6801910Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+build	Install Rust Toolchain	2026-03-28T05:18:05.6802280Z env:
+build	Install Rust Toolchain	2026-03-28T05:18:05.6802540Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Install Rust Toolchain	2026-03-28T05:18:05.6802810Z   PROJECT_NAME: fld
+build	Install Rust Toolchain	2026-03-28T05:18:05.6803080Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Install Rust Toolchain	2026-03-28T05:18:05.6803430Z   LIVE_URL: https://fld.foldaa.com
+build	Install Rust Toolchain	2026-03-28T05:18:05.6803680Z   REPONAME: vmador/FoldaaWeb
+build	Install Rust Toolchain	2026-03-28T05:18:05.6803920Z   icon_args: --icon app-icon.icns
+build	Install Rust Toolchain	2026-03-28T05:18:05.6815820Z   CARGO_HOME: /Users/runner/.cargo
+build	Install Rust Toolchain	2026-03-28T05:18:05.6816180Z   CARGO_INCREMENTAL: 0
+build	Install Rust Toolchain	2026-03-28T05:18:05.6816500Z   CARGO_TERM_COLOR: always
+build	Install Rust Toolchain	2026-03-28T05:18:05.6816770Z ##[endgroup]
+build	Install Rust Toolchain	2026-03-28T05:18:05.7216320Z rustc 1.94.1 (e408947bf 2026-03-25)
+build	Install Rust Toolchain	2026-03-28T05:18:05.7216730Z binary: rustc
+build	Install Rust Toolchain	2026-03-28T05:18:05.7217050Z commit-hash: e408947bfd200af42db322daf0fadfe7e26d3bd1
+build	Install Rust Toolchain	2026-03-28T05:18:05.7217340Z commit-date: 2026-03-25
+build	Install Rust Toolchain	2026-03-28T05:18:05.7217550Z host: aarch64-apple-darwin
+build	Install Rust Toolchain	2026-03-28T05:18:05.7217760Z release: 1.94.1
+build	Install Rust Toolchain	2026-03-28T05:18:05.7220460Z LLVM version: 21.1.8
+build	Setup Tauri Build Environment	﻿2026-03-28T05:18:05.7285480Z ##[group]Run npm install -g @tauri-apps/cli@1
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7285870Z [36;1mnpm install -g @tauri-apps/cli@1[0m
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7286100Z [36;1mcd tauri-template[0m
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7286300Z [36;1mnpm install[0m
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7316860Z shell: /bin/bash -e {0}
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7317100Z env:
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7317310Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7317520Z   PROJECT_NAME: fld
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7317740Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7318050Z   LIVE_URL: https://fld.foldaa.com
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7318320Z   REPONAME: vmador/FoldaaWeb
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7318530Z   icon_args: --icon app-icon.icns
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7318760Z   CARGO_HOME: /Users/runner/.cargo
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7318960Z   CARGO_INCREMENTAL: 0
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7319140Z   CARGO_TERM_COLOR: always
+build	Setup Tauri Build Environment	2026-03-28T05:18:05.7319320Z ##[endgroup]
+build	Setup Tauri Build Environment	2026-03-28T05:18:06.6514550Z 
+build	Setup Tauri Build Environment	2026-03-28T05:18:06.6515150Z added 3 packages in 814ms
+build	Setup Tauri Build Environment	2026-03-28T05:18:06.6515540Z 
+build	Setup Tauri Build Environment	2026-03-28T05:18:06.6515890Z 1 package is looking for funding
+build	Setup Tauri Build Environment	2026-03-28T05:18:06.6516250Z   run `npm fund` for details
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1492700Z 
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1593760Z added 4 packages, and audited 5 packages in 426ms
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1694900Z 
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1795920Z 2 packages are looking for funding
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1897440Z   run `npm fund` for details
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.1998210Z 
+build	Setup Tauri Build Environment	2026-03-28T05:18:07.2099140Z found 0 vulnerabilities
+build	Inject Dynamic Tauri Configurations	﻿2026-03-28T05:18:07.2199100Z ##[group]Run set -x
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2199390Z [36;1mset -x[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2199570Z [36;1mcd tauri-template/src-tauri[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2199880Z [36;1m# Handle potential null or empty config[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2200130Z [36;1mCONF_JSON='{}'[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2200400Z [36;1mif [ "$USER_CONFIG" != "null" ] && [ -n "$USER_CONFIG" ]; then[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2200700Z [36;1m  CONF_JSON="$USER_CONFIG"[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2200930Z [36;1mfi[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2201070Z [36;1m[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2201370Z [36;1m# Use jq to update tauri.conf.json dynamically with custom mac_config (Pro Build)[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2201750Z [36;1mjq --arg name "$PROJECT_NAME" \[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2202040Z [36;1m   --arg url "$LIVE_URL" \[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2202270Z [36;1m   --arg id "$PROJECT_ID" \[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2202550Z [36;1m   --argjson user_config "$CONF_JSON" \[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2202820Z [36;1m   '.package.productName = $name | [0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2203170Z [36;1m    .tauri.bundle.identifier = ("com.foldaa.app." + $id) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2203720Z [36;1m    .tauri.windows[0].title = $name | [0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2203970Z [36;1m    .build.devPath = $url | [0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2204260Z [36;1m    .build.distDir = "../dist" |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2204570Z [36;1m    .tauri.windows[0].width = ($user_config.window.width // 1200) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2204980Z [36;1m    .tauri.windows[0].height = ($user_config.window.height // 800) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2205560Z [36;1m    .tauri.windows[0].resizable = (if $user_config.behavior.resizable != null then $user_config.behavior.resizable else true end) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2206330Z [36;1m    .tauri.windows[0].fullscreen = (if $user_config.window.fullscreen != null then $user_config.window.fullscreen else false end) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2207120Z [36;1m    .tauri.windows[0].decorations = (if $user_config.window.frameless == true or $user_config.toolbar.style == "Hidden" then false else true end) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2207950Z [36;1m    .tauri.windows[0].transparent = (if $user_config.window.transparent != null then $user_config.window.transparent else true end) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2208740Z [36;1m    .tauri.windows[0].alwaysOnTop = (if $user_config.behavior.always_on_top != null then $user_config.behavior.always_on_top else false end) |[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2209590Z [36;1m    .tauri.windows[0].titleBarStyle = (if $user_config.toolbar.style == "Hidden" then "Transparent" else ($user_config.toolbar.style // "Overlay") end)' \[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2210300Z [36;1m   tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2210640Z [36;1m[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2221400Z [36;1m# Inject the actual URL into the dummy index.html for production redirect[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2221900Z [36;1msed -i '' "s|__FOLDAA_URL__|$LIVE_URL|g" ../dist/index.html[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2222170Z [36;1m[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2222440Z [36;1m# Handle icon (Prioritize custom icns, fallback to repo default)[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2222770Z [36;1mif [ -f "../../app-icon.icns" ]; then[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2223060Z [36;1m  echo "Found custom app icon, injecting into bundle"[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2223340Z [36;1m  mkdir -p icons[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2223570Z [36;1m  cp ../../app-icon.icns icons/icon.icns[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2224080Z [36;1m  jq '.tauri.bundle.icon = ["icons/icon.icns"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2224560Z [36;1melse[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2224780Z [36;1m  echo "Using default app icon from repository"[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2225370Z [36;1m  jq '.tauri.bundle.icon = ["icons/icon.png"]' tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2225810Z [36;1mfi[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2225960Z [36;1m[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2226130Z [36;1mecho "DUMPING MODIFIED tauri.conf.json:"[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2226810Z [36;1mcat tauri.conf.json[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2226990Z [36;1m[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2227200Z [36;1m# Also update Cargo.toml to ensure binary name matches[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2227560Z [36;1msed -i '' "s|^name = \".*\"|name = \"$PROJECT_NAME\"|g" Cargo.toml[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2227860Z [36;1mecho "DUMPING Cargo.toml:"[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2228080Z [36;1mhead -n 10 Cargo.toml[0m
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2259110Z shell: /bin/bash -e {0}
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2259330Z env:
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2259500Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2259700Z   PROJECT_NAME: fld
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2259890Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2260190Z   LIVE_URL: https://fld.foldaa.com
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2260390Z   REPONAME: vmador/FoldaaWeb
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2260610Z   icon_args: --icon app-icon.icns
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2260830Z   CARGO_HOME: /Users/runner/.cargo
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2261020Z   CARGO_INCREMENTAL: 0
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2261230Z   CARGO_TERM_COLOR: always
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2262300Z   USER_CONFIG: {
+build	Inject Dynamic Tauri Configurations	  "behavior": {
+build	Inject Dynamic Tauri Configurations	    "always_on_top": false,
+build	Inject Dynamic Tauri Configurations	    "resizable": true
+build	Inject Dynamic Tauri Configurations	  },
+build	Inject Dynamic Tauri Configurations	  "branding": {
+build	Inject Dynamic Tauri Configurations	    "app_name": "fld",
+build	Inject Dynamic Tauri Configurations	    "icon_url": "https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Inject Dynamic Tauri Configurations	  },
+build	Inject Dynamic Tauri Configurations	  "toolbar": {
+build	Inject Dynamic Tauri Configurations	    "style": "Overlay"
+build	Inject Dynamic Tauri Configurations	  },
+build	Inject Dynamic Tauri Configurations	  "vibrancy": {
+build	Inject Dynamic Tauri Configurations	    "enabled": true,
+build	Inject Dynamic Tauri Configurations	    "type": "fullscreen-ui"
+build	Inject Dynamic Tauri Configurations	  },
+build	Inject Dynamic Tauri Configurations	  "window": {
+build	Inject Dynamic Tauri Configurations	    "frameless": true,
+build	Inject Dynamic Tauri Configurations	    "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	    "height": 800,
+build	Inject Dynamic Tauri Configurations	    "transparent": true,
+build	Inject Dynamic Tauri Configurations	    "width": 1200
+build	Inject Dynamic Tauri Configurations	  }
+build	Inject Dynamic Tauri Configurations	}
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2263870Z ##[endgroup]
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2522720Z + cd tauri-template/src-tauri
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2622990Z + CONF_JSON='{}'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2723320Z + '[' '{
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2824290Z   "behavior": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2824740Z Found custom app icon, injecting into bundle
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.2925750Z     "always_on_top": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3026190Z     "resizable": true
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3026640Z DUMPING MODIFIED tauri.conf.json:
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3229500Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3229920Z {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3328290Z   "branding": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3328680Z   "build": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3429990Z     "app_name": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3430300Z     "beforeBuildCommand": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3531040Z     "icon_url": "https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3531500Z     "beforeDevCommand": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3631430Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3631810Z     "devPath": "https://fld.foldaa.com",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3731530Z   "toolbar": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3731840Z     "distDir": "../dist",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3821780Z     "style": "Overlay"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3822110Z     "withGlobalTauri": false
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3825310Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3825520Z   "vibrancy": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3825720Z     "enabled": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3826050Z     "type": "fullscreen-ui"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3826270Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3826430Z   "window": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3826600Z     "frameless": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3826810Z     "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827000Z     "height": 800,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827200Z     "transparent": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827380Z     "width": 1200
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827540Z   }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827690Z }' '!=' null ']'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3827840Z + '[' -n '{
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828000Z   "behavior": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828170Z     "always_on_top": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828370Z     "resizable": true
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828540Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828670Z   "branding": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3828840Z     "app_name": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3829160Z     "icon_url": "https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3829460Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3829590Z   "toolbar": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3829770Z     "style": "Overlay"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3829930Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3830080Z   "vibrancy": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3830240Z     "enabled": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3830440Z     "type": "fullscreen-ui"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3830940Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3831090Z   "window": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3831260Z     "frameless": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3831450Z     "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3831640Z     "height": 800,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3831810Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832020Z     "transparent": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832210Z   "package": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832380Z     "productName": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832570Z     "version": "0.1.0"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832740Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3832890Z   "tauri": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833080Z     "allowlist": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833250Z       "all": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833400Z       "shell": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833580Z         "all": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833750Z         "open": true
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3833930Z       }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3834100Z     },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3834280Z     "bundle": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3834480Z       "active": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3834730Z       "category": "DeveloperTool",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3834950Z       "copyright": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3835120Z       "deb": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3835290Z         "depends": []
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3835700Z       },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3835900Z       "externalBin": [],
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3836090Z       "icon": [
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3836260Z         "icons/icon.icns"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3836430Z       ],
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3836750Z       "identifier": "com.foldaa.app.5c50003e-4150-415f-99b3-712af5f7dedd",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3837070Z       "longDescription": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3837280Z       "macOS": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3837450Z         "entitlements": null,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3837690Z         "exceptionDomain": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3837900Z         "frameworks": [],
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3838120Z         "signingIdentity": null
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3838330Z       },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3838480Z       "resources": [],
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3838670Z       "shortDescription": "",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3838860Z       "targets": "all",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3839050Z       "windows": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3839260Z         "certificateThumbprint": null,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3839530Z         "digestAlgorithm": "sha256"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3839730Z       }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3839870Z     },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840010Z     "security": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840180Z       "csp": null
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840360Z     },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840490Z     "updater": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840660Z       "active": false
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840830Z     },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3840990Z     "windows": [
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3841140Z       {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3841300Z         "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3841490Z         "resizable": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3841690Z         "title": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3841870Z         "width": 1200,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3842060Z         "height": 800,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3842240Z         "decorations": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3842450Z         "transparent": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3842670Z         "hiddenTitle": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3842890Z         "titleBarStyle": "Overlay",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843120Z         "alwaysOnTop": false
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843320Z       }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843450Z     ]
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843590Z   }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843720Z }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3843890Z DUMPING Cargo.toml:
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3844050Z [package]
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3844210Z name = "fld"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3844380Z version = "0.1.0"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3844620Z description = "Foldaa Pro Build"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3844830Z authors = ["Foldaa"]
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3845010Z license = "MIT"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3845370Z repository = "https://github.com/foldaa/foldaa"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3845610Z edition = "2021"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3845800Z rust-version = "1.60"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3845910Z 
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3849940Z     "width": 1200
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3859710Z   }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3867830Z }' ']'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3868600Z + CONF_JSON='{
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3874100Z   "behavior": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3878460Z     "always_on_top": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3879390Z     "resizable": true
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3889870Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3890020Z   "branding": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3890220Z     "app_name": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3890550Z     "icon_url": "https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3890850Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3890990Z   "toolbar": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3891160Z     "style": "Overlay"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3891330Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3891480Z   "vibrancy": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3891640Z     "enabled": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3891830Z     "type": "fullscreen-ui"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892010Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892160Z   "window": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892340Z     "frameless": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892520Z     "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892710Z     "height": 800,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3892880Z     "transparent": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3893080Z     "width": 1200
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3893230Z   }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3893370Z }'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3893940Z + jq --arg name fld --arg url https://fld.foldaa.com --arg id 5c50003e-4150-415f-99b3-712af5f7dedd --argjson user_config '{
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3894650Z   "behavior": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3894820Z     "always_on_top": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3895020Z     "resizable": true
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3895190Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3895360Z   "branding": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3895530Z     "app_name": "fld",
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3895830Z     "icon_url": "https://foldaa-terminal-ui.vercel.app/icon.svg"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896120Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896250Z   "toolbar": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896420Z     "style": "Overlay"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896580Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896720Z   "vibrancy": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3896910Z     "enabled": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3897110Z     "type": "fullscreen-ui"
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3907650Z   },
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3912720Z   "window": {
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3923490Z     "frameless": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3927580Z     "fullscreen": false,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3927800Z     "height": 800,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3927990Z     "transparent": true,
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3928190Z     "width": 1200
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3928360Z   }
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3928580Z }' '.package.productName = $name | 
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3928920Z     .tauri.bundle.identifier = ("com.foldaa.app." + $id) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3929250Z     .tauri.windows[0].title = $name | 
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3929510Z     .build.devPath = $url | 
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3929760Z     .build.distDir = "../dist" |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3930100Z     .tauri.windows[0].width = ($user_config.window.width // 1200) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3930540Z     .tauri.windows[0].height = ($user_config.window.height // 800) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3931170Z     .tauri.windows[0].resizable = (if $user_config.behavior.resizable != null then $user_config.behavior.resizable else true end) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3931980Z     .tauri.windows[0].fullscreen = (if $user_config.window.fullscreen != null then $user_config.window.fullscreen else false end) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3941100Z     .tauri.windows[0].decorations = (if $user_config.window.frameless == true or $user_config.toolbar.style == "Hidden" then false else true end) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3945940Z     .tauri.windows[0].transparent = (if $user_config.window.transparent != null then $user_config.window.transparent else true end) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3952970Z     .tauri.windows[0].alwaysOnTop = (if $user_config.behavior.always_on_top != null then $user_config.behavior.always_on_top else false end) |
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3954130Z     .tauri.windows[0].titleBarStyle = (if $user_config.toolbar.style == "Hidden" then "Transparent" else ($user_config.toolbar.style // "Overlay") end)' tauri.conf.json
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3954820Z + mv tauri.conf.json.tmp tauri.conf.json
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3955280Z + sed -i '' 's|__FOLDAA_URL__|https://fld.foldaa.com|g' ../dist/index.html
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3955630Z + '[' -f ../../app-icon.icns ']'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3955960Z + echo 'Found custom app icon, injecting into bundle'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3956480Z + mkdir -p icons
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3956730Z + cp ../../app-icon.icns icons/icon.icns
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3957100Z + jq '.tauri.bundle.icon = ["icons/icon.icns"]' tauri.conf.json
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3957450Z + mv tauri.conf.json.tmp tauri.conf.json
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3957750Z + echo 'DUMPING MODIFIED tauri.conf.json:'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3958010Z + cat tauri.conf.json
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3958290Z + sed -i '' 's|^name = ".*"|name = "fld"|g' Cargo.toml
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3958560Z + echo 'DUMPING Cargo.toml:'
+build	Inject Dynamic Tauri Configurations	2026-03-28T05:18:07.3958780Z + head -n 10 Cargo.toml
+build	Build Mac App with Tauri (Universal)	﻿2026-03-28T05:18:07.3987700Z ##[group]Run cd tauri-template
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.3987990Z [36;1mcd tauri-template[0m
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.3988250Z [36;1mnpm run tauri build -- --target universal-apple-darwin[0m
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4026740Z shell: /bin/bash -e {0}
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4026940Z env:
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4027110Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4027310Z   PROJECT_NAME: fld
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4027500Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4028040Z   LIVE_URL: https://fld.foldaa.com
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4028250Z   REPONAME: vmador/FoldaaWeb
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4028440Z   icon_args: --icon app-icon.icns
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4028730Z   CARGO_HOME: /Users/runner/.cargo
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4028920Z   CARGO_INCREMENTAL: 0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4029090Z   CARGO_TERM_COLOR: always
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.4029250Z ##[endgroup]
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.5393900Z 
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.5394470Z > foldaa-pro-app@0.1.0 tauri
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.5394880Z > tauri build --target universal-apple-darwin
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:07.5395130Z 
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:08.8614290Z [1m[92m    Updating[0m crates.io index
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.4835010Z [1m[92m     Locking[0m 413 packages to latest compatible versions
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.4872780Z [1m[92m      Adding[0m generic-array v0.14.7 [1m[33m(available: v0.14.9)[0m
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.5027160Z [1m[92m      Adding[0m tauri v1.8.3 [1m[33m(available: v2.10.3)[0m
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.5037450Z [1m[92m      Adding[0m tauri-build v1.5.6 [1m[33m(available: v2.5.6)[0m
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.5300240Z [1m[92m Downloading[0m crates ...
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.5850350Z [1m[92m  Downloaded[0m phf_generator v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.5902230Z [1m[92m  Downloaded[0m kuchikiki v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6027430Z [1m[92m  Downloaded[0m block v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6028220Z [1m[92m  Downloaded[0m tar v0.4.45
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6123460Z [1m[92m  Downloaded[0m bytes v1.11.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6209950Z [1m[92m  Downloaded[0m phf_codegen v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6285960Z [1m[92m  Downloaded[0m serde_with v3.18.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6627020Z [1m[92m  Downloaded[0m ref-cast v1.0.25
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6751850Z [1m[92m  Downloaded[0m rand_pcg v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6801970Z [1m[92m  Downloaded[0m same-file v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6825410Z [1m[92m  Downloaded[0m tauri v1.8.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.6992790Z [1m[92m  Downloaded[0m simd-adler32 v0.3.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7035310Z [1m[92m  Downloaded[0m zerovec v0.11.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7154470Z [1m[92m  Downloaded[0m potential_utf v0.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7175820Z [1m[92m  Downloaded[0m markup5ever v0.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7213060Z [1m[92m  Downloaded[0m plist v1.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7323940Z [1m[92m  Downloaded[0m phf_codegen v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7367490Z [1m[92m  Downloaded[0m proc-macro-hack v0.5.20+deprecated
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7452050Z [1m[92m  Downloaded[0m selectors v0.22.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7514170Z [1m[92m  Downloaded[0m serialize-to-javascript-impl v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7544410Z [1m[92m  Downloaded[0m serde_with_macros v3.18.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7577420Z [1m[92m  Downloaded[0m itoa v1.0.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7613360Z [1m[92m  Downloaded[0m serde_repr v0.1.20
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7666700Z [1m[92m  Downloaded[0m pin-project-lite v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7926230Z [1m[92m  Downloaded[0m mac v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7964280Z [1m[92m  Downloaded[0m rustc_version v0.4.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.7989000Z [1m[92m  Downloaded[0m phf_generator v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8010000Z [1m[92m  Downloaded[0m hex v0.4.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8056300Z [1m[92m  Downloaded[0m idna v1.1.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8127550Z [1m[92m  Downloaded[0m quick-xml v0.38.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8250500Z [1m[92m  Downloaded[0m proc-macro2 v1.0.106
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8336470Z [1m[92m  Downloaded[0m rand_chacha v0.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8384240Z [1m[92m  Downloaded[0m schemars v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8721300Z [1m[92m  Downloaded[0m siphasher v0.3.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8752130Z [1m[92m  Downloaded[0m ignore v0.4.25
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8791830Z [1m[92m  Downloaded[0m serde_derive v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8843540Z [1m[92m  Downloaded[0m siphasher v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8863110Z [1m[92m  Downloaded[0m scopeguard v1.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.8881070Z [1m[92m  Downloaded[0m encoding_rs v0.8.35
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9188670Z [1m[92m  Downloaded[0m serialize-to-javascript v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9206980Z [1m[92m  Downloaded[0m slab v0.4.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9227560Z [1m[92m  Downloaded[0m crossbeam-epoch v0.9.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9266880Z [1m[92m  Downloaded[0m rand v0.7.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9352250Z [1m[92m  Downloaded[0m string_cache_codegen v0.5.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9363920Z [1m[92m  Downloaded[0m stable_deref_trait v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9376420Z [1m[92m  Downloaded[0m futures-task v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9411300Z [1m[92m  Downloaded[0m dtoa-short v0.3.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9412010Z [1m[92m  Downloaded[0m crossbeam-channel v0.5.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9474950Z [1m[92m  Downloaded[0m core-graphics-types v0.1.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9485170Z [1m[92m  Downloaded[0m icu_properties v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9515690Z [1m[92m  Downloaded[0m getrandom v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9569810Z [1m[92m  Downloaded[0m getrandom v0.1.16
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9609220Z [1m[92m  Downloaded[0m form_urlencoded v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9620610Z [1m[92m  Downloaded[0m find-msvc-tools v0.1.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9648860Z [1m[92m  Downloaded[0m dtoa v1.0.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9681540Z [1m[92m  Downloaded[0m dispatch v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9697240Z [1m[92m  Downloaded[0m cocoa v0.24.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9735000Z [1m[92m  Downloaded[0m cc v1.2.58
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9782100Z [1m[92m  Downloaded[0m shlex v1.3.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9801840Z [1m[92m  Downloaded[0m serde v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9857430Z [1m[92m  Downloaded[0m precomputed-hash v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9864190Z [1m[92m  Downloaded[0m string_cache v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9885990Z [1m[92m  Downloaded[0m smallvec v1.15.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:09.9915910Z [1m[92m  Downloaded[0m libc v0.2.183
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0512440Z [1m[92m  Downloaded[0m html5ever v0.26.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0564550Z [1m[92m  Downloaded[0m displaydoc v0.2.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0626540Z [1m[92m  Downloaded[0m darling_macro v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0627630Z [1m[92m  Downloaded[0m darling v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0728960Z [1m[92m  Downloaded[0m regex-syntax v0.8.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0839500Z [1m[92m  Downloaded[0m icu_locale_core v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.0967100Z [1m[92m  Downloaded[0m iana-time-zone v0.1.65
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1065810Z [1m[92m  Downloaded[0m futf v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1156460Z [1m[92m  Downloaded[0m fdeflate v0.3.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1162360Z [1m[92m  Downloaded[0m dunce v1.0.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1164300Z [1m[92m  Downloaded[0m core-foundation v0.9.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1165410Z [1m[92m  Downloaded[0m syn v1.0.109
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1327540Z [1m[92m  Downloaded[0m state v0.5.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1374550Z [1m[92m  Downloaded[0m raw-window-handle v0.5.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1393770Z [1m[92m  Downloaded[0m strsim v0.11.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1412000Z [1m[92m  Downloaded[0m serde_spanned v0.6.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1426210Z [1m[92m  Downloaded[0m hashbrown v0.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1485770Z [1m[92m  Downloaded[0m idna_adapter v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1499330Z [1m[92m  Downloaded[0m ico v0.4.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1549400Z [1m[92m  Downloaded[0m heck v0.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1573110Z [1m[92m  Downloaded[0m num-traits v0.2.19
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1612610Z [1m[92m  Downloaded[0m zerovec-derive v0.11.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1646790Z [1m[92m  Downloaded[0m url v2.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1688630Z [1m[92m  Downloaded[0m getrandom v0.4.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1749970Z [1m[92m  Downloaded[0m generic-array v0.14.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.1772280Z [1m[92m  Downloaded[0m futures-util v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2005630Z [1m[92m  Downloaded[0m errno v0.3.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2028680Z [1m[92m  Downloaded[0m digest v0.10.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2058880Z [1m[92m  Downloaded[0m derive_more v0.99.20
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2135040Z [1m[92m  Downloaded[0m cpufeatures v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2170840Z [1m[92m  Downloaded[0m convert_case v0.4.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2175630Z [1m[92m  Downloaded[0m yoke v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2201650Z [1m[92m  Downloaded[0m ident_case v1.0.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2211890Z [1m[92m  Downloaded[0m globset v0.4.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2232150Z [1m[92m  Downloaded[0m foreign-types-shared v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2240970Z [1m[92m  Downloaded[0m equivalent v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2255570Z [1m[92m  Downloaded[0m cfb v0.7.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2320210Z [1m[92m  Downloaded[0m matches v0.1.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2331620Z [1m[92m  Downloaded[0m http-range v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2343650Z [1m[92m  Downloaded[0m flate2 v1.1.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2431270Z [1m[92m  Downloaded[0m dyn-clone v1.0.20
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2455950Z [1m[92m  Downloaded[0m deranged v0.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2474830Z [1m[92m  Downloaded[0m crc32fast v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2502200Z [1m[92m  Downloaded[0m cfg-if v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2520580Z [1m[92m  Downloaded[0m once_cell v1.21.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2564030Z [1m[92m  Downloaded[0m new_debug_unreachable v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2580660Z [1m[92m  Downloaded[0m glob v0.3.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2601270Z [1m[92m  Downloaded[0m fastrand v2.3.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2618540Z [1m[92m  Downloaded[0m wry v0.24.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.2706550Z [1m[92m  Downloaded[0m winnow v0.5.40
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3144200Z [1m[92m  Downloaded[0m icu_normalizer v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3186430Z [1m[92m  Downloaded[0m http v0.2.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3285100Z [1m[92m  Downloaded[0m hashbrown v0.16.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3403980Z [1m[92m  Downloaded[0m futures-macro v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3418880Z [1m[92m  Downloaded[0m fluent-uri v0.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3462210Z [1m[92m  Downloaded[0m ppv-lite86 v0.2.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3482330Z [1m[92m  Downloaded[0m indexmap v2.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3553210Z [1m[92m  Downloaded[0m typenum v1.19.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3606230Z [1m[92m  Downloaded[0m toml_edit v0.22.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3676470Z [1m[92m  Downloaded[0m tauri-utils v1.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3710490Z [1m[92m  Downloaded[0m icu_provider v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3752910Z [1m[92m  Downloaded[0m fxhash v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3768670Z [1m[92m  Downloaded[0m core-graphics v0.22.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3795550Z [1m[92m  Downloaded[0m semver v1.0.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.3828220Z [1m[92m  Downloaded[0m schemars v0.9.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.4074990Z [1m[92m  Downloaded[0m phf_shared v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.4083080Z [1m[92m  Downloaded[0m phf_shared v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.4111720Z [1m[92m  Downloaded[0m zerocopy v0.8.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.4453480Z [1m[92m  Downloaded[0m tokio v1.50.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5276970Z [1m[92m  Downloaded[0m dirs-sys-next v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5291170Z [1m[92m  Downloaded[0m crossbeam-deque v0.8.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5313090Z [1m[92m  Downloaded[0m percent-encoding v2.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5327340Z [1m[92m  Downloaded[0m objc_id v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5349050Z [1m[92m  Downloaded[0m toml_write v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5369580Z [1m[92m  Downloaded[0m time v0.3.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5597700Z [1m[92m  Downloaded[0m thiserror v1.0.69
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5699310Z [1m[92m  Downloaded[0m icu_normalizer_data v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5733430Z [1m[92m  Downloaded[0m foreign-types v0.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5744700Z [1m[92m  Downloaded[0m fnv v1.0.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5756760Z [1m[92m  Downloaded[0m embed-resource v2.5.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5782050Z [1m[92m  Downloaded[0m crypto-common v0.1.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5796560Z [1m[92m  Downloaded[0m png v0.17.16
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5866460Z [1m[92m  Downloaded[0m miniz_oxide v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5903990Z [1m[92m  Downloaded[0m unicode-ident v1.0.24
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.5947420Z [1m[92m  Downloaded[0m toml_edit v0.19.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6407500Z [1m[92m  Downloaded[0m toml v0.7.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6439810Z [1m[92m  Downloaded[0m time-core v0.1.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6455380Z [1m[92m  Downloaded[0m tauri-runtime v0.14.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6480420Z [1m[92m  Downloaded[0m phf v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6497990Z [1m[92m  Downloaded[0m phf v0.10.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6510560Z [1m[92m  Downloaded[0m objc_exception v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6520140Z [1m[92m  Downloaded[0m itoa v0.4.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6539650Z [1m[92m  Downloaded[0m zerofrom-derive v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6553180Z [1m[92m  Downloaded[0m icu_properties_data v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6735480Z [1m[92m  Downloaded[0m embed_plist v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6750340Z [1m[92m  Downloaded[0m cssparser-macros v0.6.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6758990Z [1m[92m  Downloaded[0m phf_generator v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6777390Z [1m[92m  Downloaded[0m num-conv v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6789080Z [1m[92m  Downloaded[0m zerofrom v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6801850Z [1m[92m  Downloaded[0m yoke-derive v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6816300Z [1m[92m  Downloaded[0m thin-slice v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6823600Z [1m[92m  Downloaded[0m ctor v0.2.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6847070Z [1m[92m  Downloaded[0m cocoa-foundation v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6858970Z [1m[92m  Downloaded[0m lock_api v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6876490Z [1m[92m  Downloaded[0m writeable v0.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6904490Z [1m[92m  Downloaded[0m tendril v0.4.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6941720Z [1m[92m  Downloaded[0m tauri-runtime-wry v0.14.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6961110Z [1m[92m  Downloaded[0m pathdiff v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.6975060Z [1m[92m  Downloaded[0m parking_lot v0.12.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7017850Z [1m[92m  Downloaded[0m lazy_static v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7046030Z [1m[92m  Downloaded[0m walkdir v2.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7072410Z [1m[92m  Downloaded[0m utf8_iter v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7086890Z [1m[92m  Downloaded[0m tauri-winres v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7112590Z [1m[92m  Downloaded[0m filetime v0.2.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7138860Z [1m[92m  Downloaded[0m dirs-next v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7158260Z [1m[92m  Downloaded[0m cssparser v0.27.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7198390Z [1m[92m  Downloaded[0m cargo_toml v0.15.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7217790Z [1m[92m  Downloaded[0m chrono v0.4.44
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7328510Z [1m[92m  Downloaded[0m sha2 v0.10.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7370530Z [1m[92m  Downloaded[0m servo_arc v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7377850Z [1m[92m  Downloaded[0m serde_json v1.0.149
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7522620Z [1m[92m  Downloaded[0m serde_core v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7563420Z [1m[92m  Downloaded[0m litemap v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7597330Z [1m[92m  Downloaded[0m json-patch v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7633570Z [1m[92m  Downloaded[0m core-foundation-sys v0.8.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7696030Z [1m[92m  Downloaded[0m regex-automata v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.7910510Z [1m[92m  Downloaded[0m regex v1.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8001740Z [1m[92m  Downloaded[0m ref-cast-impl v1.0.25
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8011590Z [1m[92m  Downloaded[0m rand_chacha v0.3.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8027500Z [1m[92m  Downloaded[0m syn v2.0.117
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8211650Z [1m[92m  Downloaded[0m tauri-build v1.5.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8229200Z [1m[92m  Downloaded[0m tao v0.16.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8558000Z [1m[92m  Downloaded[0m rand_core v0.6.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8577930Z [1m[92m  Downloaded[0m rand_core v0.5.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.8596610Z [1m[92m  Downloaded[0m rustix v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9053170Z [1m[92m  Downloaded[0m zerotrie v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9104660Z [1m[92m  Downloaded[0m winnow v0.7.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9258300Z [1m[92m  Downloaded[0m uuid v1.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9302630Z [1m[92m  Downloaded[0m time-macros v0.2.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9344890Z [1m[92m  Downloaded[0m thiserror-impl v1.0.69
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9366930Z [1m[92m  Downloaded[0m tempfile v3.27.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9409850Z [1m[92m  Downloaded[0m tauri-codegen v1.4.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9426910Z [1m[92m  Downloaded[0m indexmap v1.9.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9475680Z [1m[92m  Downloaded[0m darling_core v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9592820Z [1m[92m  Downloaded[0m brotli v7.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9903820Z [1m[92m  Downloaded[0m rand v0.8.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:10.9960840Z [1m[92m  Downloaded[0m quote v1.0.45
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0013790Z [1m[92m  Downloaded[0m phf_macros v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0023740Z [1m[92m  Downloaded[0m phf_macros v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0041240Z [1m[92m  Downloaded[0m phf v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0051220Z [1m[92m  Downloaded[0m parking_lot_core v0.9.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0084450Z [1m[92m  Downloaded[0m open v3.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0102830Z [1m[92m  Downloaded[0m nodrop v0.1.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0114230Z [1m[92m  Downloaded[0m memchr v2.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0201500Z [1m[92m  Downloaded[0m infer v0.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0230920Z [1m[92m  Downloaded[0m zmij v1.0.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0260870Z [1m[92m  Downloaded[0m utf-8 v0.7.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0276890Z [1m[92m  Downloaded[0m tinystr v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0305720Z [1m[92m  Downloaded[0m tauri-macros v1.4.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0323770Z [1m[92m  Downloaded[0m alloc-no-stdlib v2.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0349320Z [1m[92m  Downloaded[0m powerfmt v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0365650Z [1m[92m  Downloaded[0m phf_shared v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0377160Z [1m[92m  Downloaded[0m objc v0.2.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0415770Z [1m[92m  Downloaded[0m malloc_buf v0.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0420580Z [1m[92m  Downloaded[0m log v0.4.29
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0454210Z [1m[92m  Downloaded[0m jsonptr v0.4.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0495400Z [1m[92m  Downloaded[0m instant v0.1.13
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0500540Z [1m[92m  Downloaded[0m xattr v1.6.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0537890Z [1m[92m  Downloaded[0m toml_datetime v0.6.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0552460Z [1m[92m  Downloaded[0m toml v0.8.23
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0586290Z [1m[92m  Downloaded[0m bstr v1.12.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0696710Z [1m[92m  Downloaded[0m bitflags v1.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0749470Z [1m[92m  Downloaded[0m base64 v0.22.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0817770Z [1m[92m  Downloaded[0m adler2 v2.0.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0835550Z [1m[92m  Downloaded[0m version_check v0.9.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0853550Z [1m[92m  Downloaded[0m synstructure v0.13.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0868150Z [1m[92m  Downloaded[0m icu_collections v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0976640Z [1m[92m  Downloaded[0m byteorder v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.0998440Z [1m[92m  Downloaded[0m brotli-decompressor v4.0.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1100100Z [1m[92m  Downloaded[0m base64 v0.21.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1155240Z [1m[92m  Downloaded[0m anyhow v1.0.102
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1221980Z [1m[92m  Downloaded[0m alloc-stdlib v0.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1239150Z [1m[92m  Downloaded[0m aho-corasick v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1333580Z [1m[92m  Downloaded[0m bitflags v2.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1414270Z [1m[92m  Downloaded[0m autocfg v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1442070Z [1m[92m  Downloaded[0m futures-core v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1462900Z [1m[92m  Downloaded[0m block-buffer v0.10.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.1478010Z [1m[92m  Downloaded[0m crossbeam-utils v0.8.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.2418390Z [1m[92m   Compiling[0m proc-macro2 v1.0.106
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.2522770Z [1m[92m   Compiling[0m unicode-ident v1.0.24
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.2637480Z [1m[92m   Compiling[0m quote v1.0.45
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:11.6353670Z [1m[92m   Compiling[0m libc v0.2.183
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:13.1377320Z [1m[92m   Compiling[0m cfg-if v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:13.1784670Z [1m[92m   Compiling[0m zerocopy v0.8.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:13.4152140Z [1m[92m   Compiling[0m serde_core v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:13.7310730Z [1m[92m   Compiling[0m syn v2.0.117
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:13.7749410Z [1m[92m   Compiling[0m serde v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:14.4670200Z [1m[92m   Compiling[0m siphasher v0.3.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:14.5805020Z [1m[92m   Compiling[0m getrandom v0.1.16
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:14.7144220Z [1m[92m   Compiling[0m getrandom v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:14.7953190Z [1m[92m   Compiling[0m syn v1.0.109
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:15.0043940Z [1m[92m   Compiling[0m rand_core v0.6.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:16.0824470Z [1m[92m   Compiling[0m ppv-lite86 v0.2.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:16.2231700Z [1m[92m   Compiling[0m synstructure v0.13.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:16.5835120Z [1m[92m   Compiling[0m rand_chacha v0.3.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:16.6167420Z [1m[92m   Compiling[0m rand_core v0.5.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:16.7767780Z [1m[92m   Compiling[0m rand v0.8.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:17.0625920Z [1m[92m   Compiling[0m serde_derive v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:17.1892720Z [1m[92m   Compiling[0m zerofrom-derive v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:17.9290800Z [1m[92m   Compiling[0m yoke-derive v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:18.5489330Z [1m[92m   Compiling[0m zerovec-derive v0.11.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:18.8402240Z [1m[92m   Compiling[0m displaydoc v0.2.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.2067340Z [1m[92m   Compiling[0m siphasher v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.2117060Z [1m[92m   Compiling[0m rand_pcg v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.2562270Z [1m[92m   Compiling[0m rand_chacha v0.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.2888660Z [1m[92m   Compiling[0m phf_shared v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.3848260Z [1m[92m   Compiling[0m rand v0.7.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.5262970Z [1m[92m   Compiling[0m phf_shared v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.5990130Z [1m[92m   Compiling[0m parking_lot_core v0.9.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.6731240Z [1m[92m   Compiling[0m phf_generator v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.7632700Z [1m[92m   Compiling[0m icu_normalizer_data v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.7845370Z [1m[92m   Compiling[0m icu_properties_data v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.8849210Z [1m[92m   Compiling[0m phf_generator v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.9057040Z [1m[92m   Compiling[0m stable_deref_trait v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.9158780Z [1m[92m   Compiling[0m phf_shared v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.9262950Z [1m[92m   Compiling[0m zmij v1.0.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:19.9405020Z [1m[92m   Compiling[0m getrandom v0.4.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.0308160Z [1m[92m   Compiling[0m proc-macro-hack v0.5.20+deprecated
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.0812520Z [1m[92m   Compiling[0m phf_generator v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.0914240Z [1m[92m   Compiling[0m zerofrom v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.1477190Z [1m[92m   Compiling[0m yoke v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.2543580Z [1m[92m   Compiling[0m phf_codegen v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.3193930Z [1m[92m   Compiling[0m string_cache_codegen v0.5.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.5164710Z [1m[92m   Compiling[0m shlex v1.3.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.6009650Z [1m[92m   Compiling[0m smallvec v1.15.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.6126770Z [1m[92m   Compiling[0m find-msvc-tools v0.1.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.6872270Z [1m[92m   Compiling[0m cc v1.2.58
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:20.7064260Z [1m[92m   Compiling[0m phf_macros v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:21.1192940Z [1m[92m   Compiling[0m markup5ever v0.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:21.4377780Z [1m[92m   Compiling[0m cssparser v0.27.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:21.6960840Z [1m[92m   Compiling[0m zerovec v0.11.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:21.7425740Z [1m[92m   Compiling[0m phf_codegen v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.0398760Z [1m[92m   Compiling[0m thiserror v1.0.69
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.2760090Z [1m[92m   Compiling[0m memchr v2.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.6018490Z [1m[92m   Compiling[0m autocfg v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.8434730Z [1m[92m   Compiling[0m indexmap v1.9.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.8535200Z [1m[92m   Compiling[0m selectors v0.22.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.9498240Z [1m[92m   Compiling[0m html5ever v0.26.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:22.9902300Z [1m[92m   Compiling[0m cssparser-macros v0.6.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:23.1127670Z [1m[92m   Compiling[0m strsim v0.11.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:23.2110470Z [1m[92m   Compiling[0m ident_case v1.0.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:23.2645400Z [1m[92m   Compiling[0m darling_core v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:23.8062460Z [1m[92m   Compiling[0m thiserror-impl v1.0.69
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.0707260Z [1m[92m   Compiling[0m hashbrown v0.16.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.3958050Z [1m[92m   Compiling[0m equivalent v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.4257170Z [1m[92m   Compiling[0m crc32fast v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.4952950Z [1m[92m   Compiling[0m convert_case v0.4.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.5758610Z [1m[92m   Compiling[0m indexmap v2.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.6921450Z [1m[92m   Compiling[0m derive_more v0.99.20
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.8561680Z [1m[92m   Compiling[0m darling_macro v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:24.9455410Z [1m[92m   Compiling[0m tinystr v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.0594540Z [1m[92m   Compiling[0m litemap v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.0603160Z [1m[92m   Compiling[0m writeable v0.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.1472230Z [1m[92m   Compiling[0m icu_locale_core v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.1573860Z [1m[92m   Compiling[0m darling v0.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.1698020Z [1m[92m   Compiling[0m potential_utf v0.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.2369420Z [1m[92m   Compiling[0m zerotrie v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.4092250Z [1m[92m   Compiling[0m bitflags v1.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.5603740Z [1m[92m   Compiling[0m scopeguard v1.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.6009890Z [1m[92m   Compiling[0m byteorder v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.7049720Z [1m[92m   Compiling[0m new_debug_unreachable v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.7165030Z [1m[92m   Compiling[0m lock_api v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.7500770Z [1m[92m   Compiling[0m icu_provider v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.9021150Z [1m[92m   Compiling[0m icu_collections v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:25.9531910Z [1m[92m   Compiling[0m serde_with_macros v3.18.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.2265740Z [1m[92m   Compiling[0m phf_macros v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.4506260Z [1m[92m   Compiling[0m itoa v1.0.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.5925740Z [1m[92m   Compiling[0m log v0.4.29
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.6136730Z [1m[92m   Compiling[0m precomputed-hash v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.6203770Z [1m[92m   Compiling[0m mac v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.7200390Z [1m[92m   Compiling[0m futf v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.7733590Z [1m[92m   Compiling[0m parking_lot v0.12.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:26.9731860Z [1m[92m   Compiling[0m utf-8 v0.7.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:27.0532760Z [1m[92m   Compiling[0m dtoa v1.0.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:27.2261180Z [1m[92m   Compiling[0m serde_json v1.0.149
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:27.6485510Z [1m[92m   Compiling[0m dtoa-short v0.3.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:27.7012470Z [1m[92m   Compiling[0m tendril v0.4.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.1455300Z [1m[92m   Compiling[0m string_cache v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.2362870Z [1m[92m   Compiling[0m icu_properties v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.4903790Z [1m[92m   Compiling[0m icu_normalizer v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.6773380Z [1m[92m   Compiling[0m objc_exception v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.8150000Z [1m[92m   Compiling[0m phf v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.8897400Z [1m[92m   Compiling[0m phf v0.10.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.9523100Z [1m[92m   Compiling[0m toml_datetime v0.6.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.9650600Z [1m[92m   Compiling[0m serde_spanned v0.6.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:28.9870780Z [1m[92m   Compiling[0m ctor v0.2.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.0201050Z [1m[92m   Compiling[0m crossbeam-utils v0.8.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.0828190Z [1m[92m   Compiling[0m alloc-no-stdlib v2.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.1432640Z [1m[92m   Compiling[0m nodrop v0.1.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.1836550Z [1m[92m   Compiling[0m itoa v0.4.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.2170450Z [1m[92m   Compiling[0m semver v1.0.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.2583230Z [1m[92m   Compiling[0m version_check v0.9.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.3924880Z [1m[92m   Compiling[0m typenum v1.19.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.4019120Z [1m[92m   Compiling[0m matches v0.1.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.6072560Z [1m[92m   Compiling[0m generic-array v0.14.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.6585480Z [1m[92m   Compiling[0m servo_arc v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:29.7419640Z [1m[92m   Compiling[0m alloc-stdlib v0.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.1759230Z [1m[92m   Compiling[0m idna_adapter v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.2465720Z [1m[92m   Compiling[0m uuid v1.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.5734370Z [1m[92m   Compiling[0m fxhash v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.8295550Z [1m[92m   Compiling[0m percent-encoding v2.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.8829620Z [1m[92m   Compiling[0m thin-slice v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.9137910Z [1m[92m   Compiling[0m core-foundation-sys v0.8.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:30.9340080Z [1m[92m   Compiling[0m fnv v1.0.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.0214650Z [1m[92m   Compiling[0m hashbrown v0.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.0860420Z [1m[92m   Compiling[0m utf8_iter v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.1015320Z [1m[92m   Compiling[0m core-foundation v0.9.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.1346580Z [1m[92m   Compiling[0m idna v1.1.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.5282770Z [1m[92m   Compiling[0m cfb v0.7.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.5611740Z [1m[92m   Compiling[0m form_urlencoded v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:31.9386590Z [1m[92m   Compiling[0m jsonptr v0.4.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:33.5331910Z [1m[92m   Compiling[0m brotli-decompressor v4.0.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:34.9179010Z [1m[92m   Compiling[0m malloc_buf v0.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:34.9338980Z [1m[92m   Compiling[0m simd-adler32 v0.3.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:34.9555550Z [1m[92m   Compiling[0m same-file v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.1099900Z [1m[92m   Compiling[0m anyhow v1.0.102
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.2426280Z [1m[92m   Compiling[0m walkdir v2.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.2728060Z [1m[92m   Compiling[0m objc v0.2.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.4569120Z [1m[92m   Compiling[0m brotli v7.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.6507220Z [1m[92m   Compiling[0m kuchikiki v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:35.7853550Z [1m[92m   Compiling[0m json-patch v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:36.0723320Z [1m[92m   Compiling[0m infer v0.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:36.1480460Z [1m[92m   Compiling[0m url v2.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:36.3074110Z [1m[92m   Compiling[0m core-graphics-types v0.1.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:36.3625540Z [1m[92m   Compiling[0m phf v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:36.4521140Z [1m[92m   Compiling[0m serde_with v3.18.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.0143920Z [1m[92m   Compiling[0m foreign-types-shared v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.0582260Z [1m[92m   Compiling[0m dunce v1.0.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.2543980Z [1m[92m   Compiling[0m toml_write v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.3449840Z [1m[92m   Compiling[0m adler2 v2.0.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.3551090Z [1m[92m   Compiling[0m winnow v0.5.40
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.4030850Z [1m[92m   Compiling[0m heck v0.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.5728240Z [1m[92m   Compiling[0m winnow v0.7.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.7838670Z [1m[92m   Compiling[0m glob v0.3.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:37.9691440Z [1m[92m   Compiling[0m tauri-utils v1.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:38.3426270Z [1m[92m   Compiling[0m toml_edit v0.19.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:38.5735380Z [1m[92m   Compiling[0m toml_edit v0.22.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:40.2908090Z [1m[92m   Compiling[0m miniz_oxide v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:41.3283750Z [1m[92m   Compiling[0m foreign-types v0.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:42.8528510Z [1m[92m   Compiling[0m rustix v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:43.1111110Z [1m[92m   Compiling[0m block v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:43.1673570Z [1m[92m   Compiling[0m powerfmt v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:43.2108520Z [1m[92m   Compiling[0m bytes v1.11.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:43.2601010Z [1m[92m   Compiling[0m deranged v0.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:43.8216720Z [1m[92m   Compiling[0m cocoa-foundation v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:45.3739560Z [1m[92m   Compiling[0m flate2 v1.1.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:45.8592810Z [1m[92m   Compiling[0m core-graphics v0.22.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:46.2411100Z [1m[92m   Compiling[0m toml v0.8.23
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:46.5837980Z [1m[92m   Compiling[0m toml v0.7.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:46.9104600Z [1m[92m   Compiling[0m block-buffer v0.10.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:46.9642170Z [1m[92m   Compiling[0m crypto-common v0.1.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:47.0082660Z [1m[92m   Compiling[0m fdeflate v0.3.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:47.8762950Z [1m[92m   Compiling[0m rustc_version v0.4.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:48.0103550Z [1m[92m   Compiling[0m aho-corasick v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:48.8553290Z [1m[92m   Compiling[0m tao v0.16.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:48.9733020Z [1m[92m   Compiling[0m errno v0.3.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:49.0357320Z [1m[92m   Compiling[0m regex-syntax v0.8.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:50.4438670Z [1m[92m   Compiling[0m num-conv v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:50.4946590Z [1m[92m   Compiling[0m time-core v0.1.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:50.5549950Z [1m[92m   Compiling[0m raw-window-handle v0.5.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:50.6730550Z [1m[92m   Compiling[0m bitflags v2.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:51.9692600Z [1m[92m   Compiling[0m regex-automata v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:52.1355020Z [1m[92m   Compiling[0m time v0.3.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:56.4670900Z [1m[92m   Compiling[0m embed-resource v2.5.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:56.5849380Z [1m[92m   Compiling[0m png v0.17.16
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:57.7122340Z [1m[92m   Compiling[0m digest v0.10.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:18:58.3550260Z [1m[92m   Compiling[0m cocoa v0.24.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:02.3350890Z [1m[92m   Compiling[0m http v0.2.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:02.6916350Z [1m[92m   Compiling[0m crossbeam-channel v0.5.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:03.1357970Z [1m[92m   Compiling[0m quick-xml v0.38.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:03.6665970Z [1m[92m   Compiling[0m instant v0.1.13
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:03.7268900Z [1m[92m   Compiling[0m cpufeatures v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:03.7948250Z [1m[92m   Compiling[0m dirs-sys-next v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:03.8497290Z [1m[92m   Compiling[0m base64 v0.22.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:04.0266500Z [1m[92m   Compiling[0m tauri-runtime v0.14.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:04.0800880Z [1m[92m   Compiling[0m wry v0.24.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:04.3776300Z [1m[92m   Compiling[0m dispatch v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:04.4217330Z [1m[92m   Compiling[0m once_cell v1.21.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:04.4887590Z [1m[92m   Compiling[0m lazy_static v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:05.7010450Z [1m[92m   Compiling[0m plist v1.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:06.1813240Z [1m[92m   Compiling[0m dirs-next v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:06.2336390Z [1m[92m   Compiling[0m sha2 v0.10.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:07.5894220Z [1m[92m   Compiling[0m ico v0.4.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:07.9106620Z [1m[92m   Compiling[0m tauri-winres v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:08.0718960Z [1m[92m   Compiling[0m regex v1.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:08.3032510Z [1m[92m   Compiling[0m cargo_toml v0.15.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:08.9271950Z [1m[92m   Compiling[0m objc_id v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:08.9745310Z [1m[92m   Compiling[0m crossbeam-epoch v0.9.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:09.2667550Z [1m[92m   Compiling[0m bstr v1.12.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:09.8253100Z [1m[92m   Compiling[0m base64 v0.21.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:09.9424780Z [1m[92m   Compiling[0m tauri-runtime-wry v0.14.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:09.9878650Z [1m[92m   Compiling[0m http-range v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:10.0679810Z [1m[92m   Compiling[0m pin-project-lite v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:10.2312730Z [1m[92m   Compiling[0m tauri v1.8.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:10.4204550Z [1m[92m   Compiling[0m tauri-codegen v1.4.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:12.1349650Z [1m[92m   Compiling[0m globset v0.4.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:13.0445750Z [1m[92m   Compiling[0m crossbeam-deque v0.8.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:14.4948640Z [1m[92m   Compiling[0m tauri-build v1.5.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:14.8374360Z [1m[92m   Compiling[0m xattr v1.6.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:16.3477220Z [1m[92m   Compiling[0m serialize-to-javascript-impl v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:16.5832810Z [1m[92m   Compiling[0m futures-macro v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:16.9062080Z [1m[92m   Compiling[0m filetime v0.2.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.0380970Z [1m[92m   Compiling[0m futures-core v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.0783710Z [1m[92m   Compiling[0m pathdiff v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.0962030Z [1m[92m   Compiling[0m futures-task v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.1230090Z [1m[92m   Compiling[0m fastrand v2.3.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.1863940Z [1m[92m   Compiling[0m slab v0.4.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:17.2752540Z [1m[92m   Compiling[0m futures-util v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:18.8759810Z [1m[92m   Compiling[0m tempfile v3.27.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:19.0532310Z [1m[92m   Compiling[0m open v3.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:19.1743380Z [1m[92m   Compiling[0m tar v0.4.45
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:19.4582990Z [1m[92m   Compiling[0m serialize-to-javascript v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:19.5728400Z [1m[92m   Compiling[0m fld v0.1.0 (/Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri)
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:20.7638290Z [1m[92m   Compiling[0m ignore v0.4.25
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:21.1720810Z [1m[92m   Compiling[0m tauri-macros v1.4.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:21.9870010Z [1m[92m   Compiling[0m tokio v1.50.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:23.0192480Z [1m[92m   Compiling[0m serde_repr v0.1.20
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:23.2574450Z [1m[92m   Compiling[0m encoding_rs v0.8.35
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:25.2530210Z [1m[92m   Compiling[0m state v0.5.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:25.3358060Z [1m[92m   Compiling[0m embed_plist v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:35.7743990Z [1m[92m    Finished[0m `release` profile [optimized] target(s) in 1m 26s
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.3155910Z [1m[92m   Compiling[0m libc v0.2.183
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.3197300Z [1m[92m   Compiling[0m cfg-if v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.3221270Z [1m[92m   Compiling[0m stable_deref_trait v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.3798800Z [1m[92m   Compiling[0m serde_core v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.4530050Z [1m[92m   Compiling[0m zerofrom v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.5330960Z [1m[92m   Compiling[0m yoke v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.6639550Z [1m[92m   Compiling[0m smallvec v1.15.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.7699710Z [1m[92m   Compiling[0m memchr v2.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.8293770Z [1m[92m   Compiling[0m serde v1.0.228
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:36.8448530Z [1m[92m   Compiling[0m zerovec v0.11.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.2730640Z [1m[92m   Compiling[0m siphasher v0.3.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.3878120Z [1m[92m   Compiling[0m bitflags v1.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.4169870Z [1m[92m   Compiling[0m tinystr v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.5436840Z [1m[92m   Compiling[0m log v0.4.29
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.6509050Z [1m[92m   Compiling[0m writeable v0.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.7196100Z [1m[92m   Compiling[0m scopeguard v1.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.7558170Z [1m[92m   Compiling[0m itoa v1.0.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.7625050Z [1m[92m   Compiling[0m litemap v0.8.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.8528660Z [1m[92m   Compiling[0m icu_locale_core v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.8804620Z [1m[92m   Compiling[0m potential_utf v0.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:37.9560440Z [1m[92m   Compiling[0m zerotrie v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:38.2208310Z [1m[92m   Compiling[0m hashbrown v0.16.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:38.4173030Z [1m[92m   Compiling[0m equivalent v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:38.4423010Z [1m[92m   Compiling[0m icu_provider v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:38.6238920Z [1m[92m   Compiling[0m indexmap v2.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:38.6805200Z [1m[92m   Compiling[0m icu_collections v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.0964030Z [1m[92m   Compiling[0m zmij v1.0.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1103030Z [1m[92m   Compiling[0m icu_normalizer_data v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1151960Z [1m[92m   Compiling[0m icu_properties_data v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1185990Z [1m[92m   Compiling[0m parking_lot_core v0.9.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1243420Z [1m[92m   Compiling[0m new_debug_unreachable v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1262590Z [1m[92m   Compiling[0m siphasher v1.0.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1451320Z [1m[92m   Compiling[0m serde_json v1.0.149
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.1530860Z [1m[92m   Compiling[0m crossbeam-utils v0.8.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.2164180Z [1m[92m   Compiling[0m phf_shared v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.3938020Z [1m[92m   Compiling[0m objc_exception v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.5986070Z [1m[92m   Compiling[0m lock_api v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.6174680Z [1m[92m   Compiling[0m getrandom v0.4.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.6215480Z [1m[92m   Compiling[0m mac v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.6272700Z [1m[92m   Compiling[0m byteorder v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.6465670Z [1m[92m   Compiling[0m core-foundation-sys v0.8.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.7199820Z [1m[92m   Compiling[0m precomputed-hash v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.7479800Z [1m[92m   Compiling[0m core-foundation v0.9.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.7483790Z [1m[92m   Compiling[0m parking_lot v0.12.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:39.7497580Z [1m[92m   Compiling[0m futf v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:40.0290640Z [1m[92m   Compiling[0m icu_normalizer v2.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:40.4687740Z [1m[92m   Compiling[0m icu_properties v2.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.5769720Z [1m[92m   Compiling[0m phf_shared v0.10.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.6831430Z [1m[92m   Compiling[0m phf_shared v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.7459880Z [1m[92m   Compiling[0m malloc_buf v0.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.7788760Z [1m[92m   Compiling[0m fnv v1.0.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.7874580Z [1m[92m   Compiling[0m utf-8 v0.7.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.8109650Z [1m[92m   Compiling[0m dtoa v1.0.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.8691040Z [1m[92m   Compiling[0m simd-adler32 v0.3.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.8695700Z [1m[92m   Compiling[0m dtoa-short v0.3.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:41.9338120Z [1m[92m   Compiling[0m tendril v0.4.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.0343590Z [1m[92m   Compiling[0m objc v0.2.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.0795870Z [1m[92m   Compiling[0m phf v0.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.1364120Z [1m[92m   Compiling[0m phf v0.10.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.2098260Z [1m[92m   Compiling[0m idna_adapter v1.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.2559520Z [1m[92m   Compiling[0m core-graphics-types v0.1.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.2956530Z [1m[92m   Compiling[0m string_cache v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.3175770Z [1m[92m   Compiling[0m crc32fast v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.3319930Z [1m[92m   Compiling[0m thiserror v1.0.69
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.3335260Z [1m[92m   Compiling[0m cssparser v0.27.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.3652820Z [1m[92m   Compiling[0m markup5ever v0.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.4308350Z [1m[92m   Compiling[0m zerocopy v0.8.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.4426410Z [1m[92m   Compiling[0m utf8_iter v1.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.4453020Z [1m[92m   Compiling[0m itoa v0.4.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.5003170Z [1m[92m   Compiling[0m nodrop v0.1.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.5040340Z [1m[92m   Compiling[0m percent-encoding v2.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.5293860Z [1m[92m   Compiling[0m alloc-no-stdlib v2.0.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.5737550Z [1m[92m   Compiling[0m adler2 v2.0.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.5779300Z [1m[92m   Compiling[0m foreign-types-shared v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.6195460Z [1m[92m   Compiling[0m matches v0.1.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.6407280Z [1m[92m   Compiling[0m miniz_oxide v0.8.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:42.6535480Z [1m[92m   Compiling[0m foreign-types v0.3.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:43.2125440Z [1m[92m   Compiling[0m alloc-stdlib v0.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:43.2574850Z [1m[92m   Compiling[0m form_urlencoded v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:43.3810150Z [1m[92m   Compiling[0m servo_arc v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:43.4548170Z [1m[92m   Compiling[0m idna v1.1.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:43.9833000Z [1m[92m   Compiling[0m uuid v1.23.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.3960340Z [1m[92m   Compiling[0m fxhash v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.4394720Z [1m[92m   Compiling[0m html5ever v0.26.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.5341100Z [1m[92m   Compiling[0m selectors v0.22.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.5460460Z [1m[92m   Compiling[0m indexmap v1.9.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.6054690Z [1m[92m   Compiling[0m getrandom v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:44.7101540Z [1m[92m   Compiling[0m bytes v1.11.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:45.2470430Z [1m[92m   Compiling[0m same-file v1.0.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:45.2707680Z [1m[92m   Compiling[0m thin-slice v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:45.3278010Z [1m[92m   Compiling[0m block v0.1.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:45.3351820Z [1m[92m   Compiling[0m hashbrown v0.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:45.4114880Z [1m[92m   Compiling[0m cocoa-foundation v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.1713130Z [1m[92m   Compiling[0m ppv-lite86 v0.2.21
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.3874200Z [1m[92m   Compiling[0m walkdir v2.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.5337300Z [1m[92m   Compiling[0m rustix v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.6002940Z [1m[92m   Compiling[0m rand_core v0.6.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.8079840Z [1m[92m   Compiling[0m cfb v0.7.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:46.9004650Z [1m[92m   Compiling[0m flate2 v1.1.9
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:47.2180760Z [1m[92m   Compiling[0m url v2.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:47.4748310Z [1m[92m   Compiling[0m brotli-decompressor v4.0.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:47.9725850Z [1m[92m   Compiling[0m core-graphics v0.22.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:48.3572570Z [1m[92m   Compiling[0m fdeflate v0.3.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:48.9449400Z [1m[92m   Compiling[0m jsonptr v0.4.7
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:49.1295270Z [1m[92m   Compiling[0m aho-corasick v1.1.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:49.8710840Z [1m[92m   Compiling[0m errno v0.3.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:49.9288420Z [1m[92m   Compiling[0m raw-window-handle v0.5.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:50.0405300Z [1m[92m   Compiling[0m regex-syntax v0.8.10
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:51.0038710Z [1m[92m   Compiling[0m bitflags v2.11.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:51.2293220Z [1m[92m   Compiling[0m regex-automata v0.4.14
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:54.8096890Z [1m[92m   Compiling[0m tao v0.16.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:55.1975240Z [1m[92m   Compiling[0m json-patch v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:55.5260240Z [1m[92m   Compiling[0m png v0.17.16
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:56.3507340Z [1m[92m   Compiling[0m cocoa v0.24.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:57.1251720Z [1m[92m   Compiling[0m brotli v7.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:59.3838840Z [1m[92m   Compiling[0m infer v0.13.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:19:59.9811250Z [1m[92m   Compiling[0m kuchikiki v0.8.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:00.2135530Z [1m[92m   Compiling[0m rand_chacha v0.3.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:00.4396780Z [1m[92m   Compiling[0m http v0.2.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:00.5320920Z [1m[92m   Compiling[0m crossbeam-channel v0.5.15
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:00.9430090Z [1m[92m   Compiling[0m phf v0.11.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.0223570Z [1m[92m   Compiling[0m serde_with v3.18.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.0909760Z [1m[92m   Compiling[0m semver v1.0.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.5140900Z [1m[92m   Compiling[0m instant v0.1.13
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.5518840Z [1m[92m   Compiling[0m lazy_static v1.5.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.5835720Z [1m[92m   Compiling[0m glob v0.3.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.7213470Z [1m[92m   Compiling[0m dunce v1.0.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.7543010Z [1m[92m   Compiling[0m once_cell v1.21.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.8600080Z [1m[92m   Compiling[0m dispatch v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:01.9786510Z [1m[92m   Compiling[0m powerfmt v0.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:02.1275970Z [1m[92m   Compiling[0m deranged v0.5.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:02.2836470Z [1m[92m   Compiling[0m tauri-utils v1.6.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:02.8737390Z [1m[92m   Compiling[0m wry v0.24.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:02.8940270Z [1m[92m   Compiling[0m tauri-runtime v0.14.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:02.9041760Z [1m[92m   Compiling[0m rand v0.8.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:03.4180060Z [1m[92m   Compiling[0m objc_id v0.1.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:03.4797870Z [1m[92m   Compiling[0m crossbeam-epoch v0.9.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:03.7961070Z [1m[92m   Compiling[0m bstr v1.12.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:04.2423890Z [1m[92m   Compiling[0m time-core v0.1.8
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:04.3128630Z [1m[92m   Compiling[0m pin-project-lite v0.2.17
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:04.3434890Z [1m[92m   Compiling[0m num-conv v0.2.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:04.4030480Z [1m[92m   Compiling[0m http-range v0.1.5
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:04.5691950Z [1m[92m   Compiling[0m tauri-runtime-wry v0.14.11
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:05.2608330Z [1m[92m   Compiling[0m time v0.3.47
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:08.2533550Z [1m[92m   Compiling[0m globset v0.4.18
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:09.7400660Z [1m[92m   Compiling[0m crossbeam-deque v0.8.6
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:09.8524610Z [1m[92m   Compiling[0m xattr v1.6.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:10.2495360Z [1m[92m   Compiling[0m anyhow v1.0.102
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:10.2976490Z [1m[92m   Compiling[0m quick-xml v0.38.4
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:10.7095770Z [1m[92m   Compiling[0m filetime v0.2.27
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:10.8315020Z [1m[92m   Compiling[0m dirs-sys-next v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:10.9047740Z [1m[92m   Compiling[0m base64 v0.22.1
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.2175120Z [1m[92m   Compiling[0m fastrand v2.3.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.3700080Z [1m[92m   Compiling[0m slab v0.4.12
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.4780940Z [1m[92m   Compiling[0m futures-task v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.4989210Z [1m[92m   Compiling[0m futures-core v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.5721770Z [1m[92m   Compiling[0m pathdiff v0.2.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.5727090Z [1m[92m   Compiling[0m futures-util v0.3.32
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.6107950Z [1m[92m   Compiling[0m open v3.2.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:11.6740140Z [1m[92m   Compiling[0m tempfile v3.27.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:12.2550680Z [1m[92m   Compiling[0m plist v1.8.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:12.7890370Z [1m[92m   Compiling[0m serialize-to-javascript v0.1.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:12.8964360Z [1m[92m   Compiling[0m dirs-next v2.0.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:12.9782360Z [1m[92m   Compiling[0m tar v0.4.45
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:13.7898610Z [1m[92m   Compiling[0m ignore v0.4.25
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:16.3511670Z [1m[92m   Compiling[0m tauri v1.8.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:16.3673920Z [1m[92m   Compiling[0m tokio v1.50.0
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:18.3604120Z [1m[92m   Compiling[0m regex v1.12.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:18.4257480Z [1m[92m   Compiling[0m encoding_rs v0.8.35
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:19.3477210Z [1m[92m   Compiling[0m state v0.5.3
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:19.4359320Z [1m[92m   Compiling[0m embed_plist v1.2.2
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:21.9604150Z [1m[92m   Compiling[0m fld v0.1.0 (/Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri)
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:29.8937030Z [1m[92m    Finished[0m `release` profile [optimized] target(s) in 54.01s
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:30.7450190Z         Warn Signing, by default, is only supported on Windows hosts, but you can specify a custom signing command in `bundler > windows > sign_command`, for now, skipping signing the installer...
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:30.7451340Z     Bundling fld.app (/Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app)
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:30.7560100Z     Bundling fld_0.1.0_universal.dmg (/Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/dmg/fld_0.1.0_universal.dmg)
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:30.7608280Z      Running bundle_dmg.sh
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:39.1377640Z     Finished 2 bundles at:
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:39.1378600Z         /Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:39.1390270Z         /Users/runner/work/FoldaaWeb/FoldaaWeb/tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/dmg/fld_0.1.0_universal.dmg
+build	Build Mac App with Tauri (Universal)	2026-03-28T05:20:39.1390770Z 
+build	Repackage DMG for Monterey	﻿2026-03-28T05:20:39.1609520Z ##[group]Run set -x
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1609740Z [36;1mset -x[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1609970Z [36;1mecho "Current directory: $(pwd)"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1610180Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1610310Z [36;1m# 1. Find the .app bundle[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1610700Z [36;1mAPP_PATH=$(find . -name "*.app" -type d -not -path "*/node_modules/*" -not -path "*/Cargo/*" | head -n 1)[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1611080Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1611220Z [36;1mif [ -z "$APP_PATH" ]; then[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1611550Z [36;1m  echo "::error::No .app bundle found! Doing diagnostic file listing:"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1612020Z [36;1m  find . -type d \( -name node_modules -o -name .git -o -name target -o -name Cargo \) -prune -o -print[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1612390Z [36;1m  # Check for any dmgs[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1612590Z [36;1m  find . -name "*.dmg" -print[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1612820Z [36;1m  exit 1[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1612960Z [36;1mfi[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1613120Z [36;1mecho "Found app at: $APP_PATH"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1613340Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1613510Z [36;1m# 2. Fix permissions (Executable bit)[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1613790Z [36;1mecho "Setting executable permissions on $APP_PATH"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1614040Z [36;1mchmod -R 755 "$APP_PATH"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1614220Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1614410Z [36;1m# 3. Create a fresh DMG manually[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1614650Z [36;1mAPP_NAME=$(basename "$APP_PATH" .app)[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1614910Z [36;1mmkdir -p dmg_repack[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1615110Z [36;1mcp -R "$APP_PATH" dmg_repack/[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1615300Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1615520Z [36;1m# CRITICAL: Clean up ANY existing DMGs to avoid "Resource busy"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1615830Z [36;1mfind . -maxdepth 1 -name "*.dmg" -delete[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1616060Z [36;1msync && sleep 2[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1616220Z [36;1m[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1616350Z [36;1m# Create DMG using hdiutil[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1616690Z [36;1mDMG_NAME="05af6b28-0075-401e-b0af-838fe924a567.dmg"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1617370Z [36;1mhdiutil create -volname "$APP_NAME" -srcfolder dmg_repack -ov -format UDZO "$DMG_NAME"[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1617770Z [36;1mecho "FINAL_DMG=$DMG_NAME" >> $GITHUB_ENV[0m
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1731180Z shell: /bin/bash -e {0}
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1731380Z env:
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1731540Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1731740Z   PROJECT_NAME: fld
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1731930Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1732190Z   LIVE_URL: https://fld.foldaa.com
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1732380Z   REPONAME: vmador/FoldaaWeb
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1732620Z   icon_args: --icon app-icon.icns
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1732820Z   CARGO_HOME: /Users/runner/.cargo
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1733010Z   CARGO_INCREMENTAL: 0
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1733170Z   CARGO_TERM_COLOR: always
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.1733320Z ##[endgroup]
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2010580Z ++ pwd
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2011850Z + echo 'Current directory: /Users/runner/work/FoldaaWeb/FoldaaWeb'
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2012560Z Current directory: /Users/runner/work/FoldaaWeb/FoldaaWeb
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2018860Z ++ find . -name '*.app' -type d -not -path '*/node_modules/*' -not -path '*/Cargo/*'
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2019280Z ++ head -n 1
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2630030Z + APP_PATH=./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2630860Z + '[' -z ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app ']'
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2631620Z + echo 'Found app at: ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app'
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2632530Z + echo 'Setting executable permissions on ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app'
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2633340Z + chmod -R 755 ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2637740Z Found app at: ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2640450Z Setting executable permissions on ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2666580Z ++ basename ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app .app
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2685590Z + APP_NAME=fld
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2685860Z + mkdir -p dmg_repack
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2709600Z + cp -R ./tauri-template/src-tauri/target/universal-apple-darwin/release/bundle/macos/fld.app dmg_repack/
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2808800Z + find . -maxdepth 1 -name '*.dmg' -delete
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.2841890Z + sync
+build	Repackage DMG for Monterey	2026-03-28T05:20:39.3118490Z + sleep 2
+build	Repackage DMG for Monterey	2026-03-28T05:20:41.3659500Z + DMG_NAME=05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Repackage DMG for Monterey	2026-03-28T05:20:41.3692600Z + hdiutil create -volname fld -srcfolder dmg_repack -ov -format UDZO 05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Repackage DMG for Monterey	2026-03-28T05:20:45.7349300Z created: /Users/runner/work/FoldaaWeb/FoldaaWeb/05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Repackage DMG for Monterey	2026-03-28T05:20:45.7357230Z + echo FINAL_DMG=05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Upload to Cloudflare R2	﻿2026-03-28T05:20:45.7438580Z ##[group]Run if [ -z "$FINAL_DMG" ]; then
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7439310Z [36;1mif [ -z "$FINAL_DMG" ]; then[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7440000Z [36;1m  echo "Error: Final DMG not found!"[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7440710Z [36;1m  exit 1[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7441110Z [36;1mfi[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7441520Z [36;1m[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7441930Z [36;1m# Upload DMG to R2 Bucket[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7443350Z [36;1mR2_ENDPOINT="https://***.r2.cloudflarestorage.com"[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7444430Z [36;1maws s3 cp "$FINAL_DMG" "s3://***/05af6b28-0075-401e-b0af-838fe924a567.dmg" \[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7445310Z [36;1m  --endpoint-url $R2_ENDPOINT \[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7446030Z [36;1m  --content-type "application/x-apple-diskimage" \[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7467830Z [36;1m  --content-disposition "attachment; filename=\"fld.dmg\""[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7468780Z [36;1m  [0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7470900Z [36;1mDOWNLOAD_URL="***/05af6b28-0075-401e-b0af-838fe924a567.dmg"[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7471860Z [36;1mecho "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV[0m
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7551980Z shell: /bin/bash -e {0}
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7552530Z env:
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7552950Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7553520Z   PROJECT_NAME: fld
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7554030Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7554710Z   LIVE_URL: https://fld.foldaa.com
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7555270Z   REPONAME: vmador/FoldaaWeb
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7555840Z   icon_args: --icon app-icon.icns
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7556390Z   CARGO_HOME: /Users/runner/.cargo
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7556940Z   CARGO_INCREMENTAL: 0
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7557380Z   CARGO_TERM_COLOR: always
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7557980Z   FINAL_DMG: 05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7558900Z   AWS_ACCESS_KEY_ID: ***
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7559760Z   AWS_SECRET_ACCESS_KEY: ***
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7560290Z   AWS_DEFAULT_REGION: auto
+build	Upload to Cloudflare R2	2026-03-28T05:20:45.7560770Z ##[endgroup]
+build	Upload to Cloudflare R2	2026-03-28T05:20:46.6142750Z Completed 1.0 MiB/4.8 MiB (20.4 MiB/s) with 1 file(s) remaining
+build	Upload to Cloudflare R2	2026-03-28T05:20:46.6585500Z Completed 2.0 MiB/4.8 MiB (33.5 MiB/s) with 1 file(s) remaining
+build	Upload to Cloudflare R2	2026-03-28T05:20:46.7002280Z Completed 3.0 MiB/4.8 MiB (28.8 MiB/s) with 1 file(s) remaining
+build	Upload to Cloudflare R2	2026-03-28T05:20:46.7556420Z Completed 4.0 MiB/4.8 MiB (27.4 MiB/s) with 1 file(s) remaining
+build	Upload to Cloudflare R2	2026-03-28T05:20:47.2726850Z Completed 4.8 MiB/4.8 MiB (23.6 MiB/s) with 1 file(s) remaining
+build	Upload to Cloudflare R2	2026-03-28T05:20:47.2727840Z upload: ./05af6b28-0075-401e-b0af-838fe924a567.dmg to s3://***/05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Notify Supabase (Success)	﻿2026-03-28T05:20:47.3906190Z ##[group]Run RUN_URL="https://github.com/vmador/FoldaaWeb/actions/runs/23678256528"
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3906690Z [36;1mRUN_URL="https://github.com/vmador/FoldaaWeb/actions/runs/23678256528"[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3907220Z [36;1mLOG_MSG="Build successful using pro mode on $(uname -m). Universal flags applied. View details at $RUN_URL"[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3907680Z [36;1m[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3908140Z [36;1mcurl -s -X POST ***/functions/v1/update-mac-build \[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3909440Z [36;1m  -H 'Authorization: ***' \[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3909690Z [36;1m  -H 'Content-Type: application/json' \[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3910190Z [36;1m  -d "{\"build_id\": \"05af6b28-0075-401e-b0af-838fe924a567\", \"status\": \"ready\", \"dmg_url\": \"$DOWNLOAD_URL\", \"logs\": \"$LOG_MSG\"}"[0m
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3939930Z shell: /bin/bash -e {0}
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3940220Z env:
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3940400Z   MACOSX_DEPLOYMENT_TARGET: 10.15
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3940610Z   PROJECT_NAME: fld
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3940880Z   PROJECT_ID: 5c50003e-4150-415f-99b3-712af5f7dedd
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3941170Z   LIVE_URL: https://fld.foldaa.com
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3941370Z   REPONAME: vmador/FoldaaWeb
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3941580Z   icon_args: --icon app-icon.icns
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3941800Z   CARGO_HOME: /Users/runner/.cargo
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3942020Z   CARGO_INCREMENTAL: 0
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3942200Z   CARGO_TERM_COLOR: always
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3942430Z   FINAL_DMG: 05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3943010Z   DOWNLOAD_URL: ***/05af6b28-0075-401e-b0af-838fe924a567.dmg
+build	Notify Supabase (Success)	2026-03-28T05:20:47.3943290Z ##[endgroup]
+build	Notify Supabase (Success)	2026-03-28T05:20:48.8390580Z {"success":true}
+build	Post Setup Node.js	﻿2026-03-28T05:20:48.8541520Z Post job cleanup.
+build	Post Checkout Repository	﻿2026-03-28T05:20:49.1179210Z Post job cleanup.
+build	Post Checkout Repository	2026-03-28T05:20:49.2009760Z [command]/opt/homebrew/bin/git version
+build	Post Checkout Repository	2026-03-28T05:20:49.2173890Z git version 2.53.0
+build	Post Checkout Repository	2026-03-28T05:20:49.2206650Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/3ca2ccb6-63fc-4721-96ec-ebf934c6b1fa/.gitconfig'
+build	Post Checkout Repository	2026-03-28T05:20:49.2213400Z Temporarily overriding HOME='/Users/runner/work/_temp/3ca2ccb6-63fc-4721-96ec-ebf934c6b1fa' before making global git config changes
+build	Post Checkout Repository	2026-03-28T05:20:49.2214160Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Checkout Repository	2026-03-28T05:20:49.2220730Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/FoldaaWeb/FoldaaWeb
+build	Post Checkout Repository	2026-03-28T05:20:49.2305990Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Post Checkout Repository	2026-03-28T05:20:49.2360400Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Post Checkout Repository	2026-03-28T05:20:49.3065620Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Checkout Repository	2026-03-28T05:20:49.3116480Z http.https://github.com/.extraheader
+build	Post Checkout Repository	2026-03-28T05:20:49.3126150Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	Post Checkout Repository	2026-03-28T05:20:49.3190610Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Post Checkout Repository	2026-03-28T05:20:49.3890090Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Checkout Repository	2026-03-28T05:20:49.3946130Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Complete job	﻿2026-03-28T05:20:49.4667370Z Cleaning up orphan processes
+build	Complete job	2026-03-28T05:20:49.6045800Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

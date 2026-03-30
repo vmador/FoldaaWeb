@@ -27,7 +27,7 @@ import DeveloperProfile from "./DeveloperProfile"
 import { formatDistanceToNow } from "date-fns"
 import clsx from "clsx"
 
-type ViewMode = "featured" | "all" | "categories"
+type ViewMode = "featured" | "apps" | "resources" | "all" | "categories"
 type PageView = "marketplace" | "project" | "developer"
 type SortOption = "trending" | "new" | "most_viewed" | "most_installed"
 
@@ -75,9 +75,19 @@ const MarketplaceCard = ({ listing, onClick, onViewDeveloper, colors }: any) => 
             </div>
 
             <div style={{ minWidth: 0, flex: 1 }}>
-                <h3 className="text-[15px] font-bold text-foreground m-0 mb-0.5 tracking-tight">
-                    {listing.title}
-                </h3>
+                <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="text-[15px] font-bold text-foreground m-0 tracking-tight">
+                        {listing.title}
+                    </h3>
+                    <span className={clsx(
+                        "text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider border",
+                        listing.type === 'app' 
+                            ? "bg-blue-500/10 text-blue-500 border-blue-500/20" 
+                            : "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                    )}>
+                        {listing.type || 'resource'}
+                    </span>
+                </div>
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
@@ -160,7 +170,9 @@ const FeaturedCarousel = ({ listings, onClick }: any) => {
                             </div>
                         </div>
                         <button className="px-10 py-4 bg-foreground text-background text-sm font-black rounded-full hover:bg-foreground/90 transition-all hover:scale-105 shadow-xl uppercase tracking-widest border border-neutral-200">
-                            Install
+                             {current.is_for_sale 
+                                ? (current.type === 'app' ? "Acquire" : `Buy — $${current.asking_price}`)
+                                : (current.type === 'app' ? "Get App" : "Deploy")}
                         </button>
                     </div>
                 </div>
@@ -192,7 +204,9 @@ const MarketplaceFilters = ({ sortBy, onSortChange, viewMode, setViewMode }: any
             <div className="flex gap-6 ml-1">
                 {[
                     { id: "featured", label: "Featured" },
-                    { id: "all", label: "All Templates" },
+                    { id: "apps", label: "Apps" },
+                    { id: "resources", label: "Resources" },
+                    { id: "all", label: "All Items" },
                     { id: "categories", label: "Categories" },
                 ].map((tab) => {
                     const isActive = viewMode === tab.id
@@ -313,6 +327,15 @@ export default function Marketplace() {
                 .from("marketplace_listings")
                 .select("*, profiles(*), projects(icon_192_url, favicon_url)", { count: "exact" })
                 .eq("status", "published")
+
+            // ── Segmentation Filter ──────────────────────────────────────────
+            if (viewMode === "apps") {
+                query = query.eq("type", "app")
+            } else if (viewMode === "resources") {
+                query = query.eq("type", "resource")
+            } else {
+                query = query.neq("type", "service")
+            }
 
             // Category Filter
             if (viewMode === "categories" && selectedCategory !== "all") {

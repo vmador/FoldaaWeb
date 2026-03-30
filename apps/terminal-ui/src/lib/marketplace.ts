@@ -52,6 +52,17 @@ export interface MarketplaceListing {
     ls_product_id?: string;
     ls_checkout_id?: string;
     sale_status?: 'draft' | 'available' | 'sold' | 'cancelled' | 'pending' | 'withdrawn';
+    receipt_button_text?: string;
+    receipt_link_url?: string;
+    receipt_thank_you_note?: string;
+    redirect_url?: string;
+    type: 'resource' | 'app' | 'service';
+    subtype?: string;
+    pricing_model?: 'monthly' | 'fixed';
+    max_active_requests?: number;
+    service_duration?: string;
+    onboarding_message?: string;
+    complexity?: 'simple' | 'starter' | 'full';
     updated_at: string;
 }
 
@@ -124,7 +135,11 @@ export const createMarketplaceCheckout = async (params: {
     projectId: string, 
     price: number,
     name: string,
-    description: string 
+    description: string,
+    receipt_button_text?: string,
+    receipt_link_url?: string,
+    receipt_thank_you_note?: string,
+    redirect_url?: string
 }) => {
     const { data, error } = await supabase.functions.invoke('marketplace-checkout', {
         body: { 
@@ -132,12 +147,35 @@ export const createMarketplaceCheckout = async (params: {
             project_id: params.projectId,
             price: params.price,
             name: params.name,
-            description: params.description
+            description: params.description,
+            receipt_button_text: params.receipt_button_text,
+            receipt_link_url: params.receipt_link_url,
+            receipt_thank_you_note: params.receipt_thank_you_note,
+            redirect_url: params.redirect_url
         }
     });
 
     if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
     return data;
+};
+
+/**
+ * Resets (deletes) the marketplace checkout for a project.
+ */
+export const resetMarketplaceCheckout = async (projectId: string) => {
+    const { error } = await supabase
+        .from('marketplace_listings')
+        .update({ 
+            ls_checkout_url: null,
+            ls_product_id: null,
+            ls_checkout_id: null,
+            sale_status: 'draft'
+        })
+        .eq('project_id', projectId);
+
+    if (error) throw error;
+    return { success: true };
 };
 
 /**

@@ -1,0 +1,25 @@
+@keyframes campfire-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes campfire-counter-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.orbit-container {
+  animation: campfire-orbit 40s linear infinite;
+  will-change: transform;
+}
+
+.counter-orbit {
+  animation: campfire-counter-orbit 40s linear infinite;
+  will-change: transform;
+}
+
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

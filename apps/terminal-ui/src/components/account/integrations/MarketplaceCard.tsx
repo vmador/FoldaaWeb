@@ -34,9 +34,8 @@ export default function MarketplaceCard() {
             if (account) {
                 setHasCredentials(true)
                 setAccountInfo(account)
-                if (account.api_key) {
-                    fetchStores(account.api_key)
-                }
+                // We don't fetch stores if we only have the encrypted key on the client
+                // But if the user just connected, we might have the key in state
             } else {
                 setHasCredentials(false)
             }
@@ -49,19 +48,22 @@ export default function MarketplaceCard() {
 
     const fetchStores = async (key: string) => {
         try {
-            const response = await fetch("https://api.lemonsqueezy.com/v1/stores", {
-                headers: {
-                    Authorization: `Bearer ${key}`,
-                    Accept: "application/vnd.api+json",
-                    "Content-Type": "application/vnd.api+json",
-                },
+            const response = await fetch("/api/lemonsqueezy/stores", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ api_key: key.trim() }),
             })
-            const data = await response.json()
-            if (data.data) {
-                setStores(data.data)
+            const result = await response.json()
+            if (result.success && result.data) {
+                setStores(result.data)
+                setError("")
+            } else {
+                setError(result.error || "Failed to fetch stores")
+                setStores([])
             }
         } catch (err) {
             console.error("Error fetching stores:", err)
+            setError("Failed to reach store selector")
         }
     }
 
@@ -79,19 +81,23 @@ export default function MarketplaceCard() {
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) throw new Error("Not authenticated")
 
-            const { error: upsertError } = await supabase
-                .from("seller_accounts")
-                .upsert({
-                    user_id: user.id,
+            const selectedStore = stores.find(s => s.id === selectedStoreId)
+
+            const response = await fetch("/api/lemonsqueezy/encrypt", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
                     api_key: apiKey.trim(),
-                    provider: "lemonsqueezy",
-                    store_id: selectedStoreId || null,
-                    updated_at: new Date().toISOString(),
+                    store_id: selectedStoreId,
+                    store_name: selectedStore?.attributes?.name || "",
+                    template_variant_id: "" // Optional if handled elsewhere
                 })
+            })
 
-            if (upsertError) throw upsertError
+            const result = await response.json()
+            if (!result.success) throw new Error(result.error || "Failed to connect")
 
-            setSuccess("LemonSqueezy connected")
+            setSuccess("LemonSqueezy connected securely")
             await checkCredentials()
             setShowEditForm(false)
             setApiKey("")

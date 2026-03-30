@@ -57,6 +57,7 @@ export type Folder = {
     created_at: string;
     updated_at: string;
     order_index: number;
+    icon?: string | null;
 }
 
 interface ProjectContextType {
@@ -66,7 +67,7 @@ interface ProjectContextType {
     error: any;
     mutateProjects: React.Dispatch<React.SetStateAction<Project[]>>;
     mutateFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
-    createFolder: (name: string) => Promise<Folder>;
+    createFolder: (name: string, icon?: string | null) => Promise<Folder>;
     updateFolder: (id: string, updates: Partial<Folder>) => Promise<Folder>;
     deleteFolder: (id: string) => Promise<void>;
     moveProjectToFolder: (projectId: string, folderId: string | null) => Promise<void>;
@@ -150,11 +151,11 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
         };
     }, [workspaceId]);
 
-    const createFolder = async (name: string) => {
+    const createFolder = async (name: string, icon?: string | null) => {
         if (!workspaceId) throw new Error("No active workspace");
         const { data, error } = await supabase
             .from('folders')
-            .insert([{ name, workspace_id: workspaceId }])
+            .insert([{ name, workspace_id: workspaceId, icon }])
             .select()
             .single();
 

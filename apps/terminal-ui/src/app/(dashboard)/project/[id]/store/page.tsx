@@ -9,6 +9,7 @@ import {
     updateCheckoutPrice,
     disconnectSellerAccount,
     connectSellerAccount,
+    resetMarketplaceCheckout,
     MarketplaceListing,
     SellerAccount,
     getListingCheckout as getListingCheckoutApi
@@ -87,7 +88,7 @@ const INCLUDED_IN_SALE_OPTIONS = [
     { value: "training", label: "🎓 Training Session" },
 ];
 
-const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any) => (
+const MetaField = ({ label, value, onChange, placeholder, type = 'input', children }: any) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">{label}</label>
         {type === 'textarea' ? (
@@ -103,9 +104,11 @@ const MetaField = ({ label, value, onChange, placeholder, type = 'input' }: any)
                 onChange={e => onChange(e.target.value)}
                 className="bg-neutral-50 border border-neutral-200 rounded px-3 py-1.5 text-foreground outline-none font-mono text-xs focus:border-neutral-300 transition-colors"
             >
-                {CATEGORIES.map(cat => (
-                    <option key={cat.value} value={cat.value}>{cat.emoji} {cat.label}</option>
-                ))}
+                {children ? children : (
+                    CATEGORIES.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.emoji} {cat.label}</option>
+                    ))
+                )}
             </select>
         ) : (
             <input
@@ -211,6 +214,20 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                         developer_url: (listingData as any)?.developer_url || metaData?.developer_url || '',
                         version: (listingData as any)?.version || metaData?.version || '1.0.0',
                         keywords: (listingData as any)?.tags?.join(', ') || metaData?.keywords || '',
+                        receipt_button_text: (listingData as any)?.receipt_button_text || '',
+                        receipt_link_url: (listingData as any)?.receipt_link_url || '',
+                        receipt_thank_you_note: (listingData as any)?.receipt_thank_you_note || '',
+                        redirect_url: (listingData as any)?.redirect_url || '',
+                        type: (listingData as any)?.type || 'resource',
+                        subtype: (listingData as any)?.subtype || '',
+                        pricing_model: (listingData as any)?.pricing_model || 'monthly',
+                        max_active_requests: (listingData as any)?.max_active_requests || 1,
+                        service_duration: (listingData as any)?.service_duration || '',
+                        onboarding_message: (listingData as any)?.onboarding_message || '',
+                        complexity: (listingData as any)?.complexity || 'simple',
+                        primary_category: metaData?.primary_category || (listingData as any)?.category || 'productivity',
+                        secondary_category: metaData?.secondary_category || '',
+                        age_rating: metaData?.age_rating || '4+',
                     };
                     setMetadata(combinedData);
                     setImagePreviews({
@@ -253,7 +270,18 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                         included_in_sale: ['source_code'],
                         icon_url: project?.icon_512_url || project?.icon_192_url || project?.apple_touch_icon_url || project?.favicon_url || null,
                         logo_url: project?.logo_url || null,
-                        live_url: project?.worker_url || ''
+                        live_url: project?.worker_url || '',
+                        receipt_button_text: '',
+                        receipt_link_url: '',
+                        receipt_thank_you_note: '',
+                        redirect_url: '',
+                        type: 'resource',
+                        subtype: '',
+                        pricing_model: 'monthly',
+                        max_active_requests: 1,
+                        service_duration: '',
+                        onboarding_message: '',
+                        complexity: 'simple'
                     });
                     setImagePreviews({
                         icon: project?.icon_512_url || project?.icon_192_url || project?.apple_touch_icon_url || project?.favicon_url || null,
@@ -342,11 +370,11 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
             const filteredMetadata = {
                 project_id: projectId,
                 user_id: user.id,
-                primary_category: metadata.primary_category,
-                secondary_category: metadata.secondary_category,
-                age_rating: metadata.age_rating,
-                copyright: metadata.copyright,
-                support_url: metadata.support_url,
+                primary_category: metadata.primary_category || 'productivity',
+                secondary_category: metadata.secondary_category || '',
+                age_rating: metadata.age_rating || '4+',
+                copyright: metadata.copyright || '',
+                support_url: metadata.support_url || '',
                 marketing_url: metadata.marketing_url,
                 promotional_text: metadata.promotional_text,
                 keywords: metadata.keywords,
@@ -428,6 +456,17 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 cover_image_url: coverUrl,
                 screenshots: screenshotUrls,
                 reason_for_selling: metadata.reason_for_selling,
+                receipt_button_text: metadata.receipt_button_text,
+                receipt_link_url: metadata.receipt_link_url,
+                receipt_thank_you_note: metadata.receipt_thank_you_note,
+                redirect_url: metadata.redirect_url,
+                type: metadata.type || 'resource',
+                subtype: metadata.subtype || null,
+                pricing_model: metadata.pricing_model || null,
+                max_active_requests: metadata.max_active_requests || null,
+                service_duration: metadata.service_duration || null,
+                onboarding_message: metadata.onboarding_message || null,
+                complexity: metadata.complexity || null,
                 last_updated_at: new Date().toISOString(),
                 // Update profit margin if revenue/costs exist
                 profit_margin: (metadata.monthly_revenue > 0) 
@@ -573,14 +612,33 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 projectId,
                 price: Math.round(price * 100), // LemonSqueezy uses cents
                 name: metadata.name || project.name,
-                description: metadata.description || ''
+                description: metadata.description || '',
+                receipt_button_text: metadata.receipt_button_text,
+                receipt_link_url: metadata.receipt_link_url,
+                receipt_thank_you_note: metadata.receipt_thank_you_note,
+                redirect_url: metadata.redirect_url
             });
             if (result?.ls_checkout_url) {
                 setListing(result);
             }
         } catch (err) {
             console.error("Checkout error:", err);
-            showToast("Failed to create checkout", 'error');
+            showToast(err instanceof Error ? err.message : "Failed to create checkout", 'error');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleResetCheckout = async () => {
+        if (!confirm("Are you sure you want to remove this checkout link? You can always regenerate it later.")) return;
+        setSaving(true);
+        try {
+            await resetMarketplaceCheckout(projectId);
+            setListing(prev => prev ? { ...prev, ls_checkout_url: undefined } : null);
+            showToast("Checkout link removed", 'info');
+        } catch (err) {
+            console.error("Reset error:", err);
+            showToast("Failed to remove checkout link", 'error');
         } finally {
             setSaving(false);
         }
@@ -633,12 +691,23 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                 throw new Error(result.error || "Failed to extract assets");
             }
 
+            // Simple type inference logic
+            const textSource = `${result.assets.metadata.title} ${result.assets.metadata.description}`.toLowerCase();
+            const appKeywords = ['dashboard', 'saas', 'platform', 'app', 'tool', 'management', 'system', 'portal', 'automation', 'api', 'console', 'builder', 'generator'];
+            const resourceKeywords = ['template', 'ui kit', 'component', 'landing page', 'starter', 'boilerplate', 'design', 'layout', 'kit', 'pack'];
+            
+            const appScore = appKeywords.filter(k => textSource.includes(k)).length;
+            const resourceScore = resourceKeywords.filter(k => textSource.includes(k)).length;
+            
+            const suggestedType = appScore > resourceScore ? 'app' : 'resource';
+
             setMetadata((prev: any) => ({
                 ...prev,
                 name: prev.name || result.assets.metadata.title || project.name,
                 subtitle: prev.subtitle || result.assets.metadata.description?.slice(0, 80) || "",
                 description: prev.description || result.assets.metadata.description || "",
                 logo_url: prev.logo_url || result.assets.icons.logo || null,
+                type: prev.type === 'resource' && suggestedType === 'app' ? 'app' : prev.type // Suggest 'app' if it was default 'resource'
             }));
 
             setImagePreviews({
@@ -715,78 +784,139 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             </div>
 
                             {/* Automation */}
+                            {/* What are you selling? Selector */}
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-foreground/60 text-xs uppercase tracking-widest font-bold">Automation</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-neutral-200" />
+                                    <label className="text-foreground/60 text-xs uppercase tracking-widest font-bold">Property Type</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.05]" />
                                 </div>
-                                
-                                {!isExtractingAssets ? (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <button
-                                        onClick={handleExtractAssets}
-                                        disabled={saving || isExtractingAssets || !project?.worker_url}
-                                        className="w-full btn-outline justify-center py-3 text-[10px] uppercase tracking-widest"
+                                        onClick={() => setMetadata({...metadata, type: 'resource'})}
+                                        className={clsx(
+                                            "flex flex-col items-start gap-2 p-5 rounded-2xl border transition-all text-left group",
+                                            metadata.type === 'resource' 
+                                                ? "bg-foreground/[0.03] border-foreground/10 shadow-sm" 
+                                                : "bg-transparent border-white/5 hover:border-white/10 opacity-50 grayscale hover:grayscale-0 hover:opacity-100"
+                                        )}
                                     >
-                                        <RefreshCw size={14} className={clsx("transition-transform group-hover:rotate-180 duration-500")} />
-                                        <span>Auto-Sync Details from Site</span>
+                                        <div className="flex items-center gap-2">
+                                            <Package size={16} className={metadata.type === 'resource' ? "text-foreground" : "text-muted-foreground"} />
+                                            <span className="text-[13px] font-bold uppercase tracking-widest">Resource</span>
+                                        </div>
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">Templates, UI Kits, Components or separate developer assets.</p>
                                     </button>
-                                ) : (
-                                    <div className="w-full flex items-center justify-center gap-3 py-3 bg-foreground/5 border border-white/10 rounded-xl">
-                                        <Loader2 size={16} className="animate-spin text-foreground" />
-                                        <span className="text-foreground/40 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
-                                    </div>
-                                )}
+                                    <button
+                                        onClick={() => setMetadata({...metadata, type: 'app'})}
+                                        className={clsx(
+                                            "flex flex-col items-start gap-2 p-5 rounded-2xl border transition-all text-left group",
+                                            metadata.type === 'app' 
+                                                ? "bg-foreground/[0.03] border-foreground/10 shadow-sm" 
+                                                : "bg-transparent border-white/5 hover:border-white/10 opacity-50 grayscale hover:grayscale-0 hover:opacity-100"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <Globe size={16} className={metadata.type === 'app' ? "text-foreground" : "text-muted-foreground"} />
+                                            <span className="text-[13px] font-bold uppercase tracking-widest">Full App</span>
+                                        </div>
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">SaaS, Platforms, Tools or complete deployable products.</p>
+                                    </button>
+                                    <button
+                                        onClick={() => setMetadata({...metadata, type: 'service'})}
+                                        className={clsx(
+                                            "flex flex-col items-start gap-2 p-5 rounded-2xl border transition-all text-left group",
+                                            metadata.type === 'service' 
+                                                ? "bg-foreground/[0.03] border-foreground/10 shadow-sm" 
+                                                : "bg-transparent border-white/5 hover:border-white/10 opacity-50 grayscale hover:grayscale-0 hover:opacity-100"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <Users size={16} className={metadata.type === 'service' ? "text-foreground" : "text-muted-foreground"} />
+                                            <span className="text-[13px] font-bold uppercase tracking-widest">Service</span>
+                                        </div>
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">Sell your time and structured output collaboratively.</p>
+                                    </button>
+                                </div>
                             </div>
 
-                            {/* App Icon Area */}
-                            <div className="flex flex-col gap-4">
-                                <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">App Icon</h4>
-                                <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-center justify-center relative group overflow-hidden">
-                                        {imagePreviews.icon ? (
-                                            <img src={imagePreviews.icon} alt="Icon" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <ImageIcon size={24} className="text-[#222]" />
-                                        )}
-                                        <label className="absolute inset-0 bg-background/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                            <Upload size={16} className="text-foreground" />
-                                            <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (file) {
-                                                    setIconFile(file);
-                                                    const reader = new FileReader();
-                                                    reader.onloadend = () => setImagePreviews({...imagePreviews, icon: reader.result});
-                                                    reader.readAsDataURL(file);
-                                                }
-                                            }} />
-                                        </label>
+                            {metadata.type !== 'service' && (
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-foreground/60 text-xs uppercase tracking-widest font-bold">Automation</label>
+                                        <div className="h-[1px] flex-1 ml-4 bg-neutral-200" />
                                     </div>
-                                    <div className="flex flex-col gap-1.5 flex-1">
-                                        <span className="text-foreground text-xs font-medium">Global App Icon</span>
-                                        <p className="text-muted-foreground text-xs leading-relaxed">
-                                            High-resolution 512x512 icon for store listings and dashboard.
-                                        </p>
+                                    
+                                    {!isExtractingAssets ? (
+                                        <button
+                                            onClick={handleExtractAssets}
+                                            disabled={saving || isExtractingAssets || !project?.worker_url}
+                                            className="w-full btn-outline justify-center py-3 text-[10px] uppercase tracking-widest"
+                                        >
+                                            <RefreshCw size={14} className={clsx("transition-transform group-hover:rotate-180 duration-500")} />
+                                            <span>Auto-Sync Details from Site</span>
+                                        </button>
+                                    ) : (
+                                        <div className="w-full flex items-center justify-center gap-3 py-3 bg-foreground/5 border border-white/10 rounded-xl">
+                                            <Loader2 size={16} className="animate-spin text-foreground" />
+                                            <span className="text-foreground/40 text-xs font-bold uppercase tracking-widest">AI Extraction in progress...</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* App Icon Area */}
+                            {metadata.type !== 'service' && (
+                                <div className="flex flex-col gap-4">
+                                    <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">App Icon</h4>
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-20 h-20 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-center justify-center relative group overflow-hidden">
+                                            {imagePreviews.icon ? (
+                                                <img src={imagePreviews.icon} alt="Icon" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <ImageIcon size={24} className="text-[#222]" />
+                                            )}
+                                            <label className="absolute inset-0 bg-background/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                                <Upload size={16} className="text-foreground" />
+                                                <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) {
+                                                        setIconFile(file);
+                                                        const reader = new FileReader();
+                                                        reader.onloadend = () => setImagePreviews({...imagePreviews, icon: reader.result});
+                                                        reader.readAsDataURL(file);
+                                                    }
+                                                }} />
+                                            </label>
+                                        </div>
+                                        <div className="flex flex-col gap-1.5 flex-1">
+                                            <span className="text-foreground text-xs font-medium">Global App Icon</span>
+                                            <p className="text-muted-foreground text-xs leading-relaxed">
+                                                High-resolution 512x512 icon for store listings and dashboard.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Standard Metadata */}
                             <div className="flex flex-col gap-6">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Standard Metadata</label>
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">
+                                        {metadata.type === 'service' ? 'Service Details' : 'Standard Metadata'}
+                                    </label>
                                     <div className="h-[1px] flex-1 ml-4 bg-neutral-200" />
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-6">
                                     <MetaField 
-                                        label="App Title" 
+                                        label={metadata.type === 'service' ? 'Service Name' : 'App Title'} 
                                         value={metadata.name} 
-                                        placeholder="Enter app name..."
+                                        placeholder={metadata.type === 'service' ? 'Enter service name...' : 'Enter app name...'}
                                         onChange={(v: string) => setMetadata({...metadata, name: v})} 
                                     />
                                     <MetaField 
-                                        label="Tagline" 
-                                        placeholder="One-liner that sells your app"
+                                        label={metadata.type === 'service' ? 'Short Pitch' : 'Tagline'} 
+                                        placeholder="One-liner that sells your offering"
                                         value={metadata.subtitle} 
                                         type="textarea"
                                         onChange={(v: string) => setMetadata({...metadata, subtitle: v})} 
@@ -795,31 +925,161 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         label="Description" 
                                         type="textarea"
                                         value={metadata.description} 
-                                        placeholder="Detailed app description..."
+                                        placeholder="Detailed description..."
                                         onChange={(v: string) => setMetadata({...metadata, description: v})} 
                                     />
                                     <div className="grid grid-cols-2 gap-4">
+                                        {metadata.type !== 'service' && (
+                                            <MetaField 
+                                                label="Category" 
+                                                type="select"
+                                                value={metadata.primary_category} 
+                                                onChange={(v: string) => setMetadata({...metadata, primary_category: v})} 
+                                            />
+                                        )}
+                                        <div className={metadata.type === 'service' ? "col-span-2" : ""}>
+                                            <MetaField 
+                                                label="Subtype" 
+                                                type="select"
+                                                value={metadata.subtype} 
+                                                onChange={(v: string) => setMetadata({...metadata, subtype: v})} 
+                                            >
+                                                {metadata.type === 'resource' ? (
+                                                    <>
+                                                        <option value="template">Template</option>
+                                                        <option value="ui_kit">UI Kit</option>
+                                                        <option value="component">Component</option>
+                                                    </>
+                                                ) : metadata.type === 'app' ? (
+                                                    <>
+                                                        <option value="saas">SaaS</option>
+                                                        <option value="marketplace">Marketplace</option>
+                                                        <option value="tool">Tool</option>
+                                                        <option value="platform">Platform</option>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <option value="monthly_dev">Monthly Dev</option>
+                                                        <option value="fixed_outcome">Fixed Outcome</option>
+                                                        <option value="retainer">Retainer</option>
+                                                    </>
+                                                )}
+                                            </MetaField>
+                                        </div>
+                                    </div>
+                                    {metadata.type !== 'service' && (
+                                        <>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <MetaField 
+                                                    label="Version" 
+                                                    value={metadata.version} 
+                                                    placeholder="1.0.0"
+                                                    onChange={(v: string) => setMetadata({...metadata, version: v})} 
+                                                />
+                                                {metadata.type === 'app' && (
+                                                    <MetaField 
+                                                        label="Complexity" 
+                                                        type="select"
+                                                        value={metadata.complexity} 
+                                                        onChange={(v: string) => setMetadata({...metadata, complexity: v})} 
+                                                    >
+                                                        <option value="simple">Simple</option>
+                                                        <option value="starter">Starter</option>
+                                                        <option value="full">Full Platform</option>
+                                                    </MetaField>
+                                                )}
+                                            </div>
+                                            <MetaField 
+                                                label="Search Keywords" 
+                                                value={metadata.keywords} 
+                                                placeholder="Search and add..."
+                                                onChange={(v: string) => setMetadata({...metadata, keywords: v})} 
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Service Configuration (If Service) */}
+                            {metadata.type === 'service' && (
+                                <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-top-2 duration-500">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Service Configuration</label>
+                                        <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <MetaField 
-                                            label="Category" 
+                                            label="Pricing Model" 
                                             type="select"
-                                            value={metadata.primary_category} 
-                                            onChange={(v: string) => setMetadata({...metadata, primary_category: v})} 
+                                            value={metadata.pricing_model || 'monthly'} 
+                                            onChange={(v: string) => setMetadata({...metadata, pricing_model: v})} 
+                                        >
+                                            <option value="monthly">Monthly Subscription</option>
+                                            <option value="fixed">Fixed Price Project</option>
+                                        </MetaField>
+                                        <MetaField 
+                                            label="Max Active Requests" 
+                                            type="number"
+                                            value={metadata.max_active_requests || 1} 
+                                            onChange={(v: number) => setMetadata({...metadata, max_active_requests: v})} 
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-6">
+                                        <MetaField 
+                                            label="Service Duration / Turn-around" 
+                                            value={metadata.service_duration || ''} 
+                                            placeholder="e.g. 2-3 days per request"
+                                            onChange={(v: string) => setMetadata({...metadata, service_duration: v})} 
                                         />
                                         <MetaField 
-                                            label="Version" 
-                                            value={metadata.version} 
-                                            placeholder="1.0.0"
-                                            onChange={(v: string) => setMetadata({...metadata, version: v})} 
+                                            label="Onboarding Message" 
+                                            type="textarea"
+                                            value={metadata.onboarding_message || ''} 
+                                            placeholder="Message shown to buyers upon purchasing..."
+                                            onChange={(v: string) => setMetadata({...metadata, onboarding_message: v})} 
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Post-Purchase Experience Section */}
+                            {metadata.type !== 'service' && (
+                                <div className="flex flex-col gap-6">
+                                    <div className="flex items-center justify-between">
+                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Post-Purchase Experience</label>
+                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
+                                </div>
+                                <div className="p-6 bg-foreground/[0.02] border border-white/[0.05] rounded-2xl flex flex-col gap-6">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <MetaField 
+                                            label="Receipt Button Text" 
+                                            value={metadata.receipt_button_text} 
+                                            placeholder="e.g. Access Remix" 
+                                            onChange={(v: string) => setMetadata({...metadata, receipt_button_text: v})} 
+                                        />
+                                        <MetaField 
+                                            label="Receipt Link URL" 
+                                            value={metadata.receipt_link_url} 
+                                            placeholder="https://..." 
+                                            onChange={(v: string) => setMetadata({...metadata, receipt_link_url: v})} 
                                         />
                                     </div>
                                     <MetaField 
-                                        label="Search Keywords" 
-                                        value={metadata.keywords} 
-                                        placeholder="Search and add..."
-                                        onChange={(v: string) => setMetadata({...metadata, keywords: v})} 
+                                        label="Thank You Note (Email)" 
+                                        value={metadata.receipt_thank_you_note} 
+                                        placeholder="A short note included in the email receipt..." 
+                                        type="textarea"
+                                        onChange={(v: string) => setMetadata({...metadata, receipt_thank_you_note: v})} 
+                                    />
+                                    <MetaField 
+                                        label="Post-Purchase Redirect URL" 
+                                        value={metadata.redirect_url} 
+                                        placeholder="https://your-site.com/thanks" 
+                                        onChange={(v: string) => setMetadata({...metadata, redirect_url: v})} 
                                     />
                                 </div>
                             </div>
+                            )}
 
                             {/* Publisher Branding */}
                             <div className="flex flex-col gap-6">
@@ -873,8 +1133,9 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                             </div>
 
                             {/* Support & Legal */}
-                            <div className="flex flex-col gap-6">
-                                <div className="flex items-center justify-between">
+                            {metadata.type !== 'service' && (
+                                <div className="flex flex-col gap-6">
+                                    <div className="flex items-center justify-between">
                                     <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Support & Legal</label>
                                     <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                 </div>
@@ -906,68 +1167,71 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     />
                                 </div>
                             </div>
+                            )}
 
-                            {/* Technologies & Stack */}
-                            <div className="flex flex-col gap-6">
-                                <div className="flex items-center justify-between">
-                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Technologies & Stack</label>
-                                    <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
-                                </div>
-
-                                <div className="flex flex-col gap-6">
-                                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                                        {Object.entries(TECH_CATEGORIES).map(([key, cat]) => (
-                                            <button
-                                                key={key}
-                                                onClick={() => setSelectedTechCategory(key as any)}
-                                                className={clsx(
-                                                    "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
-                                                    selectedTechCategory === key 
-                                                        ? "bg-foreground/10 border-white/20 text-foreground shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
-                                                        : "bg-foreground/[0.02] border-white/5 text-muted-foreground hover:border-white/10"
-                                                )}
-                                            >
-                                                {cat.label}
-                                            </button>
-                                        ))}
+                            {metadata.type === 'app' && (
+                                <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-top-2 duration-500">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Technologies & Stack</label>
+                                        <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
                                     </div>
-
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                        {(TECH_CATEGORIES[selectedTechCategory]?.options || []).map(opt => {
-                                            const isSelected = metadata.tech_stack?.[selectedTechCategory]?.includes(opt);
-                                            return (
+                                    
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                            {Object.entries(TECH_CATEGORIES).map(([key, cat]) => (
                                                 <button
-                                                    key={opt}
-                                                    onClick={() => {
-                                                        const current = metadata.tech_stack?.[selectedTechCategory] || [];
-                                                        const next = isSelected 
-                                                            ? current.filter((i: string) => i !== opt)
-                                                            : [...current, opt];
-                                                        setMetadata({
-                                                            ...metadata,
-                                                            tech_stack: {
-                                                                ...metadata.tech_stack,
-                                                                [selectedTechCategory]: next
-                                                            }
-                                                        });
-                                                    }}
+                                                    key={key}
+                                                    onClick={() => setSelectedTechCategory(key as any)}
                                                     className={clsx(
-                                                        "px-3 py-2 rounded-lg border text-xs font-medium text-left transition-all",
-                                                        isSelected 
-                                                            ? "bg-foreground/[0.05] border-white/20 text-foreground" 
-                                                            : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10 hover:text-muted-foreground"
+                                                        "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
+                                                        selectedTechCategory === key 
+                                                            ? "bg-foreground/10 border-white/20 text-foreground shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
+                                                            : "bg-foreground/[0.02] border-white/5 text-muted-foreground hover:border-white/10"
                                                     )}
                                                 >
-                                                    {opt}
+                                                    {cat.label}
                                                 </button>
-                                            );
-                                        })}
+                                            ))}
+                                        </div>
+
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                            {(TECH_CATEGORIES[selectedTechCategory]?.options || []).map(opt => {
+                                                const isSelected = metadata.tech_stack?.[selectedTechCategory]?.includes(opt);
+                                                return (
+                                                    <button
+                                                        key={opt}
+                                                        onClick={() => {
+                                                            const current = metadata.tech_stack?.[selectedTechCategory] || [];
+                                                            const next = isSelected 
+                                                                ? current.filter((i: string) => i !== opt)
+                                                                : [...current, opt];
+                                                            setMetadata({
+                                                                ...metadata,
+                                                                tech_stack: {
+                                                                    ...metadata.tech_stack,
+                                                                    [selectedTechCategory]: next
+                                                                }
+                                                            });
+                                                        }}
+                                                        className={clsx(
+                                                            "px-3 py-2 rounded-lg border text-xs font-medium text-left transition-all",
+                                                            isSelected 
+                                                                ? "bg-foreground/[0.05] border-white/20 text-foreground" 
+                                                                : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10 hover:text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {opt}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Interface Assets (Screenshots) */}
-                            <div className="flex flex-col gap-6 relative z-10">
+                            {metadata.type !== 'service' && (
+                                <div className="flex flex-col gap-6 relative z-10">
                                 <div className="flex items-center justify-between">
                                     <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Interface Assets</label>
                                     <div className="h-[1px] flex-1 ml-4 bg-foreground/[0.03]" />
@@ -1021,6 +1285,7 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                     )}
                                 </div>
                             </div>
+                        )}
 
                             {/* Marketplace Status */}
                             <div className="flex flex-col gap-6 relative z-20">
@@ -1029,10 +1294,15 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                      <div className="h-[1px] flex-1 bg-foreground/[0.05]" />
                                 </div>
                                 
+                                
                                 <div className="flex items-center justify-between px-5 py-4 bg-foreground/[0.02] border border-white/[0.05] rounded-xl transition-all duration-300 hover:bg-foreground/[0.04] hover:border-white/10">
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-foreground text-xs font-medium">Available for Acquisition</span>
-                                        <span className="text-muted-foreground text-xs uppercase tracking-tight">Enable automated transfer flow</span>
+                                        <span className="text-foreground text-xs font-medium">
+                                            {metadata.type === 'service' ? 'Service Availability' : 'Available for Acquisition'}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs uppercase tracking-tight">
+                                            {metadata.type === 'service' ? 'Accept new clients and display offering' : 'Enable automated transfer flow'}
+                                        </span>
                                     </div>
                                     <Toggle 
                                         checked={metadata.is_for_sale || false}
@@ -1042,7 +1312,8 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
 
                                 {metadata.is_for_sale && (
                                     <div className="flex flex-col gap-8 animate-in slide-in-from-top-2 duration-300">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* Business Metrics (Apps only) */}
+                                        <div className={clsx("grid grid-cols-1 md:grid-cols-2 gap-6", metadata.type !== 'app' && "hidden")}>
                                             <MetaField 
                                                 label="Asking Price (USD)" 
                                                 type="number"
@@ -1075,47 +1346,62 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                             />
                                         </div>
 
-                                        <div className="flex flex-col gap-6 pt-6 border-t border-white/5">
-                                            <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Sale Details</h4>
-                                            
-                                            <MetaField 
-                                                label="Reason for Selling" 
-                                                type="textarea"
-                                                value={metadata.reason_for_selling} 
-                                                placeholder="Why are you selling this project?"
-                                                onChange={(v: string) => setMetadata({...metadata, reason_for_selling: v})} 
-                                            />
+                                        {/* Simple Price (Resources & Services) */}
+                                        {metadata.type !== 'app' && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <MetaField 
+                                                    label={metadata.pricing_model === 'monthly' ? 'Monthly Price (USD)' : 'Price (USD)'} 
+                                                    type="number"
+                                                    value={metadata.asking_price} 
+                                                    onChange={(v: number) => setMetadata({...metadata, asking_price: v})} 
+                                                />
+                                            </div>
+                                        )}
 
-                                            <div className="flex flex-col gap-3">
-                                                <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">What's included</label>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                    {INCLUDED_IN_SALE_OPTIONS.map(opt => {
-                                                        const isSelected = metadata.included_in_sale?.includes(opt.value);
-                                                        return (
-                                                            <button
-                                                                key={opt.value}
-                                                                onClick={() => {
-                                                                    const current = metadata.included_in_sale || [];
-                                                                    const next = isSelected 
-                                                                        ? current.filter((i: string) => i !== opt.value)
-                                                                        : [...current, opt.value];
-                                                                    setMetadata({...metadata, included_in_sale: next});
-                                                                }}
-                                                                className={clsx(
-                                                                    "flex items-center justify-between px-4 py-3 rounded-xl border text-xs font-medium transition-all text-left",
-                                                                    isSelected 
-                                                                        ? "bg-foreground/[0.05] border-white/20 text-foreground" 
-                                                                        : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10"
-                                                                )}
-                                                            >
-                                                                {opt.label}
-                                                                {isSelected && <Check size={14} className="text-muted-foreground" />}
-                                                            </button>
-                                                        );
-                                                    })}
+                                        {/* Sale Details (Apps only) */}
+                                        {metadata.type === 'app' && (
+                                            <div className="flex flex-col gap-6 pt-6 border-t border-white/5 animate-in slide-in-from-top-2 duration-500">
+                                                <h4 className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Sale Details</h4>
+                                                
+                                                <MetaField 
+                                                    label="Reason for Selling" 
+                                                    type="textarea"
+                                                    value={metadata.reason_for_selling} 
+                                                    placeholder="Why are you selling this project?"
+                                                    onChange={(v: string) => setMetadata({...metadata, reason_for_selling: v})} 
+                                                />
+
+                                                <div className="flex flex-col gap-3">
+                                                    <label className="text-muted-foreground text-xs uppercase tracking-widest font-bold">What's included</label>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                        {INCLUDED_IN_SALE_OPTIONS.map(opt => {
+                                                            const isSelected = metadata.included_in_sale?.includes(opt.value);
+                                                            return (
+                                                                <button
+                                                                    key={opt.value}
+                                                                    onClick={() => {
+                                                                        const current = metadata.included_in_sale || [];
+                                                                        const next = isSelected 
+                                                                            ? current.filter((i: string) => i !== opt.value)
+                                                                            : [...current, opt.value];
+                                                                        setMetadata({...metadata, included_in_sale: next});
+                                                                    }}
+                                                                    className={clsx(
+                                                                        "flex items-center justify-between px-4 py-3 rounded-xl border text-xs font-medium transition-all text-left",
+                                                                        isSelected 
+                                                                            ? "bg-foreground/[0.05] border-white/20 text-foreground" 
+                                                                            : "bg-background/20 border-white/[0.03] text-muted-foreground hover:border-white/10"
+                                                                    )}
+                                                                >
+                                                                    {opt.label}
+                                                                    {isSelected && <Check size={14} className="text-muted-foreground" />}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -1171,13 +1457,31 @@ export default function StorePage({ params }: { params: Promise<{ id: string }> 
                                         {metadata.is_for_sale && (
                                             <div className="p-5 bg-foreground/[0.02] border border-white/[0.05] rounded-xl flex flex-col gap-4">
                                                 <div className="flex items-center justify-between">
-                                                    <div className="flex flex-col">
+                                                     <div className="flex flex-col">
                                                         <span className="text-foreground text-xs font-medium uppercase tracking-widest">Marketplace Checkout</span>
                                                         <span className="text-muted-foreground text-xs">Automated Lemon Squeezy link</span>
                                                     </div>
                                                     {listing?.ls_checkout_url && (
-                                                        <div className="px-2 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded text-xs font-bold">
-                                                            LIVE
+                                                        <div className="flex items-center gap-2">
+                                                            <button 
+                                                                onClick={() => handleCreateCheckout(metadata.asking_price)}
+                                                                disabled={saving}
+                                                                className="p-1.5 text-muted-foreground hover:text-foreground transition-all rounded-md hover:bg-foreground/5"
+                                                                title="Regenerate Checkout"
+                                                            >
+                                                                <RefreshCw size={14} className={saving ? "animate-spin" : ""} />
+                                                            </button>
+                                                            <button 
+                                                                onClick={handleResetCheckout}
+                                                                disabled={saving}
+                                                                className="p-1.5 text-muted-foreground hover:text-red-500 transition-all rounded-md hover:bg-red-500/5"
+                                                                title="Remove Checkout"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </button>
+                                                            <div className="px-2 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded text-xs font-bold">
+                                                                LIVE
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>

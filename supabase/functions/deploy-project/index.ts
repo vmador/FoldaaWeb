@@ -171,9 +171,19 @@ function generateWorkerScript(project_data: any, kvId: string, project_id: strin
   const viewportFit = project_data.ignore_safe_area ? 'cover' : 'contain'
   const projectName = (project_data.name || 'Foldaa App').replace(/'/g, "\\'")
 
-  const onesignalBodyHtml = '<style>#foldaa-push-banner{position:fixed;top:-120px;left:50%;transform:translateX(-50%);width:90%;max-width:400px;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:12px 16px;display:flex;align-items:center;gap:12px;z-index:99999999;box-shadow:0 20px 40px rgba(0,0,0,0.4);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);font-family:-apple-system,sans-serif;}#foldaa-push-banner.visible{top:20px;}#foldaa-push-banner .icon{width:40px;height:40px;border-radius:10px;background:#222;overflow:hidden;flex-shrink:0;}#foldaa-push-banner .icon img{width:100%;height:100%;object-fit:cover;}#foldaa-push-banner .content{flex:1;min-width:0;}#foldaa-push-banner .title{color:white;font-size:13px;font-weight:600;margin:0;}#foldaa-push-banner .subtitle{color:rgba(255,255,255,0.5);font-size:11px;margin:2px 0 0 0;}#foldaa-push-banner .actions{display:flex;gap:8px;}#foldaa-push-banner button{border:none;padding:8px 14px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;}#foldaa-push-banner .btn-later{background:transparent;color:rgba(255,255,255,0.4);}#foldaa-push-banner .btn-allow{background:white;color:black;}</style>' +
-    '<div id="foldaa-push-banner"><div class="icon"><img src="/pwa-icon-192.png"></div><div class="content"><p class="title">' + projectName + '</p><p class="subtitle">Enable notifications</p></div><div class="actions"><button class="btn-later" onclick="dismissFoldaaBanner()">Later</button><button class="btn-allow" onclick="allowFoldaaPush()">Allow</button></div></div>' +
-    '<script>(function(){const b=document.getElementById("foldaa-push-banner");window.dismissFoldaaBanner=()=>{if(b)b.classList.remove("visible");};window.allowFoldaaPush=()=>{if(b)b.classList.remove("visible");window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(function(OS){OS.Notifications.requestPermission();});};const trigger=()=>{setTimeout(()=>{if(b)b.classList.add("visible");},500);document.removeEventListener("click",trigger);document.removeEventListener("touchstart",trigger);};document.addEventListener("click",trigger);document.addEventListener("touchstart",trigger);})();</script>';
+  const pushBannerJs = `
+    const style = document.createElement('style');
+    style.innerHTML = '#foldaa-push-banner{position:fixed;top:-120px;left:50%;transform:translateX(-50%);width:90%;max-width:400px;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:12px 16px;display:flex;align-items:center;gap:12px;z-index:99999999;box-shadow:0 20px 40px rgba(0,0,0,0.4);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);font-family:-apple-system,sans-serif;}#foldaa-push-banner.visible{top:20px;}#foldaa-push-banner .icon{width:40px;height:40px;border-radius:10px;background:#222;overflow:hidden;flex-shrink:0;}#foldaa-push-banner .icon img{width:100%;height:100%;object-fit:cover;}#foldaa-push-banner .content{flex:1;min-width:0;}#foldaa-push-banner .title{color:white;font-size:13px;font-weight:600;margin:0;}#foldaa-push-banner .subtitle{color:rgba(255,255,255,0.5);font-size:11px;margin:2px 0 0 0;}#foldaa-push-banner .actions{display:flex;gap:8px;}#foldaa-push-banner button{border:none;padding:8px 14px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;}#foldaa-push-banner .btn-later{background:transparent;color:rgba(255,255,255,0.4);}#foldaa-push-banner .btn-allow{background:white;color:black;}';
+    document.head.appendChild(style);
+    const banner = document.createElement('div');
+    banner.id = 'foldaa-push-banner';
+    banner.innerHTML = '<div class="icon"><img src="/pwa-icon-192.png"></div><div class="content"><p class="title">${projectName}</p><p class="subtitle">Enable notifications</p></div><div class="actions"><button class="btn-later" onclick="dismissFoldaaBanner()">Later</button><button class="btn-allow" onclick="allowFoldaaPush()">Allow</button></div>';
+    document.body.appendChild(banner);
+    window.dismissFoldaaBanner=()=>{banner.classList.remove("visible");};
+    window.allowFoldaaPush=()=>{banner.classList.remove("visible");window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(function(OS){OS.Notifications.requestPermission();});};
+    const trigger=()=>{setTimeout(()=>{banner.classList.add("visible");},500);document.removeEventListener("click",trigger);document.removeEventListener("touchstart",trigger);};
+    document.addEventListener("click",trigger);document.addEventListener("touchstart",trigger);
+  `.replace(/\n/g, "").replace(/\s+/g, " ");
 
   let script = "addEventListener('fetch', event => { event.respondWith(handleRequest(event.request)) })\n";
   script += "async function handleRequest(request) {\n";
@@ -184,9 +194,16 @@ function generateWorkerScript(project_data: any, kvId: string, project_id: strin
   script += "  if (path === '/pwa-icon-192.png') {\n";
   script += "    const iconUrl = '" + (project_data.icon_192_url || project_data.logo_url || '') + "'\n";
   script += "    if (iconUrl) { try { const res = await fetch(iconUrl); if (res.ok) return new Response(res.body, { headers: { 'Content-Type': 'image/png' } }) } catch (e) {} }\n";
-  script += "    return fetch('https://hueirgbgitrhqoopfxcu.supabase.co/storage/v1/object/public/branding/default-icon-192.png')\n";
+  script += "    return new Response(Uint8Array.from([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 11, 73, 68, 65, 84, 8, 153, 99, 96, 0, 0, 0, 2, 0, 1, 244, 113, 100, 166, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130]), { headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000' } })\n";
   script += "  }\n";
-  script += "  const response = await fetch('" + safeUrl + "' + url.pathname + url.search)\n";
+  script += "  const headers = new Headers(request.headers);\n";
+  script += "  headers.delete('accept-encoding');\n";
+  script += "  const newRequest = new Request('" + safeUrl + "' + url.pathname + url.search, {\n";
+  script += "    method: request.method, headers: headers,\n";
+  script += "    body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,\n";
+  script += "    redirect: 'manual'\n";
+  script += "  })\n";
+  script += "  const response = await fetch(newRequest)\n";
   script += "  const ct = (response.headers.get('Content-Type') || '').toLowerCase()\n";
   script += "  if (ct.includes('text/html')) {\n";
   script += "    let h = await response.text()\n";
@@ -195,19 +212,21 @@ function generateWorkerScript(project_data: any, kvId: string, project_id: strin
   script += "      '<link rel=\"manifest\" href=\"/manifest.json\">\\n' +\n";
   script += "      '<link rel=\"apple-touch-icon\" href=\"/pwa-icon-192.png\">\\n' +\n";
   script += "      '<meta name=\"theme-color\" content=\"" + themeColor + "\">\\n' +\n";
-  script += "      '<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\\n' +\n";
+  script += "      '<meta name=\"mobile-web-app-capable\" content=\"yes\">\\n' +\n";
   script += "      '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=" + viewportFit + "\">\\n' +\n";
-  script += "      '<meta name=\"onesignal-app-id\" content=\"" + oneSignalAppId + "\">\\n' +\n";
   script += "      '<style>body, #main { background-color: " + backgroundColor + " !important; }</style>\\n' +\n";
-  script += "      '<script src=\"https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js\" defer></script>\\n' +\n";
-  script += "      '<script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(function(OS){OS.init({appId:\"" + oneSignalAppId + "\",allowLocalhostAsSecureOrigin:true,notifyButton:{enable:false}}); OS.User.PushSubscription.addEventListener(\"change\", (e) => { console.log(\"🔔 FOLDAA: Subscription changed\", e.current.token, e.current.optedIn); }); console.log(\"🔔 FOLDAA: OneSignal Ready (v238)\"); });</script>\\n' +\n";
-  script += "      '<!-- FOLDAA_END -->';\n";
+  script += (oneSignalAppId ? 
+    ("      '<meta name=\"onesignal-app-id\" content=\"" + oneSignalAppId + "\">\\n' +\n" +
+     "      '<script src=\"https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js\" defer></script>\\n' +\n" +
+     "      '<script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(function(OS){OS.init({appId:\"" + oneSignalAppId + "\",allowLocalhostAsSecureOrigin:true,notifyButton:{enable:false}}); OS.User.PushSubscription.addEventListener(\"change\", (e) => { console.log(\"🔔 FOLDAA: Subscription changed\", e.current.token, e.current.optedIn); }); console.log(\"🔔 FOLDAA: OneSignal Ready (v238)\"); }); document.addEventListener(\"DOMContentLoaded\", () => { " + pushBannerJs.replace(/'/g, "\\'") + " });</script>\\n' +\n") 
+    : "") +
+  "      '<!-- FOLDAA_END -->';\n";
   script += "    h = h.replace(/<!-- FOLDAA_START [\\\\s\\\\S]*?<!-- FOLDAA_END -->/g, '')\n";
   script += "    let f = h.includes('</head>') || h.includes('</HEAD>') ? h.replace(/<\\/head>/i, meta + '</head>') : meta + h\n";
-  script += "    const b = '" + onesignalBodyHtml.replace(/'/g, "\\'").replace(/\n/g, "") + "';\n";
-  script += "    if (f.includes('<body') || f.includes('<BODY')) f = f.replace(/<body([^>]*)>/i, (m, g) => '<body' + g + '>' + b);\n";
-  script += "    else f = b + f;\n";
-  script += "    return new Response(f, { headers: { ...Object.fromEntries(response.headers.entries()), 'X-Foldaa-PWA': 'v238' } });\n";
+  script += "    const responseHeaders = new Headers(response.headers);\n";
+  script += "    responseHeaders.set('X-Foldaa-PWA', 'v238');\n";
+  script += "    responseHeaders.delete('content-length');\n";
+  script += "    return new Response(f, { headers: responseHeaders });\n";
   script += "  }\n";
   script += "  return response\n";
   script += "}\n";

@@ -1,6 +1,5 @@
 {
-  "buildCommand": "cd ../.. && npm run build --workspace=@foldaa/terminal-ui",
-  "installCommand": "cd ../.. && npm install",
-  "framework": "nextjs",
-  "outputDirectory": ".next"
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "framework": "nextjs"
 }

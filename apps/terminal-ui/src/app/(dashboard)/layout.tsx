@@ -7,7 +7,7 @@ import Sidebar from '@/components/Sidebar';
 import { useProjects, Project } from '@/lib/hooks/useProjects';
 import { UIProvider, useUI } from '@/lib/contexts/UIContext';
 import { supabase } from '@/lib/supabase';
-import { Globe, Gear, SignOut, CaretDown, Plus, Package, Flame, Tent, User, Check, SquaresFour } from "@phosphor-icons/react";
+import { Globe, Gear, SignOut, CaretDown, Plus, Package, Flame, Tent, User, Check, SquaresFour, Storefront, Rows } from "@phosphor-icons/react";
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { Skeleton } from '@/components/ui/Skeleton';
 import CreateProjectForm from '@/components/terminal/CreateProjectForm';
@@ -32,18 +32,24 @@ function DashboardLayoutContent({
     const { profile, loading: profileLoading } = useUserProfile();
     const router = useRouter();
     const pathname = usePathname();
-    const [activeTab, setActiveTab] = useState<'projects' | 'domains' | 'campfire'>('projects');
+    const [activeTab, setActiveTab] = useState<'projects' | 'domains' | 'campfire' | 'marketplace' | 'apps' | 'tent'>('projects');
     
     // Sync activeTab with pathname
     useEffect(() => {
-        if (pathname === '/campfire') {
+        if (pathname?.includes('/campfire/tent/')) {
+            setActiveTab('tent');
+        } else if (pathname === '/campfire' || pathname?.includes('/campfire')) {
             setActiveTab('campfire');
+        } else if (pathname === '/marketplace' || pathname?.includes('/store')) {
+            setActiveTab('marketplace');
         } else if (pathname?.includes('/domains')) {
             setActiveTab('domains');
+        } else if (pathname === '/dashboard' && dashboardView === 'grid') {
+            setActiveTab('apps');
         } else {
             setActiveTab('projects');
         }
-    }, [pathname]);
+    }, [pathname, dashboardView]);
     const { projects } = useProjects();
     const isPro = profile?.subscriptionPlan === 'pro';
 
@@ -88,74 +94,107 @@ function DashboardLayoutContent({
                 <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none opacity-40 uppercase">
                     Foldaa
                 </div>
-                <div className="flex items-center gap-6">
-                    {/* Sidebar Toggle & Split */}
-                    {!isSettingsPath && (
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="cursor-pointer hover:text-foreground transition-colors"
+                <div className="flex items-center">
+                    {/* Group 1: Sidebar Toggle & Apps Grid */}
+                    <div className="flex items-center gap-1.5 px-2">
+                        {/* 1 - Sidebar Toggle */}
+                        {!isSettingsPath && (
+                            <button
                                 onClick={toggleSidebar}
+                                className="p-1 rounded-md hover:bg-neutral-100/50 transition-colors text-muted-foreground hover:text-foreground"
+                                title="Toggle Sidebar"
                             >
-                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                                <path d="M9 3v18" />
-                            </svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                    <path d="M9 3v18" strokeWidth="3" />
+                                </svg>
+                            </button>
+                        )}
+
+                        {/* 2 - Apps - Grid View */}
+                        {!isSettingsPath && (
                             <button 
                                 onClick={() => {
-                                    setActiveTab('projects');
                                     setDashboardView('grid');
                                     router.push('/dashboard');
                                 }}
                                 className={clsx(
-                                    "transition-colors",
-                                    activeTab === 'projects' && dashboardView === 'grid' ? "text-foreground" : "hover:text-foreground"
+                                    "transition-all p-1 rounded-md",
+                                    activeTab === 'apps' ? "text-foreground" : "hover:text-foreground"
                                 )}
+                                title="Apps Grids"
                             >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer">
+                                    <rect width="7" height="7" x="3" y="3" rx="1" />
+                                    <rect width="7" height="7" x="14" y="3" rx="1" />
+                                    <rect width="7" height="7" x="14" y="14" rx="1" />
+                                    <rect width="7" height="7" x="3" y="14" rx="1" />
+                                </svg>
                             </button>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
-                    {/* Tab Selectors */}
+                    {/* Separator Between Groups */}
+                    <div className="w-[1px] h-4 bg-neutral-200/50 mx-2" />
+
+                    {/* Group 2: Apps Terminal, Domains, Store, Campfire */}
                     {!isSettingsPath && (
-                        <div className="flex items-center gap-4 text-muted-foreground">
+                        <div className="flex items-center gap-2.5 text-muted-foreground px-2">
+                            {/* 3 - Apps - Terminal View */}
                             <button
                                 onClick={() => {
-                                    setActiveTab('projects');
                                     setDashboardView('terminal');
                                     router.push('/dashboard');
                                 }}
                                 className={clsx(
-                                    "transition-colors flex items-center gap-1.5", 
-                                    activeTab === 'projects' && dashboardView === 'terminal' ? 'text-foreground' : 'hover:text-foreground'
+                                    "transition-all p-1 rounded-md", 
+                                    activeTab === 'projects' ? 'text-foreground' : 'hover:text-foreground'
                                 )}
+                                title="Apps Terminal"
                             >
-                                <span className="text-lg leading-none">፨</span>
+                                <span className="text-lg leading-none select-none" style={{ fontSize: '20px' }}>፨</span>
                             </button>
+
+                            {/* 4 - Domains */}
                             <button
                                 onClick={() => {
                                     setActiveTab('domains');
                                 }}
-                                className={clsx("transition-colors flex items-center gap-1.5", activeTab === 'domains' ? 'text-foreground' : 'hover:text-foreground')}
+                                className={clsx(
+                                    "transition-all p-1 rounded-md", 
+                                    activeTab === 'domains' ? 'text-foreground' : 'hover:text-foreground'
+                                )}
+                                title="Domains"
                             >
-                                <Globe size={14} />
+                                <Globe size={20} weight={activeTab === 'domains' ? "bold" : "regular"} />
                             </button>
+
+                            {/* 5 - Store (Marketplace) */}
+                            <button
+                                onClick={() => {
+                                    router.push('/marketplace');
+                                }}
+                                className={clsx(
+                                    "transition-all p-1 rounded-md", 
+                                    activeTab === 'marketplace' ? 'text-foreground' : 'hover:text-foreground'
+                                )}
+                                title="Store"
+                            >
+                                <Storefront size={20} weight={activeTab === 'marketplace' ? "bold" : "regular"} />
+                            </button>
+
+                             {/* 6 - Campfire */}
                              <button
                                 onClick={() => {
-                                    setActiveTab('campfire');
                                     router.push('/campfire');
                                 }}
-                                className={clsx("transition-colors flex items-center justify-center p-1 rounded-md", activeTab === 'campfire' ? 'bg-secondary text-yellow-500' : 'text-muted-foreground hover:text-foreground')}
-                                title="Marketplace"
+                                className={clsx(
+                                    "transition-all p-1 rounded-md", 
+                                    activeTab === 'campfire' ? 'text-foreground' : 'hover:text-foreground'
+                                )}
+                                title="Campfire"
                             >
-                                <Tent size={16} />
+                                <Tent size={20} weight={activeTab === 'campfire' ? "bold" : "regular"} />
                             </button>
                         </div>
                     )}
